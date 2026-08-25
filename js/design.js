@@ -177,7 +177,6 @@
 
     let currentSubTemplate = null;
     let currentTemplateSrc = null; // image src for pixel analysis
-    let currentColor       = COLORS[0];
     let currentSizeKey     = 'medium';
     let placed             = []; // stack of elements for undo
 
