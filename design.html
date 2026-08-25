@@ -87,11 +87,25 @@
                 <!-- Main Canvas Area -->
                 <div class="canvas-workspace">
                     <div class="canvas-top-controls">
-                        <span class="control-label">Petal Size:</span>
-                        <div class="size-row" role="group" aria-label="Petal size">
-                            <button class="size-btn" data-size="small">Small</button>
-                            <button class="size-btn active" data-size="medium">Medium</button>
-                            <button class="size-btn" data-size="large">Large</button>
+                        <div class="control-group">
+                            <span class="control-label">Flower Form:</span>
+                            <div class="form-row" role="group" aria-label="Flower form">
+                                <button class="form-btn active" data-form="whole" id="btnFormWhole" title="Place complete flower bloom">
+                                    🌸 Whole Flower
+                                </button>
+                                <button class="form-btn" data-form="cut" id="btnFormCut" title="Place shredded / cut petals for filling">
+                                    ✂️ Cut Petals (അരിഞ്ഞത്)
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <span class="control-label">Size:</span>
+                            <div class="size-row" role="group" aria-label="Petal size">
+                                <button class="size-btn" data-size="small">Small</button>
+                                <button class="size-btn active" data-size="medium">Medium</button>
+                                <button class="size-btn" data-size="large">Large</button>
+                            </div>
                         </div>
                     </div>
 

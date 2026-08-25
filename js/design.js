@@ -553,6 +553,17 @@
 
     buildFlowerSidebar();
 
+    // ---------- Flower Form (Whole vs Cut Petals) ----------
+    let currentFlowerForm = 'whole'; // 'whole' or 'cut'
+
+    document.querySelectorAll('.form-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            currentFlowerForm = btn.dataset.form;
+            document.querySelectorAll('.form-btn').forEach((b) => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+
     // ---------- Size buttons ----------
     document.querySelectorAll('.size-btn').forEach((btn) => {
         btn.addEventListener('click', () => {
@@ -570,6 +581,12 @@
         const flowerType = flowerObj ? flowerObj.id : (currentFlower ? currentFlower.id : 'marigold');
         const color = colorObj || currentColor;
         const g = document.createElementNS(NS, 'g');
+
+        // Check if user selected Cut Petals (Shredded) or Whole Flower
+        if (currentFlowerForm === 'cut') {
+            return drawCutPetals(g, cx, cy, flowerType, color, size);
+        }
+
         const randomRot = Math.random() * 360;
         g.setAttribute('transform', `rotate(${randomRot} ${cx} ${cy})`);
 
@@ -590,6 +607,36 @@
             default:
                 return drawMarigoldFlower(g, cx, cy, color, size);
         }
+    }
+
+    // ---------- Cut / Shredded Petals (അരിഞ്ഞ ഇതളുകൾ) ----------
+    // Realistic organic cluster of plucked/cut petal flakes for smooth pookalam filling
+    function drawCutPetals(g, cx, cy, flowerType, color, size) {
+        const flakeCount = size < 20 ? 5 : (size < 30 ? 8 : 12);
+        const spread = size * 0.45;
+
+        for (let i = 0; i < flakeCount; i++) {
+            // Random scatter around the click center
+            const angle = Math.random() * Math.PI * 2;
+            const dist  = Math.random() * spread;
+            const px    = cx + Math.cos(angle) * dist;
+            const py    = cy + Math.sin(angle) * dist;
+            const rot   = Math.random() * 360;
+
+            const flake = document.createElementNS(NS, 'path');
+            const flakeW = size * (0.18 + Math.random() * 0.12);
+            const flakeH = size * (0.32 + Math.random() * 0.18);
+
+            // Curved elongated petal shred
+            const d = `M ${px} ${py} Q ${px - flakeW} ${py - flakeH * 0.5} ${px} ${py - flakeH} Q ${px + flakeW * 0.8} ${py - flakeH * 0.5} ${px} ${py} Z`;
+            flake.setAttribute('d', d);
+            flake.setAttribute('fill', color.hex);
+            flake.setAttribute('stroke', color.border || 'rgba(0,0,0,0.12)');
+            flake.setAttribute('stroke-width', '0.5');
+            flake.setAttribute('transform', `rotate(${rot} ${px} ${py})`);
+            g.appendChild(flake);
+        }
+        return g;
     }
 
     // 1. Thumba (തുമ്പ) — delicate 4-petal starry white Onam flower with green calyx
