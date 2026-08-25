@@ -4,30 +4,73 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pookalam Gallery</title>
+    <title>Community Pookalam Gallery | Poovum-Codeum</title>
     <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body>
 
-    <header class="app-header" style="position: sticky; background: var(--cream);">
-        <button class="icon-btn" aria-label="Menu">☰</button>
-        <span class="title">Gallery</span>
-        <button class="icon-btn" aria-label="Profile">👤</button>
+    <header class="app-header" style="position: sticky; top: 0; background: var(--cream); z-index: 100;">
+        <a href="index.html" class="icon-btn" aria-label="Go to Home">←</a>
+        <span class="title">Community Gallery</span>
+        <a href="design.html" class="icon-btn" aria-label="Design" title="Create Pookalam">✨</a>
     </header>
 
-    <main class="page">
-        <h1>Community Pookalams</h1>
-        <p class="subtitle">Browse designs made by other users, or get inspired before you start your own.</p>
+    <main class="page gallery-page">
+        <div class="gallery-hero-banner">
+            <div>
+                <h1>🌸 Community Pookalams</h1>
+                <p class="subtitle">Browse festive floral designs created and shared by the community!</p>
+            </div>
+            <a href="design.html" class="hero-btn-solid gallery-create-btn">
+                <span>🌸</span> Create Your Own
+            </a>
+        </div>
 
-        <div class="placeholder-card">
-            Gallery grid of saved / shared pookalam designs will go here.
+        <!-- Filter tabs -->
+        <div class="gallery-filter-bar">
+            <div class="gallery-tabs" role="tablist">
+                <button class="gallery-tab active" data-filter="all">All Designs</button>
+                <button class="gallery-tab" data-filter="community">Community Uploads ✨</button>
+                <button class="gallery-tab" data-filter="classic">Festive Classics</button>
+            </div>
+            <span class="gallery-counter" id="galleryCountBadge">Loading designs…</span>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div class="community-gallery-grid" id="communityGalleryGrid">
+            <!-- Rendered dynamically by gallery.js -->
+        </div>
+
+        <!-- Empty state placeholder (if no community designs yet) -->
+        <div id="galleryEmptyState" class="gallery-empty-state" hidden>
+            <span class="empty-icon">🪔</span>
+            <h3>Be the first to publish a Pookalam!</h3>
+            <p>Design your own floral creation and share it with the community.</p>
+            <a href="design.html" class="hero-btn-solid" style="display:inline-block; margin-top:14px;">Start Designing 🌸</a>
+        </div>
+
+        <!-- Image Fullscreen Lightbox Modal -->
+        <div id="galleryLightbox" class="modal-overlay" hidden>
+            <div class="lightbox-card">
+                <button class="lightbox-close" id="btnCloseLightbox" aria-label="Close">✕</button>
+                <div class="lightbox-img-wrap">
+                    <img id="lightboxImg" alt="Pookalam Zoom" />
+                </div>
+                <div class="lightbox-info">
+                    <div>
+                        <h3 id="lightboxTitle">Pookalam Design</h3>
+                        <p id="lightboxSubtitle" class="lightbox-meta">By Creator</p>
+                    </div>
+                    <button id="btnLightboxDownload" class="hero-btn-solid" style="padding:8px 18px; font-size:13px;">Download 📥</button>
+                </div>
+            </div>
         </div>
     </main>
 
-
-
     <script src="js/main.js"></script>
+    <script src="js/gallery.js"></script>
+    <script src="js/music.js"></script>
 </body>
 
 </html>

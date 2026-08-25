@@ -135,14 +135,14 @@
                     <div id="sharePanel" class="share-panel" hidden>
                         <p class="share-panel-title">Share your Pookalam 🌸</p>
                         <div class="share-btns" id="shareBtns">
-                            <button id="shareTwitter" class="share-btn share-twitter" title="Share on Twitter / X">
-                                <span>𝕏</span> Post on X
+                            <button id="shareGallery" class="share-btn share-gallery" title="Publish to Community Gallery">
+                                <span>🖼️</span> Share to Gallery
                             </button>
                             <button id="shareWhatsapp" class="share-btn share-whatsapp" title="Share on WhatsApp">
                                 <span>💬</span> WhatsApp
                             </button>
-                            <button id="shareInstagram" class="share-btn share-instagram" title="Save image for Instagram">
-                                <span>📸</span> Instagram
+                            <button id="shareTwitter" class="share-btn share-twitter" title="Share on Twitter / X">
+                                <span>𝕏</span> Post on X
                             </button>
                             <button id="shareCopyLink" class="share-btn share-copy" title="Copy Website Link">
                                 <span>📋</span> Copy Link
@@ -154,6 +154,40 @@
 
             </div>
         </section>
+
+        <!-- ===== Publish to Gallery Modal ===== -->
+        <div id="galleryPublishModal" class="modal-overlay" hidden>
+            <div class="modal-card">
+                <div class="modal-header">
+                    <span class="modal-icon">🌸</span>
+                    <div>
+                        <h2 class="modal-title">Publish to Community Gallery</h2>
+                        <span class="modal-subtitle">Share your Pookalam with the community!</span>
+                    </div>
+                </div>
+
+                <div class="modal-preview-box">
+                    <img id="modalPreviewImg" class="modal-preview-img" alt="Pookalam Preview" />
+                </div>
+
+                <form id="publishGalleryForm" class="modal-form" onsubmit="return false;">
+                    <div class="form-field">
+                        <label for="creatorNameInput">Your Name / Creator Name <span class="required">*</span></label>
+                        <input type="text" id="creatorNameInput" placeholder="e.g. Gayathri S." required maxlength="40" />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="creatorMsgInput">Festive Message or City (Optional)</label>
+                        <input type="text" id="creatorMsgInput" placeholder="e.g. Happy Onam from Kochi! 🪔" maxlength="60" />
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="ghost-btn" id="btnCancelPublish">Cancel</button>
+                        <button type="submit" class="hero-btn-solid" id="btnConfirmPublish">Publish to Gallery 🎉</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
     </main>
 
