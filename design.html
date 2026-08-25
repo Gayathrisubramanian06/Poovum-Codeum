@@ -55,50 +55,83 @@
         </section>
 
         <!-- ===== STEP 2: THE CANVAS ===== -->
+        <!-- ===== STEP 2: THE CANVAS & SIDE FLOWER PALETTE ===== -->
         <section id="canvasStep" hidden>
+            <div class="designer-workspace">
+                
+                <!-- Side Flower Palette -->
+                <aside class="flower-sidebar">
+                    <div class="sidebar-header">
+                        <span class="sidebar-icon">🌸</span>
+                        <div>
+                            <h2 class="sidebar-title">Flower Palette</h2>
+                            <span class="sidebar-subtitle">പൂക്കൾ തിരഞ്ഞെടുക്കുക</span>
+                        </div>
+                    </div>
 
-            <div class="palette-row" id="colorPalette" role="group" aria-label="Petal colours"></div>
+                    <!-- Active Flower Selection Banner -->
+                    <div class="active-flower-banner" id="activeFlowerBanner">
+                        <div class="active-flower-indicator" id="activeFlowerIndicator"></div>
+                        <div class="active-flower-info">
+                            <span class="active-flower-type" id="activeFlowerName">Marigold (ചെണ്ടുമല്ലി)</span>
+                            <span class="active-flower-color" id="activeColorName">Golden Orange</span>
+                        </div>
+                    </div>
 
-            <div class="size-row" role="group" aria-label="Petal size">
-                <button class="size-btn" data-size="small">Small</button>
-                <button class="size-btn active" data-size="medium">Medium</button>
-                <button class="size-btn" data-size="large">Large</button>
-            </div>
+                    <!-- Flower Categories List -->
+                    <div class="flower-categories" id="flowerCategories">
+                        <!-- Dynamically populated by design.js -->
+                    </div>
+                </aside>
 
-            <div class="canvas-shell">
-                <svg id="pookalamCanvas" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <radialGradient id="floorGradient" cx="50%" cy="45%" r="70%">
-                            <stop offset="0%" stop-color="#fffaf0" />
-                            <stop offset="100%" stop-color="#f3e6c8" />
-                        </radialGradient>
-                    </defs>
-                    <rect width="400" height="400" fill="url(#floorGradient)" />
-                    <g id="guideLayer"></g>
-                    <g id="petalLayer"></g>
-                </svg>
-                <p class="canvas-hint" id="canvasHint">Tap inside the circle to place a flower.</p>
-            </div>
+                <!-- Main Canvas Area -->
+                <div class="canvas-workspace">
+                    <div class="canvas-top-controls">
+                        <span class="control-label">Petal Size:</span>
+                        <div class="size-row" role="group" aria-label="Petal size">
+                            <button class="size-btn" data-size="small">Small</button>
+                            <button class="size-btn active" data-size="medium">Medium</button>
+                            <button class="size-btn" data-size="large">Large</button>
+                        </div>
+                    </div>
 
-            <div class="canvas-actions">
-                <button class="ghost-btn" id="btnUndo">Undo</button>
-                <button class="ghost-btn" id="btnClear">Clear</button>
-                <button class="hero-btn-solid" id="btnDownload">Download</button>
-                <button class="ghost-btn share-toggle-btn" id="btnShare">Share 🔗</button>
-            </div>
+                    <div class="canvas-shell">
+                        <svg id="pookalamCanvas" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <radialGradient id="floorGradient" cx="50%" cy="45%" r="70%">
+                                    <stop offset="0%" stop-color="#fffaf0" />
+                                    <stop offset="100%" stop-color="#f3e6c8" />
+                                </radialGradient>
+                            </defs>
+                            <rect width="400" height="400" fill="url(#floorGradient)" />
+                            <g id="guideLayer"></g>
+                            <g id="petalLayer"></g>
+                        </svg>
+                        <p class="canvas-hint" id="canvasHint">Tap inside the circle to place a flower.</p>
+                    </div>
 
-            <!-- Share panel -->
-            <div id="sharePanel" class="share-panel" hidden>
-                <p class="share-panel-title">Share your Pookalam 🌸</p>
-                <div class="share-btns" id="shareBtns">
-                    <button id="shareTwitter" class="share-btn share-twitter">
-                        <span>𝕏</span> Post on X
-                    </button>
-                    <button id="shareInstagram" class="share-btn share-instagram">
-                        <span>📸</span> Instagram
-                    </button>
+                    <div class="canvas-actions">
+                        <button class="ghost-btn" id="btnUndo" title="Undo last petal">Undo ↩</button>
+                        <button class="ghost-btn" id="btnClear" title="Clear all petals">Clear 🗑</button>
+                        <button class="hero-btn-solid" id="btnDownload" title="Download image">Download 📥</button>
+                        <button class="ghost-btn share-toggle-btn" id="btnShare" title="Share your design">Share 🔗</button>
+                    </div>
+
+                    <!-- Share panel -->
+                    <div id="sharePanel" class="share-panel" hidden>
+                        <p class="share-panel-title">Share your Pookalam 🌸</p>
+                        <div class="share-btns" id="shareBtns">
+                            <button id="shareTwitter" class="share-btn share-twitter">
+                                <span>𝕏</span> Post on X
+                            </button>
+                            <button id="shareInstagram" class="share-btn share-instagram">
+                                <span>📸</span> Instagram
+                            </button>
+                        </div>
+                        <p class="share-hint" id="shareHint"></p>
+                    </div>
                 </div>
-                <p class="share-hint" id="shareHint"></p>
+
             </div>
         </section>
 

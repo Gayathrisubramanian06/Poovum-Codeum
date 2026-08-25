@@ -37,15 +37,113 @@
 
     const SIZES = { small: 16, medium: 26, large: 38 };
 
-    const COLORS = [
-        { name: 'Marigold', hex: '#f2c14e', center: '#7a4a1e' },
-        { name: 'Saffron',  hex: '#f2994a', center: '#7a4a1e' },
-        { name: 'Rose',     hex: '#e0577b', center: '#7a4a1e' },
-        { name: 'Magenta',  hex: '#c2419a', center: '#fbf3e3' },
-        { name: 'Crimson',  hex: '#c0392b', center: '#fbf3e3' },
-        { name: 'Leaf',     hex: '#4e8c4a', center: '#fbf3e3' },
-        { name: 'Ivory',    hex: '#fdf6e3', center: '#f2c14e' },
+    // ====================================================
+    // TRADITIONAL ONAM FLOWERS & COLOR VARIETIES
+    // ====================================================
+    const ONAM_FLOWERS = [
+        {
+            id: 'thumba',
+            nameEn: 'Thumba',
+            nameMl: 'തുമ്പ',
+            icon: '🌿',
+            description: 'Sacred white Onam flower',
+            varieties: [
+                { name: 'Pure White',      hex: '#ffffff', center: '#86efac', border: '#cbd5e1' },
+                { name: 'Cream White',     hex: '#fefbf3', center: '#4ade80', border: '#e2e8f0' },
+                { name: 'Dewdrop Pearl',   hex: '#f0fdf4', center: '#22c55e', border: '#bbf7d0' },
+                { name: 'Pale Mint',       hex: '#dcfce7', center: '#16a34a', border: '#86efac' }
+            ]
+        },
+        {
+            id: 'thechi',
+            nameEn: 'Thechi',
+            nameMl: 'തെച്ചി',
+            icon: '🌺',
+            description: 'Vibrant 4-petal Ixora flower',
+            varieties: [
+                { name: 'Scarlet Red',     hex: '#dc2626', center: '#fca5a5', border: '#991b1b' },
+                { name: 'Coral Orange',    hex: '#ea580c', center: '#fed7aa', border: '#9a3412' },
+                { name: 'Golden Yellow',   hex: '#facc15', center: '#854d0e', border: '#ca8a04' },
+                { name: 'Flamingo Pink',   hex: '#ec4899', center: '#fbcfe8', border: '#be185d' },
+                { name: 'Snow White',      hex: '#fafafa', center: '#fde047', border: '#e5e7eb' }
+            ]
+        },
+        {
+            id: 'jamanthi',
+            nameEn: 'Jamanthi',
+            nameMl: 'ജമന്തി',
+            icon: '🌼',
+            description: 'Radiating pom-pom Chrysanthemum',
+            varieties: [
+                { name: 'Sunshine Yellow', hex: '#fbbf24', center: '#d97706', border: '#b45309' },
+                { name: 'Warm Saffron',    hex: '#f97316', center: '#c2410c', border: '#7c2d12' },
+                { name: 'Pure White',      hex: '#ffffff', center: '#facc15', border: '#cbd5e1' },
+                { name: 'Maroon Burgundy', hex: '#881337', center: '#fde047', border: '#4c0519' },
+                { name: 'Sunset Bronze',   hex: '#c2410c', center: '#431407', border: '#7c2d12' },
+                { name: 'Soft Lilac',      hex: '#c084fc', center: '#fef08a', border: '#9333ea' }
+            ]
+        },
+        {
+            id: 'rose',
+            nameEn: 'Rose',
+            nameMl: 'റോസ് / പനിനീർ',
+            icon: '🌹',
+            description: 'Layered fragrant Rose petals',
+            varieties: [
+                { name: 'Kashmiri Crimson',hex: '#e11d48', center: '#881337', border: '#9f1239' },
+                { name: 'Paneer Pink',     hex: '#f472b6', center: '#be185d', border: '#db2777' },
+                { name: 'Bright Yellow',   hex: '#fde047', center: '#ca8a04', border: '#eab308' },
+                { name: 'Pure White',      hex: '#ffffff', center: '#fef08a', border: '#cbd5e1' },
+                { name: 'Sunset Coral',    hex: '#fb923c', center: '#c2410c', border: '#ea580c' },
+                { name: 'Deep Velvet',     hex: '#4c0519', center: '#f43f5e', border: '#29030d' }
+            ]
+        },
+        {
+            id: 'marigold',
+            nameEn: 'Marigold',
+            nameMl: 'ചെണ്ടുമല്ലി',
+            icon: '🏵️',
+            description: 'Ruffled festive Tagetes pom-pom',
+            varieties: [
+                { name: 'Golden Orange',   hex: '#f97316', center: '#9a3412', border: '#c2410c' },
+                { name: 'Sunshine Yellow', hex: '#eab308', center: '#854d0e', border: '#ca8a04' },
+                { name: 'Deep Saffron',    hex: '#ea580c', center: '#7c2d12', border: '#9a3412' },
+                { name: 'Lemon Yellow',    hex: '#fef08a', center: '#ca8a04', border: '#fde047' },
+                { name: 'Rust Copper',     hex: '#b45309', center: '#451a03', border: '#78350f' }
+            ]
+        },
+        {
+            id: 'lotus',
+            nameEn: 'Lotus',
+            nameMl: 'താമര',
+            icon: '🪷',
+            description: 'Sacred pointed Lotus petals',
+            varieties: [
+                { name: 'Sacred Pink',     hex: '#fb7185', center: '#facc15', border: '#e11d48' },
+                { name: 'Royal Magenta',   hex: '#db2777', center: '#fde047', border: '#9d174d' },
+                { name: 'Pure White',      hex: '#ffffff', center: '#facc15', border: '#cbd5e1' },
+                { name: 'Soft Lilac',      hex: '#e879f9', center: '#fde047', border: '#c026d3' },
+                { name: 'Rose Bloom',      hex: '#f43f5e', center: '#fbbf24', border: '#be123c' }
+            ]
+        },
+        {
+            id: 'chembarathi',
+            nameEn: 'Chembarathi',
+            nameMl: 'ചെമ്പരത്തി',
+            icon: '🌺',
+            description: 'Classic 5-petal flared Hibiscus',
+            varieties: [
+                { name: 'Ruby Red',        hex: '#dc2626', center: '#7f1d1d', border: '#991b1b', stamen: '#fbbf24' },
+                { name: 'Fuchsia Pink',    hex: '#ec4899', center: '#831843', border: '#be185d', stamen: '#fde047' },
+                { name: 'Canary Yellow',   hex: '#facc15', center: '#854d0e', border: '#ca8a04', stamen: '#dc2626' },
+                { name: 'Coral Orange',    hex: '#f97316', center: '#7c2d12', border: '#ea580c', stamen: '#fde047' },
+                { name: 'Snow White',      hex: '#ffffff', center: '#cbd5e1', border: '#94a3b8', stamen: '#f59e0b' }
+            ]
+        }
     ];
+
+    let currentFlower = ONAM_FLOWERS[4]; // Default: Marigold
+    let currentColor  = ONAM_FLOWERS[4].varieties[0]; // Default: Golden Orange
 
     const PREDEFINED_TEMPLATES = {
         circle: [
@@ -378,20 +476,82 @@
         }
     }
 
-    // ---------- Colour palette ----------
-    const paletteEl = document.getElementById('colorPalette');
-    COLORS.forEach((color, i) => {
-        const btn = document.createElement('button');
-        btn.className = 'color-swatch' + (i === 0 ? ' active' : '');
-        btn.style.background = color.hex;
-        btn.setAttribute('aria-label', color.name);
-        btn.addEventListener('click', () => {
-            currentColor = color;
-            paletteEl.querySelectorAll('.color-swatch').forEach((s) => s.classList.remove('active'));
-            btn.classList.add('active');
+    // ---------- Flower Sidebar & Variety Selection ----------
+    const flowerCategoriesEl = document.getElementById('flowerCategories');
+    const activeFlowerIndicator = document.getElementById('activeFlowerIndicator');
+    const activeFlowerName = document.getElementById('activeFlowerName');
+    const activeColorName = document.getElementById('activeColorName');
+
+    function updateActiveFlowerDisplay() {
+        if (activeFlowerIndicator) activeFlowerIndicator.style.backgroundColor = currentColor.hex;
+        if (activeFlowerName) activeFlowerName.textContent = `${currentFlower.icon} ${currentFlower.nameEn} (${currentFlower.nameMl})`;
+        if (activeColorName) activeColorName.textContent = currentColor.name;
+    }
+
+    function buildFlowerSidebar() {
+        if (!flowerCategoriesEl) return;
+        flowerCategoriesEl.innerHTML = '';
+
+        ONAM_FLOWERS.forEach(flower => {
+            const isCategorySelected = (flower.id === currentFlower.id);
+            const card = document.createElement('div');
+            card.className = `flower-category-card ${isCategorySelected ? 'selected' : ''}`;
+            card.dataset.flowerId = flower.id;
+
+            // Card Header
+            const header = document.createElement('div');
+            header.className = 'flower-category-header';
+            header.innerHTML = `
+                <span class="flower-category-icon">${flower.icon}</span>
+                <div class="flower-category-names">
+                    <span class="flower-name-en">${flower.nameEn}</span>
+                    <span class="flower-name-ml">${flower.nameMl}</span>
+                </div>
+            `;
+            card.appendChild(header);
+
+            // Swatches Grid
+            const swatchesGrid = document.createElement('div');
+            swatchesGrid.className = 'flower-swatches-grid';
+
+            flower.varieties.forEach(variety => {
+                const isVarietyActive = (isCategorySelected && variety.name === currentColor.name);
+                const swatchBtn = document.createElement('button');
+                swatchBtn.className = `flower-swatch-item ${isVarietyActive ? 'active' : ''}`;
+                swatchBtn.setAttribute('title', `${flower.nameEn} - ${variety.name}`);
+                swatchBtn.setAttribute('aria-label', `${flower.nameEn} ${variety.name}`);
+
+                swatchBtn.innerHTML = `
+                    <div class="flower-swatch-circle" style="background: ${variety.hex}; ${variety.border ? `border-color: ${variety.border};` : ''}"></div>
+                    <span class="flower-swatch-name">${variety.name}</span>
+                `;
+
+                swatchBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    currentFlower = flower;
+                    currentColor = variety;
+
+                    // Update UI selection states
+                    document.querySelectorAll('.flower-category-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+
+                    document.querySelectorAll('.flower-swatch-item').forEach(s => s.classList.remove('active'));
+                    swatchBtn.classList.add('active');
+
+                    updateActiveFlowerDisplay();
+                });
+
+                swatchesGrid.appendChild(swatchBtn);
+            });
+
+            card.appendChild(swatchesGrid);
+            flowerCategoriesEl.appendChild(card);
         });
-        paletteEl.appendChild(btn);
-    });
+
+        updateActiveFlowerDisplay();
+    }
+
+    buildFlowerSidebar();
 
     // ---------- Size buttons ----------
     document.querySelectorAll('.size-btn').forEach((btn) => {
@@ -402,33 +562,248 @@
         });
     });
 
-    // ---------- Flower stamp ----------
-    function createFlower(cx, cy, color, size) {
-        const g        = document.createElementNS(NS, 'g');
-        const rotation = Math.random() * 72;
-        g.setAttribute('transform', `rotate(${rotation} ${cx} ${cy})`);
+    // ====================================================
+    // SPECIALIZED ONAM FLOWER SVG GENERATORS
+    // ====================================================
 
+    function createFlower(cx, cy, flowerObj, colorObj, size) {
+        const flowerType = flowerObj ? flowerObj.id : (currentFlower ? currentFlower.id : 'marigold');
+        const color = colorObj || currentColor;
+        const g = document.createElementNS(NS, 'g');
+        const randomRot = Math.random() * 360;
+        g.setAttribute('transform', `rotate(${randomRot} ${cx} ${cy})`);
+
+        switch (flowerType) {
+            case 'thumba':
+                return drawThumbaFlower(g, cx, cy, color, size);
+            case 'thechi':
+                return drawThechiFlower(g, cx, cy, color, size);
+            case 'jamanthi':
+                return drawJamanthiFlower(g, cx, cy, color, size);
+            case 'rose':
+                return drawRoseFlower(g, cx, cy, color, size);
+            case 'lotus':
+                return drawLotusFlower(g, cx, cy, color, size);
+            case 'chembarathi':
+                return drawChembarathiFlower(g, cx, cy, color, size);
+            case 'marigold':
+            default:
+                return drawMarigoldFlower(g, cx, cy, color, size);
+        }
+    }
+
+    // 1. Thumba (തുമ്പ) — delicate 4-petal starry white Onam flower with green calyx
+    function drawThumbaFlower(g, cx, cy, color, size) {
+        const petalCount = 4;
+        for (let i = 0; i < petalCount; i++) {
+            const angle = (360 / petalCount) * i;
+            const p = document.createElementNS(NS, 'path');
+            const d = `M ${cx} ${cy} Q ${cx - size * 0.18} ${cy - size * 0.3} ${cx} ${cy - size * 0.52} Q ${cx + size * 0.18} ${cy - size * 0.3} ${cx} ${cy} Z`;
+            p.setAttribute('d', d);
+            p.setAttribute('fill', color.hex);
+            p.setAttribute('stroke', color.border || '#cbd5e1');
+            p.setAttribute('stroke-width', '0.6');
+            p.setAttribute('transform', `rotate(${angle} ${cx} ${cy})`);
+            g.appendChild(p);
+        }
+        // Green calyx/center dot
+        const calyx = document.createElementNS(NS, 'circle');
+        calyx.setAttribute('cx', cx);
+        calyx.setAttribute('cy', cy);
+        calyx.setAttribute('r', size * 0.16);
+        calyx.setAttribute('fill', color.center || '#16a34a');
+        g.appendChild(calyx);
+        return g;
+    }
+
+    // 2. Thechi (തെച്ചി) — 4-pointed cross star Ixora flower
+    function drawThechiFlower(g, cx, cy, color, size) {
+        const petalCount = 4;
+        for (let i = 0; i < petalCount; i++) {
+            const angle = (360 / petalCount) * i + 45;
+            const p = document.createElementNS(NS, 'polygon');
+            const pts = `${cx},${cy} ${cx - size * 0.22},${cy - size * 0.28} ${cx},${cy - size * 0.52} ${cx + size * 0.22},${cy - size * 0.28}`;
+            p.setAttribute('points', pts);
+            p.setAttribute('fill', color.hex);
+            p.setAttribute('stroke', color.border || 'rgba(0,0,0,0.15)');
+            p.setAttribute('stroke-width', '0.6');
+            p.setAttribute('transform', `rotate(${angle} ${cx} ${cy})`);
+            g.appendChild(p);
+        }
+        const tube = document.createElementNS(NS, 'circle');
+        tube.setAttribute('cx', cx);
+        tube.setAttribute('cy', cy);
+        tube.setAttribute('r', size * 0.14);
+        tube.setAttribute('fill', color.center || '#fde047');
+        g.appendChild(tube);
+        return g;
+    }
+
+    // 3. Jamanthi (ജമന്തി) — 12 radiating layered pom-pom petals in two tiers
+    function drawJamanthiFlower(g, cx, cy, color, size) {
+        // Outer tier (8 petals)
+        for (let i = 0; i < 8; i++) {
+            const angle = (360 / 8) * i;
+            const petal = document.createElementNS(NS, 'ellipse');
+            petal.setAttribute('cx', cx);
+            petal.setAttribute('cy', cy - size * 0.32);
+            petal.setAttribute('rx', size * 0.15);
+            petal.setAttribute('ry', size * 0.34);
+            petal.setAttribute('fill', color.hex);
+            petal.setAttribute('stroke', color.border || 'rgba(0,0,0,0.1)');
+            petal.setAttribute('stroke-width', '0.5');
+            petal.setAttribute('transform', `rotate(${angle} ${cx} ${cy})`);
+            g.appendChild(petal);
+        }
+        // Inner tier (8 petals offset)
+        for (let i = 0; i < 8; i++) {
+            const angle = (360 / 8) * i + 22.5;
+            const petal = document.createElementNS(NS, 'ellipse');
+            petal.setAttribute('cx', cx);
+            petal.setAttribute('cy', cy - size * 0.22);
+            petal.setAttribute('rx', size * 0.13);
+            petal.setAttribute('ry', size * 0.24);
+            petal.setAttribute('fill', color.hex);
+            petal.setAttribute('transform', `rotate(${angle} ${cx} ${cy})`);
+            g.appendChild(petal);
+        }
+        // Center disc
+        const center = document.createElementNS(NS, 'circle');
+        center.setAttribute('cx', cx);
+        center.setAttribute('cy', cy);
+        center.setAttribute('r', size * 0.22);
+        center.setAttribute('fill', color.center || '#b45309');
+        g.appendChild(center);
+        return g;
+    }
+
+    // 4. Rose (റോസ് / പനിനീർ) — overlapping curved layered petals
+    function drawRoseFlower(g, cx, cy, color, size) {
+        // Outer petals
+        for (let i = 0; i < 5; i++) {
+            const angle = (360 / 5) * i;
+            const petal = document.createElementNS(NS, 'path');
+            const d = `M ${cx} ${cy} C ${cx - size * 0.38} ${cy - size * 0.25} ${cx - size * 0.32} ${cy - size * 0.52} ${cx} ${cy - size * 0.48} C ${cx + size * 0.32} ${cy - size * 0.52} ${cx + size * 0.38} ${cy - size * 0.25} ${cx} ${cy} Z`;
+            petal.setAttribute('d', d);
+            petal.setAttribute('fill', color.hex);
+            petal.setAttribute('stroke', color.border || 'rgba(0,0,0,0.15)');
+            petal.setAttribute('stroke-width', '0.5');
+            petal.setAttribute('transform', `rotate(${angle} ${cx} ${cy})`);
+            g.appendChild(petal);
+        }
+        // Inner spiral core
+        for (let i = 0; i < 4; i++) {
+            const angle = (360 / 4) * i + 36;
+            const petal = document.createElementNS(NS, 'ellipse');
+            petal.setAttribute('cx', cx);
+            petal.setAttribute('cy', cy - size * 0.16);
+            petal.setAttribute('rx', size * 0.2);
+            petal.setAttribute('ry', size * 0.26);
+            petal.setAttribute('fill', color.center || '#be185d');
+            petal.setAttribute('opacity', '0.9');
+            petal.setAttribute('transform', `rotate(${angle} ${cx} ${cy})`);
+            g.appendChild(petal);
+        }
+        const center = document.createElementNS(NS, 'circle');
+        center.setAttribute('cx', cx);
+        center.setAttribute('cy', cy);
+        center.setAttribute('r', size * 0.14);
+        center.setAttribute('fill', color.hex);
+        g.appendChild(center);
+        return g;
+    }
+
+    // 5. Marigold (ചെണ്ടുമല്ലി) — ruffled festive pom-pom
+    function drawMarigoldFlower(g, cx, cy, color, size) {
+        const petalCount = 8;
+        for (let i = 0; i < petalCount; i++) {
+            const angle = (360 / petalCount) * i;
+            const petal = document.createElementNS(NS, 'ellipse');
+            petal.setAttribute('cx', cx);
+            petal.setAttribute('cy', cy - size * 0.34);
+            petal.setAttribute('rx', size * 0.2);
+            petal.setAttribute('ry', size * 0.38);
+            petal.setAttribute('fill', color.hex);
+            petal.setAttribute('stroke', color.border || 'rgba(0,0,0,0.12)');
+            petal.setAttribute('stroke-width', '0.6');
+            petal.setAttribute('transform', `rotate(${angle} ${cx} ${cy})`);
+            g.appendChild(petal);
+        }
+        for (let i = 0; i < petalCount; i++) {
+            const angle = (360 / petalCount) * i + 22.5;
+            const petal = document.createElementNS(NS, 'ellipse');
+            petal.setAttribute('cx', cx);
+            petal.setAttribute('cy', cy - size * 0.2);
+            petal.setAttribute('rx', size * 0.16);
+            petal.setAttribute('ry', size * 0.28);
+            petal.setAttribute('fill', color.hex);
+            petal.setAttribute('transform', `rotate(${angle} ${cx} ${cy})`);
+            g.appendChild(petal);
+        }
+        const center = document.createElementNS(NS, 'circle');
+        center.setAttribute('cx', cx);
+        center.setAttribute('cy', cy);
+        center.setAttribute('r', size * 0.18);
+        center.setAttribute('fill', color.center || '#7a4a1e');
+        g.appendChild(center);
+        return g;
+    }
+
+    // 6. Lotus (താമര) — elegant pointed sacred petals
+    function drawLotusFlower(g, cx, cy, color, size) {
+        const petalCount = 8;
+        for (let i = 0; i < petalCount; i++) {
+            const angle = (360 / petalCount) * i;
+            const p = document.createElementNS(NS, 'path');
+            const d = `M ${cx} ${cy} Q ${cx - size * 0.26} ${cy - size * 0.3} ${cx} ${cy - size * 0.54} Q ${cx + size * 0.26} ${cy - size * 0.3} ${cx} ${cy} Z`;
+            p.setAttribute('d', d);
+            p.setAttribute('fill', color.hex);
+            p.setAttribute('stroke', color.border || '#e11d48');
+            p.setAttribute('stroke-width', '0.6');
+            p.setAttribute('transform', `rotate(${angle} ${cx} ${cy})`);
+            g.appendChild(p);
+        }
+        // Center seed pod
+        const pod = document.createElementNS(NS, 'circle');
+        pod.setAttribute('cx', cx);
+        pod.setAttribute('cy', cy);
+        pod.setAttribute('r', size * 0.18);
+        pod.setAttribute('fill', color.center || '#facc15');
+        g.appendChild(pod);
+        return g;
+    }
+
+    // 7. Chembarathi (ചെമ്പരത്തി) — 5 broad flared petals with central eye & stamen
+    function drawChembarathiFlower(g, cx, cy, color, size) {
         const petalCount = 5;
         for (let i = 0; i < petalCount; i++) {
             const angle = (360 / petalCount) * i;
             const petal = document.createElementNS(NS, 'ellipse');
-            const dist  = size * 0.45;
-            petal.setAttribute('cx',        cx);
-            petal.setAttribute('cy',        cy - dist);
-            petal.setAttribute('rx',        size * 0.28);
-            petal.setAttribute('ry',        size * 0.5);
-            petal.setAttribute('fill',      color.hex);
+            petal.setAttribute('cx', cx);
+            petal.setAttribute('cy', cy - size * 0.28);
+            petal.setAttribute('rx', size * 0.28);
+            petal.setAttribute('ry', size * 0.44);
+            petal.setAttribute('fill', color.hex);
+            petal.setAttribute('stroke', color.border || 'rgba(0,0,0,0.15)');
+            petal.setAttribute('stroke-width', '0.6');
             petal.setAttribute('transform', `rotate(${angle} ${cx} ${cy})`);
             g.appendChild(petal);
         }
+        // Central eye
+        const eye = document.createElementNS(NS, 'circle');
+        eye.setAttribute('cx', cx);
+        eye.setAttribute('cy', cy);
+        eye.setAttribute('r', size * 0.22);
+        eye.setAttribute('fill', color.center || '#7f1d1d');
+        g.appendChild(eye);
 
-        const centerDot = document.createElementNS(NS, 'circle');
-        centerDot.setAttribute('cx',   cx);
-        centerDot.setAttribute('cy',   cy);
-        centerDot.setAttribute('r',    size * 0.2);
-        centerDot.setAttribute('fill', color.center);
-        g.appendChild(centerDot);
-
+        // Stamen stalk dot
+        const stamen = document.createElementNS(NS, 'circle');
+        stamen.setAttribute('cx', cx + size * 0.12);
+        stamen.setAttribute('cy', cy - size * 0.14);
+        stamen.setAttribute('r', size * 0.08);
+        stamen.setAttribute('fill', color.stamen || '#fbbf24');
+        g.appendChild(stamen);
         return g;
     }
 
@@ -478,7 +853,7 @@
 
             // Place flower inside the masked group
             const size   = SIZES[currentSizeKey];
-            const flower = createFlower(x, y, currentColor, size);
+            const flower = createFlower(x, y, currentFlower, currentColor, size);
             regionGroup.appendChild(flower);
             placed.push(flower);
 
@@ -489,7 +864,7 @@
                 return;
             }
             const size   = SIZES[currentSizeKey];
-            const flower = createFlower(x, y, currentColor, size);
+            const flower = createFlower(x, y, currentFlower, currentColor, size);
             petalLayer.appendChild(flower);
             placed.push(flower);
         }
