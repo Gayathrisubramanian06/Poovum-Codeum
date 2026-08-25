@@ -100,6 +100,13 @@
                         </div>
 
                         <div class="control-group">
+                            <span class="control-label">Symmetry:</span>
+                            <button type="button" class="symmetry-toggle-btn active" id="btnSymmetry" title="Fill all symmetrical petals in the ring at once">
+                                ✨ On (Mandala)
+                            </button>
+                        </div>
+
+                        <div class="control-group">
                             <span class="control-label">Size:</span>
                             <div class="size-row" role="group" aria-label="Petal size">
                                 <button class="size-btn" data-size="small">Small</button>
@@ -110,7 +117,7 @@
                     </div>
 
                     <div class="canvas-shell">
-                        <svg id="pookalamCanvas" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <svg id="pookalamCanvas" viewBox="0 0 400 400" width="400" height="400" xmlns="http://www.w3.org/2000/svg">
                             <defs>
                                 <radialGradient id="floorGradient" cx="50%" cy="45%" r="70%">
                                     <stop offset="0%" stop-color="#fffaf0" />
@@ -118,10 +125,16 @@
                                 </radialGradient>
                             </defs>
                             <rect width="400" height="400" fill="url(#floorGradient)" />
+                            <!-- 1. Vector Segment Shape Fills (Cut petals) -->
+                            <g id="vectorFillLayer"></g>
+                            <!-- 2. Vector Outline Borders (Crisp dark outlines) -->
+                            <g id="vectorBorderLayer"></g>
+                            <!-- 3. Guide Image Layer (for uploaded templates) -->
                             <g id="guideLayer"></g>
+                            <!-- 4. Whole Stamped Flower Layer -->
                             <g id="petalLayer"></g>
                         </svg>
-                        <p class="canvas-hint" id="canvasHint">Tap inside the circle to place a flower.</p>
+                        <p class="canvas-hint" id="canvasHint">Tap inside any bordered shape to fill it with flower petals.</p>
                     </div>
 
                     <div class="canvas-actions">

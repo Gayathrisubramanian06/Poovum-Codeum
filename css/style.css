@@ -562,6 +562,33 @@ button {
     box-shadow: 0 2px 8px rgba(122, 74, 30, 0.3);
 }
 
+.symmetry-toggle-btn {
+    background: #fdfaf3;
+    border: 1.5px solid #ebdcc5;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--brown-dark);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.symmetry-toggle-btn:hover {
+    border-color: var(--gold);
+    background: #ffffff;
+}
+
+.symmetry-toggle-btn.active {
+    background: linear-gradient(135deg, #7a4a1e 0%, #9a6a2f 100%);
+    color: #ffffff;
+    border-color: var(--gold);
+    box-shadow: 0 2px 8px rgba(122, 74, 30, 0.25);
+}
+
 .size-row {
     display: flex;
     gap: 6px;
@@ -593,6 +620,32 @@ button {
     border-radius: 20px;
     padding: 12px;
     box-shadow: 0 6px 18px var(--shadow);
+    position: relative;
+}
+
+/* ============================================
+   VECTOR POOKALAM SEGMENT STYLES
+   ============================================ */
+
+.pookalam-segment {
+    fill: rgba(255, 255, 255, 0.01);
+    stroke: #2a1608;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    cursor: pointer;
+    transition: fill 0.15s ease, stroke 0.15s ease, stroke-width 0.15s ease;
+}
+
+.pookalam-segment:hover,
+.pookalam-segment.symm-highlight {
+    fill: rgba(242, 193, 78, 0.4) !important;
+    stroke: #e67e22 !important;
+    stroke-width: 2.4 !important;
+}
+
+.shape-petal-fill {
+    transition: opacity 0.2s ease;
 }
 
 #pookalamCanvas {
