@@ -49,7 +49,18 @@
             { id: 'c7',  name: 'Petal Wave',        img: 'assets/images/circle-7.jpg' },
             { id: 'c8',  name: 'Lotus Bloom',       img: 'assets/images/circle-8.jpg' },
             { id: 'c9',  name: 'Intricate Web',     img: 'assets/images/circle-9.jpg' },
-            { id: 'c10', name: 'Royal Core',        img: 'assets/images/circle-10.jpg' }
+            { id: 'c10', name: 'Royal Core',        img: 'assets/images/circle-10.jpg' },
+            { id: 'c11', name: 'Spiral Bloom',      img: 'assets/images/circle-11.jpg' },
+            { id: 'c12', name: 'Radiant Petals',    img: 'assets/images/circle-12.jpg' },
+            { id: 'c13', name: 'Layered Lotus',     img: 'assets/images/circle-13.jpg' },
+            { id: 'c14', name: 'Peacock Wheel',     img: 'assets/images/circle-14.jpg' },
+            { id: 'c15', name: 'Star Weave',        img: 'assets/images/circle-15.jpg' },
+            { id: 'c16', name: 'Floral Mandala',    img: 'assets/images/circle-16.jpg' },
+            { id: 'c17', name: 'Concentric Bloom',  img: 'assets/images/circle-17.jpg' },
+            { id: 'c18', name: 'Heritage Pattern',  img: 'assets/images/circle-18.jpg' },
+            { id: 'c19', name: 'Petal Crown',       img: 'assets/images/circle-19.jpg' },
+            { id: 'c20', name: 'Grand Sunflower',   img: 'assets/images/circle-20.jpg' },
+            { id: 'c21', name: 'Festival Ring',     img: 'assets/images/circle-21.jpg' }
         ],
         square: [
             { id: 's1', name: 'Grid',     img: null, svg: '<rect x="70" y="70" width="260" height="260" rx="10" fill="none" stroke="rgba(0,0,0,0.15)" stroke-width="2"/><line x1="200" y1="70" x2="200" y2="330" stroke="rgba(0,0,0,0.15)" stroke-width="2"/><line x1="70" y1="200" x2="330" y2="200" stroke="rgba(0,0,0,0.15)" stroke-width="2"/>' },
@@ -80,6 +91,11 @@
         btnBack.hidden = false;
         pageTitle.textContent = 'Pick a Design';
 
+        const subTitle = document.getElementById('subTemplateTitle');
+        const subSubtitle = document.getElementById('subTemplateSubtitle');
+        if (subTitle) subTitle.textContent = 'Pick a design';
+        if (subSubtitle) subSubtitle.textContent = 'Select a layout to use as your guide.';
+
         predefinedTemplates.hidden = false;
         customTemplateUpload.hidden = true;
 
@@ -104,8 +120,15 @@
         btnBack.hidden = false;
         pageTitle.textContent = 'Upload Your Template';
 
+        // Hide the image grid completely — only the upload box should show
+        predefinedTemplates.innerHTML = '';
         predefinedTemplates.hidden = true;
         customTemplateUpload.hidden = false;
+
+        const subTitle = document.getElementById('subTemplateTitle');
+        const subSubtitle = document.getElementById('subTemplateSubtitle');
+        if (subTitle) subTitle.textContent = 'Upload Your Own';
+        if (subSubtitle) subSubtitle.textContent = 'Use your own image as a tracing guide.';
     }
 
     function goToCanvas() {
