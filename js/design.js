@@ -429,8 +429,18 @@
         updateHint();
     }
 
-    document.getElementById('btnChooseTemplate').addEventListener('click', goToBrowseTemplates);
-    document.getElementById('btnUploadOwn').addEventListener('click', goToUploadOwn);
+    const btnChooseTemplate = document.getElementById('btnChooseTemplate');
+    if (btnChooseTemplate) btnChooseTemplate.addEventListener('click', goToBrowseTemplates);
+
+    const btnUploadOwn = document.getElementById('btnUploadOwn');
+    if (btnUploadOwn) btnUploadOwn.addEventListener('click', goToUploadOwn);
+
+    const btnBrowseFiles = document.getElementById('btnBrowseFiles');
+    if (btnBrowseFiles && templateFileInput) {
+        btnBrowseFiles.addEventListener('click', () => {
+            templateFileInput.click();
+        });
+    }
 
     if (templateFileInput) {
         templateFileInput.addEventListener('change', (e) => {
@@ -446,13 +456,15 @@
         });
     }
 
-    btnBack.addEventListener('click', () => {
-        if (!canvasStep.hidden) {
-            goToBrowseTemplates();
-        } else if (subTemplateStep && !subTemplateStep.hidden) {
-            goToHome();
-        }
-    });
+    if (btnBack) {
+        btnBack.addEventListener('click', () => {
+            if (!canvasStep.hidden) {
+                goToBrowseTemplates();
+            } else if (subTemplateStep && !subTemplateStep.hidden) {
+                goToHome();
+            }
+        });
+    }
 
     function updateHint() {
         if (isImageTemplate) {

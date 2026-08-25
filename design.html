@@ -47,10 +47,10 @@
                 <!-- Populated dynamically by JS -->
             </div>
 
-            <div id="customTemplateUpload" style="text-align: center; padding: 40px; border: 2px dashed var(--gold); border-radius: 12px; margin-top: 20px;" hidden>
-                <p style="margin-bottom: 16px;">Upload a picture to use as a tracing guide.</p>
-                <input type="file" id="templateFileInput" accept="image/*" hidden />
-                <button class="hero-btn-solid" onclick="document.getElementById('templateFileInput').click()">Browse Files</button>
+            <div id="customTemplateUpload" class="custom-template-upload" hidden>
+                <p style="margin-bottom: 16px; font-weight: 600;">Upload a picture or sketch to use as your tracing guide.</p>
+                <input type="file" id="templateFileInput" accept="image/*" style="display:none;" />
+                <button class="hero-btn-solid" id="btnBrowseFiles" type="button" style="max-width: 220px; margin: 0 auto; display: inline-block;">Browse Files</button>
             </div>
         </section>
 
