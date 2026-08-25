@@ -1036,16 +1036,87 @@
         setTimeout(() => URL.revokeObjectURL(link.href), 1000);
     }
 
-    // 1. 𝕏 Post on Twitter/X (Web Intent)
-    const shareTwitterBtn = document.getElementById('shareTwitter');
-    if (shareTwitterBtn) {
-        shareTwitterBtn.addEventListener('click', () => {
-            const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(SHARE_TEXT + ' #Onam #Pookalam #Kerala')}&url=${encodeURIComponent(PROJECT_URL)}`;
-            window.open(tweetUrl, '_blank', 'noopener,noreferrer');
+    // 1. 🖼️ Share to Community Gallery
+    const shareGalleryBtn = document.getElementById('shareGallery');
+    const galleryPublishModal = document.getElementById('galleryPublishModal');
+    const modalPreviewImg = document.getElementById('modalPreviewImg');
+    const publishGalleryForm = document.getElementById('publishGalleryForm');
+    const creatorNameInput = document.getElementById('creatorNameInput');
+    const creatorMsgInput = document.getElementById('creatorMsgInput');
+    const btnCancelPublish = document.getElementById('btnCancelPublish');
+
+    let currentPublishDataUrl = null;
+
+    if (shareGalleryBtn) {
+        shareGalleryBtn.addEventListener('click', () => {
             generatePNG((blob) => {
-                triggerDownload(blob, 'my-onam-pookalam.png');
-                if (shareHint) shareHint.textContent = '✅ Twitter opened & Pookalam image downloaded to attach!';
+                if (!blob) return;
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    currentPublishDataUrl = e.target.result;
+                    if (modalPreviewImg) modalPreviewImg.src = currentPublishDataUrl;
+                    if (galleryPublishModal) {
+                        galleryPublishModal.hidden = false;
+                        galleryPublishModal.classList.add('show');
+                        if (creatorNameInput) creatorNameInput.focus();
+                    }
+                };
+                reader.readAsDataURL(blob);
             });
+        });
+    }
+
+    if (btnCancelPublish) {
+        btnCancelPublish.addEventListener('click', () => {
+            if (galleryPublishModal) {
+                galleryPublishModal.hidden = true;
+                galleryPublishModal.classList.remove('show');
+            }
+        });
+    }
+
+    if (publishGalleryForm) {
+        publishGalleryForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const creatorName = (creatorNameInput ? creatorNameInput.value.trim() : '') || 'Pookalam Artist';
+            const creatorMsg = (creatorMsgInput ? creatorMsgInput.value.trim() : '') || 'Happy Onam! 🌸';
+
+            if (!currentPublishDataUrl) {
+                alert('Pookalam image is still processing. Please try again in a moment.');
+                return;
+            }
+
+            const newEntry = {
+                id: 'community-' + Date.now(),
+                title: `${creatorName}'s Pookalam`,
+                creator: creatorName,
+                city: creatorMsg,
+                date: 'Just now',
+                img: currentPublishDataUrl,
+                likes: 1
+            };
+
+            try {
+                const STORAGE_KEY = 'pookalam_community_gallery';
+                const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                existing.unshift(newEntry);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+            } catch (err) {
+                console.error('Failed to save to gallery localStorage:', err);
+            }
+
+            if (galleryPublishModal) {
+                galleryPublishModal.hidden = true;
+                galleryPublishModal.classList.remove('show');
+            }
+
+            if (shareHint) {
+                shareHint.textContent = '🎉 Published to Community Gallery! Opening Gallery…';
+            }
+
+            setTimeout(() => {
+                window.location.href = 'gallery.html';
+            }, 1000);
         });
     }
 
@@ -1062,13 +1133,15 @@
         });
     }
 
-    // 3. 📸 Instagram (Downloads image + guidance)
-    const shareInstagramBtn = document.getElementById('shareInstagram');
-    if (shareInstagramBtn) {
-        shareInstagramBtn.addEventListener('click', () => {
+    // 3. 𝕏 Post on Twitter/X (Web Intent)
+    const shareTwitterBtn = document.getElementById('shareTwitter');
+    if (shareTwitterBtn) {
+        shareTwitterBtn.addEventListener('click', () => {
+            const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(SHARE_TEXT + ' #Onam #Pookalam #Kerala')}&url=${encodeURIComponent(PROJECT_URL)}`;
+            window.open(tweetUrl, '_blank', 'noopener,noreferrer');
             generatePNG((blob) => {
                 triggerDownload(blob, 'my-onam-pookalam.png');
-                if (shareHint) shareHint.textContent = '✅ Pookalam saved to your device! Open Instagram → Create Post/Story to share.';
+                if (shareHint) shareHint.textContent = '✅ Twitter opened & Pookalam image downloaded to attach!';
             });
         });
     }
@@ -1093,34 +1166,5 @@
                 if (shareHint) shareHint.textContent = 'Link: ' + PROJECT_URL;
             }
         });
-    }
-
-    // 5. 📤 Native Web Share API (Mobile / Tablet)
-    if (typeof navigator.share === 'function') {
-        const nativeBtn = document.createElement('button');
-        nativeBtn.className = 'share-btn share-native';
-        nativeBtn.innerHTML = '<span>📤</span> More…';
-        nativeBtn.title = 'Share with other apps';
-        nativeBtn.addEventListener('click', () => {
-            generatePNG((blob) => {
-                if (blob && typeof navigator.canShare === 'function') {
-                    const file = new File([blob], 'my-pookalam.png', { type: 'image/png' });
-                    if (navigator.canShare({ files: [file] })) {
-                        navigator.share({
-                            title: 'My Onam Pookalam 🌸',
-                            text:  SHARE_TEXT,
-                            files: [file]
-                        }).catch(() => {});
-                        return;
-                    }
-                }
-                navigator.share({
-                    title: 'My Onam Pookalam 🌸',
-                    text:  SHARE_TEXT,
-                    url:   PROJECT_URL
-                }).catch(() => {});
-            });
-        });
-        if (shareBtns) shareBtns.appendChild(nativeBtn);
     }
 })();
