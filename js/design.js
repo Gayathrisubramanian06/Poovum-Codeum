@@ -447,7 +447,11 @@
     function updateHint() {
         if (isImageTemplate) {
             if (templateReady) {
-                canvasHint.textContent = 'Click inside a bordered region to fill it. Each region snaps to its borders!';
+                if (currentFlowerForm === 'cut') {
+                    canvasHint.textContent = `✂️ Cut Petals Mode: Click inside any bordered shape to fill it with ${currentColor.name} ${currentFlower.nameEn} petals!`;
+                } else {
+                    canvasHint.textContent = `🌸 Whole Flower Mode: Click anywhere to place a complete ${currentFlower.nameEn} bloom.`;
+                }
             } else {
                 canvasHint.textContent = 'Loading template borders… please wait.';
             }
@@ -544,13 +548,14 @@
     buildFlowerSidebar();
 
     // ---------- Flower Form (Whole vs Cut Petals) ----------
-    let currentFlowerForm = 'whole'; // 'whole' or 'cut'
+    let currentFlowerForm = 'cut'; // default: 'cut' (fill shape) or 'whole' (stamp flower)
 
     document.querySelectorAll('.form-btn').forEach((btn) => {
         btn.addEventListener('click', () => {
             currentFlowerForm = btn.dataset.form;
             document.querySelectorAll('.form-btn').forEach((b) => b.classList.remove('active'));
             btn.classList.add('active');
+            updateHint();
         });
     });
 
@@ -599,14 +604,91 @@
         }
     }
 
-    // ---------- Cut / Shredded Petals (അരിഞ്ഞ ഇതളുകൾ) ----------
-    // Realistic organic cluster of plucked/cut petal flakes for smooth pookalam filling
+    // ====================================================
+    // REGION SHAPE FILLER (Cut / Shredded Petals)
+    // Fills an entire detected bordered shape with realistic shredded petals
+    // ====================================================
+
+    function fillRegionWithCutPetals(regionMask, flowerObj, colorObj) {
+        const flowerType = flowerObj ? flowerObj.id : (currentFlower ? currentFlower.id : 'marigold');
+        const color = colorObj || currentColor;
+        const group = document.createElementNS(NS, 'g');
+        group.setAttribute('class', 'shape-petal-fill');
+
+        // 1. Base floral wash layer over the region
+        const baseWash = document.createElementNS(NS, 'rect');
+        baseWash.setAttribute('x', '0');
+        baseWash.setAttribute('y', '0');
+        baseWash.setAttribute('width',  String(CANVAS_SIZE));
+        baseWash.setAttribute('height', String(CANVAS_SIZE));
+        baseWash.setAttribute('fill', color.hex);
+        baseWash.setAttribute('opacity', '0.68');
+        group.appendChild(baseWash);
+
+        // 2. Compute bounding box of this region
+        let minX = CANVAS_SIZE, maxX = 0, minY = CANVAS_SIZE, maxY = 0;
+        for (let y = 0; y < CANVAS_SIZE; y++) {
+            const rowOffset = y * CANVAS_SIZE;
+            for (let x = 0; x < CANVAS_SIZE; x++) {
+                if (regionMask[rowOffset + x]) {
+                    if (x < minX) minX = x;
+                    if (x > maxX) maxX = x;
+                    if (y < minY) minY = y;
+                    if (y > maxY) maxY = y;
+                }
+            }
+        }
+
+        // 3. Dense scatter of individual cut petal flakes across the shape interior
+        const step = 8; // Dense 8px grid for rich, seamless physical petal coverage
+        for (let py = minY; py <= maxY; py += step) {
+            for (let px = minX; px <= maxX; px += step) {
+                // Organic jitter
+                const jx = Math.round(px + (Math.random() - 0.5) * (step * 0.9));
+                const jy = Math.round(py + (Math.random() - 0.5) * (step * 0.9));
+
+                if (jx >= 0 && jx < CANVAS_SIZE && jy >= 0 && jy < CANVAS_SIZE) {
+                    if (regionMask[jy * CANVAS_SIZE + jx]) {
+                        const rot = Math.random() * 360;
+                        const flake = document.createElementNS(NS, 'path');
+
+                        // Shred dimensions based on flower variety
+                        const w = 4.5 + Math.random() * 3.5;
+                        const h = 8.5 + Math.random() * 5.5;
+
+                        let d;
+                        if (flowerType === 'thechi') {
+                            // Pointed Ixora petal shred
+                            d = `M ${jx} ${jy} L ${jx - w * 0.7} ${jy - h * 0.4} L ${jx} ${jy - h} L ${jx + w * 0.7} ${jy - h * 0.4} Z`;
+                        } else if (flowerType === 'lotus' || flowerType === 'thumba') {
+                            // Pointed lotus / delicate thumba flake
+                            d = `M ${jx} ${jy} Q ${jx - w * 0.8} ${jy - h * 0.5} ${jx} ${jy - h} Q ${jx + w * 0.8} ${jy - h * 0.5} ${jx} ${jy} Z`;
+                        } else {
+                            // Scalloped / curved marigold, rose, jamanthi, chembarathi flake
+                            d = `M ${jx} ${jy} C ${jx - w} ${jy - h * 0.3} ${jx - w * 0.8} ${jy - h * 0.8} ${jx} ${jy - h} C ${jx + w * 0.8} ${jy - h * 0.8} ${jx + w} ${jy - h * 0.3} ${jx} ${jy} Z`;
+                        }
+
+                        flake.setAttribute('d', d);
+                        flake.setAttribute('fill', color.hex);
+                        flake.setAttribute('stroke', color.border || 'rgba(0,0,0,0.14)');
+                        flake.setAttribute('stroke-width', '0.45');
+                        flake.setAttribute('opacity', (0.85 + Math.random() * 0.15).toFixed(2));
+                        flake.setAttribute('transform', `rotate(${rot} ${jx} ${jy})`);
+                        group.appendChild(flake);
+                    }
+                }
+            }
+        }
+
+        return group;
+    }
+
+    // ---------- Free-Draw Cut Petal Cluster (when no template loaded) ----------
     function drawCutPetals(g, cx, cy, flowerType, color, size) {
-        const flakeCount = size < 20 ? 5 : (size < 30 ? 8 : 12);
-        const spread = size * 0.45;
+        const flakeCount = size < 20 ? 8 : (size < 30 ? 14 : 22);
+        const spread = size * 0.55;
 
         for (let i = 0; i < flakeCount; i++) {
-            // Random scatter around the click center
             const angle = Math.random() * Math.PI * 2;
             const dist  = Math.random() * spread;
             const px    = cx + Math.cos(angle) * dist;
@@ -617,7 +699,6 @@
             const flakeW = size * (0.18 + Math.random() * 0.12);
             const flakeH = size * (0.32 + Math.random() * 0.18);
 
-            // Curved elongated petal shred
             const d = `M ${px} ${py} Q ${px - flakeW} ${py - flakeH * 0.5} ${px} ${py - flakeH} Q ${px + flakeW * 0.8} ${py - flakeH * 0.5} ${px} ${py} Z`;
             flake.setAttribute('d', d);
             flake.setAttribute('fill', color.hex);
@@ -880,7 +961,7 @@
             if (!regionMask) {
                 // Clicked on a border or background — shake and hint
                 flashOutOfBounds();
-                canvasHint.textContent = 'That\'s a border! Click inside a coloured region.';
+                canvasHint.textContent = "That's a border line! Click inside an enclosed shape to fill it.";
                 setTimeout(updateHint, 1800);
                 return;
             }
@@ -888,11 +969,20 @@
             // Unlock this region (add to accumulated mask)
             commitRegion(regionMask);
 
-            // Place flower inside the masked group
-            const size   = SIZES[currentSizeKey];
-            const flower = createFlower(x, y, currentFlower, currentColor, size);
-            regionGroup.appendChild(flower);
-            placed.push(flower);
+            if (currentFlowerForm === 'cut') {
+                // ✂️ CUT PETALS MODE: Fill the entire enclosed shape bounded by the borders!
+                const shapeFill = fillRegionWithCutPetals(regionMask, currentFlower, currentColor);
+                regionGroup.appendChild(shapeFill);
+                placed.push(shapeFill);
+                canvasHint.textContent = `✨ Filled shape with ${currentColor.name} ${currentFlower.nameEn} petals!`;
+            } else {
+                // 🌸 WHOLE FLOWER MODE: Stamp an intact whole flower at the clicked point
+                const size   = SIZES[currentSizeKey];
+                const flower = createFlower(x, y, currentFlower, currentColor, size);
+                regionGroup.appendChild(flower);
+                placed.push(flower);
+                canvasHint.textContent = `🌸 Placed ${currentColor.name} ${currentFlower.nameEn} flower!`;
+            }
 
         } else {
             // ----- Free draw or SVG template -----
