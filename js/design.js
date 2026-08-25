@@ -326,6 +326,370 @@
         svgMaskImgEl = null;
     }
 
+    const vectorFillLayer   = document.getElementById('vectorFillLayer');
+    const vectorBorderLayer = document.getElementById('vectorBorderLayer');
+    const btnSymmetry       = document.getElementById('btnSymmetry');
+    let isSymmetryActive    = true;
+    let currentVectorTpl    = null; // ID of active vector template
+
+    if (btnSymmetry) {
+        btnSymmetry.addEventListener('click', () => {
+            isSymmetryActive = !isSymmetryActive;
+            btnSymmetry.classList.toggle('active', isSymmetryActive);
+            btnSymmetry.textContent = isSymmetryActive ? '✨ On (Mandala)' : 'Off (Single)';
+            updateHint();
+        });
+    }
+
+    // ====================================================
+    // INTERACTIVE VECTOR MANDALA TEMPLATES (100% Leak-Proof)
+    // ====================================================
+    const VECTOR_TEMPLATES = [
+        {
+            id: 'lotus-mandala',
+            name: 'Sacred Lotus (അഷ്ടദള പത്മം)',
+            badge: 'Mandala ✨',
+            build: buildLotusMandala
+        },
+        {
+            id: 'sunburst-12',
+            name: 'Sunburst Star (സൂര്യകാന്തി)',
+            badge: 'Mandala ✨',
+            build: buildSunburstMandala
+        },
+        {
+            id: 'peacock-wheel',
+            name: 'Peacock Wheel (മയിൽപ്പീലി)',
+            badge: 'Mandala ✨',
+            build: buildPeacockWheelMandala
+        },
+        {
+            id: 'diamond-mandala',
+            name: 'Diamond Star (വൈര നക്ഷത്രം)',
+            badge: 'Mandala ✨',
+            build: buildDiamondStarMandala
+        },
+        {
+            id: 'concentric-rings',
+            name: 'Concentric Bloom (സഹസ്രദളം)',
+            badge: 'Mandala ✨',
+            build: buildConcentricBloomMandala
+        },
+        {
+            id: 'heritage-8',
+            name: 'Classic Heritage (പാരമ്പര്യ വലയം)',
+            badge: 'Mandala ✨',
+            build: buildHeritageMandala
+        }
+    ];
+
+    // ---------- Geometric SVG Segment Math Helpers ----------
+
+    function createSegmentElement(dPath, groupKey) {
+        const path = document.createElementNS(NS, 'path');
+        path.setAttribute('d', dPath);
+        path.setAttribute('class', 'pookalam-segment');
+        path.setAttribute('data-group', groupKey);
+
+        // Interactive hover highlight (mandala symmetry)
+        path.addEventListener('mouseenter', () => {
+            if (isSymmetryActive) {
+                const sameGroup = vectorBorderLayer.querySelectorAll(`.pookalam-segment[data-group="${groupKey}"]`);
+                sameGroup.forEach(el => el.classList.add('symm-highlight'));
+            }
+        });
+
+        path.addEventListener('mouseleave', () => {
+            const allHighlighted = vectorBorderLayer.querySelectorAll('.symm-highlight');
+            allHighlighted.forEach(el => el.classList.remove('symm-highlight'));
+        });
+
+        // Click to fill
+        path.addEventListener('click', (e) => {
+            e.stopPropagation();
+            fillVectorSegment(path, groupKey);
+        });
+
+        return path;
+    }
+
+    function addCircleSegment(layer, cx, cy, r, groupKey) {
+        const d = `M ${cx} ${cy - r} A ${r} ${r} 0 1 1 ${cx} ${cy + r} A ${r} ${r} 0 1 1 ${cx} ${cy - r} Z`;
+        const seg = createSegmentElement(d, groupKey);
+        layer.appendChild(seg);
+    }
+
+    function addPetalSegment(layer, cx, cy, dist, angleDeg, length, width, groupKey) {
+        const rad = (angleDeg - 90) * Math.PI / 180;
+        const perp = rad + Math.PI / 2;
+
+        const bx = cx + dist * Math.cos(rad);
+        const by = cy + dist * Math.sin(rad);
+
+        const tx = cx + (dist + length) * Math.cos(rad);
+        const ty = cy + (dist + length) * Math.sin(rad);
+
+        const mx1 = cx + (dist + length * 0.5) * Math.cos(rad) + (width * 0.5) * Math.cos(perp);
+        const my1 = cy + (dist + length * 0.5) * Math.sin(rad) + (width * 0.5) * Math.sin(perp);
+
+        const mx2 = cx + (dist + length * 0.5) * Math.cos(rad) - (width * 0.5) * Math.cos(perp);
+        const my2 = cy + (dist + length * 0.5) * Math.sin(rad) - (width * 0.5) * Math.sin(perp);
+
+        const d = `M ${bx} ${by} Q ${mx1} ${my1} ${tx} ${ty} Q ${mx2} ${my2} ${bx} ${by} Z`;
+        const seg = createSegmentElement(d, groupKey);
+        layer.appendChild(seg);
+    }
+
+    function addAnnularArcSegment(layer, cx, cy, r1, r2, startDeg, endDeg, groupKey) {
+        const rad1 = (startDeg - 90) * Math.PI / 180;
+        const rad2 = (endDeg - 90) * Math.PI / 180;
+
+        const x1 = cx + r1 * Math.cos(rad1);
+        const y1 = cy + r1 * Math.sin(rad1);
+
+        const x2 = cx + r2 * Math.cos(rad1);
+        const y2 = cy + r2 * Math.sin(rad1);
+
+        const x3 = cx + r2 * Math.cos(rad2);
+        const y3 = cy + r2 * Math.sin(rad2);
+
+        const x4 = cx + r1 * Math.cos(rad2);
+        const y4 = cy + r1 * Math.sin(rad2);
+
+        const largeArc = (endDeg - startDeg) > 180 ? 1 : 0;
+        const d = `M ${x1} ${y1} L ${x2} ${y2} A ${r2} ${r2} 0 ${largeArc} 1 ${x3} ${y3} L ${x4} ${y4} A ${r1} ${r1} 0 ${largeArc} 0 ${x1} ${y1} Z`;
+        const seg = createSegmentElement(d, groupKey);
+        layer.appendChild(seg);
+    }
+
+    function addDiamondSegment(layer, cx, cy, dist, angleDeg, length, width, groupKey) {
+        const rad = (angleDeg - 90) * Math.PI / 180;
+        const perp = rad + Math.PI / 2;
+
+        const bx = cx + (dist - length * 0.5) * Math.cos(rad);
+        const by = cy + (dist - length * 0.5) * Math.sin(rad);
+
+        const tx = cx + (dist + length * 0.5) * Math.cos(rad);
+        const ty = cy + (dist + length * 0.5) * Math.sin(rad);
+
+        const mx1 = cx + dist * Math.cos(rad) + (width * 0.5) * Math.cos(perp);
+        const my1 = cy + dist * Math.sin(rad) + (width * 0.5) * Math.sin(perp);
+
+        const mx2 = cx + dist * Math.cos(rad) - (width * 0.5) * Math.cos(perp);
+        const my2 = cy + dist * Math.sin(rad) - (width * 0.5) * Math.sin(perp);
+
+        const d = `M ${bx} ${by} L ${mx1} ${my1} L ${tx} ${ty} L ${mx2} ${my2} Z`;
+        const seg = createSegmentElement(d, groupKey);
+        layer.appendChild(seg);
+    }
+
+    // ---------- 1. Sacred Lotus Mandala Builder ----------
+    function buildLotusMandala(layer) {
+        // Center Bindu
+        addCircleSegment(layer, CENTER, CENTER, 24, 'lotus-center');
+
+        // Inner 8-Petal Ring
+        for (let i = 0; i < 8; i++) {
+            addPetalSegment(layer, CENTER, CENTER, 24, i * 45, 45, 24, 'lotus-inner-8');
+        }
+
+        // Mid 8-Pointed Lotus Petals
+        for (let i = 0; i < 8; i++) {
+            addPetalSegment(layer, CENTER, CENTER, 65, i * 45 + 22.5, 60, 36, 'lotus-mid-8');
+        }
+
+        // Concentric Annular Ring 1 (16 Segments)
+        for (let i = 0; i < 16; i++) {
+            addAnnularArcSegment(layer, CENTER, CENTER, 120, 155, i * 22.5, (i + 1) * 22.5, 'lotus-ring-16');
+        }
+
+        // Outer Scallop Shells (16 Segments)
+        for (let i = 0; i < 16; i++) {
+            addPetalSegment(layer, CENTER, CENTER, 155, i * 22.5 + 11.25, 38, 28, 'lotus-scallop-16');
+        }
+    }
+
+    // ---------- 2. Sunburst 12-Ray Mandala Builder ----------
+    function buildSunburstMandala(layer) {
+        addCircleSegment(layer, CENTER, CENTER, 28, 'sun-center');
+
+        for (let i = 0; i < 12; i++) {
+            addPetalSegment(layer, CENTER, CENTER, 28, i * 30, 48, 18, 'sun-rays-12');
+        }
+
+        for (let i = 0; i < 12; i++) {
+            addDiamondSegment(layer, CENTER, CENTER, 100, i * 30 + 15, 52, 26, 'sun-diamonds-12');
+        }
+
+        for (let i = 0; i < 24; i++) {
+            addAnnularArcSegment(layer, CENTER, CENTER, 128, 162, i * 15, (i + 1) * 15, 'sun-flutes-24');
+        }
+
+        for (let i = 0; i < 24; i++) {
+            addPetalSegment(layer, CENTER, CENTER, 162, i * 15 + 7.5, 32, 18, 'sun-outer-24');
+        }
+    }
+
+    // ---------- 3. Peacock Wheel Mandala Builder ----------
+    function buildPeacockWheelMandala(layer) {
+        addCircleSegment(layer, CENTER, CENTER, 26, 'peacock-center');
+
+        for (let i = 0; i < 8; i++) {
+            addPetalSegment(layer, CENTER, CENTER, 26, i * 45, 52, 28, 'peacock-eyes-8');
+        }
+
+        for (let i = 0; i < 8; i++) {
+            addDiamondSegment(layer, CENTER, CENTER, 102, i * 45 + 22.5, 58, 36, 'peacock-fans-8');
+        }
+
+        for (let i = 0; i < 16; i++) {
+            addAnnularArcSegment(layer, CENTER, CENTER, 130, 162, i * 22.5, (i + 1) * 22.5, 'peacock-ring-16');
+        }
+
+        for (let i = 0; i < 16; i++) {
+            addPetalSegment(layer, CENTER, CENTER, 162, i * 22.5 + 11.25, 34, 26, 'peacock-waves-16');
+        }
+    }
+
+    // ---------- 4. Diamond Star Mandala Builder ----------
+    function buildDiamondStarMandala(layer) {
+        addDiamondSegment(layer, CENTER, CENTER, 0, 0, 48, 48, 'diamond-core');
+
+        for (let i = 0; i < 8; i++) {
+            addDiamondSegment(layer, CENTER, CENTER, 52, i * 45, 48, 28, 'diamond-tier1');
+        }
+
+        for (let i = 0; i < 8; i++) {
+            addDiamondSegment(layer, CENTER, CENTER, 98, i * 45 + 22.5, 62, 36, 'diamond-tier2');
+        }
+
+        for (let i = 0; i < 16; i++) {
+            addDiamondSegment(layer, CENTER, CENTER, 142, i * 22.5, 46, 24, 'diamond-tier3');
+        }
+
+        for (let i = 0; i < 16; i++) {
+            addPetalSegment(layer, CENTER, CENTER, 162, i * 22.5 + 11.25, 32, 24, 'diamond-chevrons');
+        }
+    }
+
+    // ---------- 5. Concentric Bloom Mandala Builder ----------
+    function buildConcentricBloomMandala(layer) {
+        addCircleSegment(layer, CENTER, CENTER, 22, 'bloom-center');
+
+        for (let i = 0; i < 8; i++) {
+            addPetalSegment(layer, CENTER, CENTER, 22, i * 45, 42, 22, 'bloom-tier-8');
+        }
+
+        for (let i = 0; i < 12; i++) {
+            addPetalSegment(layer, CENTER, CENTER, 62, i * 30 + 15, 52, 24, 'bloom-tier-12');
+        }
+
+        for (let i = 0; i < 16; i++) {
+            addPetalSegment(layer, CENTER, CENTER, 110, i * 22.5, 54, 26, 'bloom-tier-16');
+        }
+
+        for (let i = 0; i < 24; i++) {
+            addPetalSegment(layer, CENTER, CENTER, 158, i * 15 + 7.5, 36, 20, 'bloom-tier-24');
+        }
+    }
+
+    // ---------- 6. Heritage 8-Petal Mandala Builder ----------
+    function buildHeritageMandala(layer) {
+        addCircleSegment(layer, CENTER, CENTER, 26, 'heritage-center');
+
+        for (let i = 0; i < 8; i++) {
+            addPetalSegment(layer, CENTER, CENTER, 26, i * 45, 56, 32, 'heritage-hearts-8');
+        }
+
+        for (let i = 0; i < 8; i++) {
+            addDiamondSegment(layer, CENTER, CENTER, 102, i * 45 + 22.5, 60, 36, 'heritage-chevrons-8');
+        }
+
+        for (let i = 0; i < 16; i++) {
+            addAnnularArcSegment(layer, CENTER, CENTER, 128, 160, i * 22.5, (i + 1) * 22.5, 'heritage-arcs-16');
+        }
+
+        for (let i = 0; i < 16; i++) {
+            addPetalSegment(layer, CENTER, CENTER, 160, i * 22.5 + 11.25, 34, 26, 'heritage-shells-16');
+        }
+    }
+
+    // ---------- Vector Segment Filling Handler ----------
+    function fillVectorSegment(targetPath, groupKey) {
+        const segmentsToFill = isSymmetryActive && groupKey
+            ? Array.from(vectorBorderLayer.querySelectorAll(`.pookalam-segment[data-group="${groupKey}"]`))
+            : [targetPath];
+
+        const batchAction = [];
+
+        segmentsToFill.forEach(seg => {
+            const d = seg.getAttribute('d');
+            const fillGroup = document.createElementNS(NS, 'g');
+            fillGroup.setAttribute('class', 'vector-segment-fill');
+
+            // 1. Exact base path fill in flower color
+            const pathFill = document.createElementNS(NS, 'path');
+            pathFill.setAttribute('d', d);
+            pathFill.setAttribute('fill', currentColor.hex);
+            pathFill.setAttribute('stroke', currentColor.border || 'none');
+            pathFill.setAttribute('stroke-width', '0.5');
+            fillGroup.appendChild(pathFill);
+
+            // 2. If in Cut Petals Mode: add authentic shredded petal flakes inside the shape
+            if (currentFlowerForm === 'cut') {
+                const bbox = seg.getBBox();
+                const step = 8;
+                for (let py = bbox.y; py <= bbox.y + bbox.height; py += step) {
+                    for (let px = bbox.x; px <= bbox.x + bbox.width; px += step) {
+                        const jx = px + (Math.random() - 0.5) * (step * 0.8);
+                        const jy = py + (Math.random() - 0.5) * (step * 0.8);
+
+                        // Check if point is inside the shape
+                        const pt = svg.createSVGPoint();
+                        pt.x = jx;
+                        pt.y = jy;
+
+                        if (seg.isPointInFill ? seg.isPointInFill(pt) : true) {
+                            const flake = document.createElementNS(NS, 'path');
+                            const w = 3.5 + Math.random() * 2.5;
+                            const h = 7.0 + Math.random() * 4.0;
+                            const rot = Math.random() * 360;
+
+                            const flakeD = `M ${jx} ${jy} Q ${jx - w} ${jy - h * 0.5} ${jx} ${jy - h} Q ${jx + w * 0.8} ${jy - h * 0.5} ${jx} ${jy} Z`;
+                            flake.setAttribute('d', flakeD);
+                            flake.setAttribute('fill', currentColor.hex);
+                            flake.setAttribute('stroke', currentColor.border || 'rgba(0,0,0,0.12)');
+                            flake.setAttribute('stroke-width', '0.4');
+                            flake.setAttribute('opacity', (0.85 + Math.random() * 0.15).toFixed(2));
+                            flake.setAttribute('transform', `rotate(${rot} ${jx} ${jy})`);
+                            fillGroup.appendChild(flake);
+                        }
+                    }
+                }
+            } else {
+                // Whole flower mode: stamp flower in center of segment
+                const bbox = seg.getBBox();
+                const size = SIZES[currentSizeKey];
+                const cx = bbox.x + bbox.width / 2;
+                const cy = bbox.y + bbox.height / 2;
+                const flower = createFlower(cx, cy, currentFlower, currentColor, size);
+                fillGroup.appendChild(flower);
+            }
+
+            vectorFillLayer.appendChild(fillGroup);
+            batchAction.push(fillGroup);
+        });
+
+        placed.push({
+            type: 'vector-batch',
+            elements: batchAction
+        });
+
+        if (canvasHint) {
+            canvasHint.textContent = `✨ Filled ${segmentsToFill.length} ${segmentsToFill.length === 1 ? 'shape' : 'mandala petals'} with ${currentColor.name} ${currentFlower.nameEn}!`;
+        }
+    }
+
     // ====================================================
     // STEP NAVIGATION
     // ====================================================
@@ -336,6 +700,8 @@
         btnBack.hidden = true;
         pageTitle.textContent = 'Design Your Pookalam';
         clearRegionState();
+        if (vectorFillLayer) vectorFillLayer.innerHTML = '';
+        if (vectorBorderLayer) vectorBorderLayer.innerHTML = '';
         petalLayer.innerHTML = '';
         placed = [];
     }
@@ -350,17 +716,53 @@
         const subTitle    = document.getElementById('subTemplateTitle');
         const subSubtitle = document.getElementById('subTemplateSubtitle');
         if (subTitle)    subTitle.textContent    = 'Pick a design';
-        if (subSubtitle) subSubtitle.textContent = 'Select a layout to use as your guide.';
+        if (subSubtitle) subSubtitle.textContent = 'Select an interactive mandala layout or classic outline to start.';
 
         predefinedTemplates.hidden    = false;
         customTemplateUpload.hidden   = true;
 
         predefinedTemplates.innerHTML = '';
+
+        // 1. Render Interactive Vector Mandalas (Instant Border Snapping + Symmetry)
+        VECTOR_TEMPLATES.forEach(tpl => {
+            const btn = document.createElement('button');
+            btn.className = 'template-card vector-card';
+
+            // Generate mini vector preview
+            const previewSvg = document.createElementNS(NS, 'svg');
+            previewSvg.setAttribute('viewBox', '0 0 400 400');
+            previewSvg.setAttribute('class', 'template-card-preview');
+            const g = document.createElementNS(NS, 'g');
+            tpl.build(g);
+            previewSvg.appendChild(g);
+
+            btn.appendChild(previewSvg);
+
+            const title = document.createElement('div');
+            title.className = 'template-card-title';
+            title.innerHTML = `<span>${tpl.name}</span><span class="tpl-badge">${tpl.badge}</span>`;
+            btn.appendChild(title);
+
+            btn.addEventListener('click', () => {
+                currentVectorTpl = tpl;
+                currentTemplateSrc = null;
+                currentSubTemplate = null;
+                goToCanvas();
+                if (vectorBorderLayer) {
+                    vectorBorderLayer.innerHTML = '';
+                    tpl.build(vectorBorderLayer);
+                }
+            });
+            predefinedTemplates.appendChild(btn);
+        });
+
+        // 2. Also render the 21 classic photo templates
         PREDEFINED_TEMPLATES.circle.forEach(tpl => {
             const btn = document.createElement('button');
             btn.className = 'template-card';
             btn.innerHTML = `<img src="${tpl.img}" alt="${tpl.name}" loading="lazy" />`;
             btn.addEventListener('click', () => {
+                currentVectorTpl = null;
                 currentTemplateSrc = tpl.img;
                 currentSubTemplate = `<image href="${tpl.img}" x="0" y="0" width="400" height="400" opacity="0.3" preserveAspectRatio="xMidYMid meet" />`;
                 goToCanvas();
@@ -393,12 +795,14 @@
         btnBack.hidden      = false;
         pageTitle.textContent = 'Design Your Pookalam';
 
-        // Reset canvas content and region state
+        // Reset canvas content
         clearRegionState();
+        if (vectorFillLayer) vectorFillLayer.innerHTML = '';
+        if (!currentVectorTpl && vectorBorderLayer) vectorBorderLayer.innerHTML = '';
         petalLayer.innerHTML = '';
         placed = [];
 
-        // Initialise region detection if an image template was chosen
+        // Initialise image region detection if a photo template was chosen
         if (currentTemplateSrc) {
             initRegionDetection(currentTemplateSrc);
         }
@@ -1002,19 +1406,24 @@
     // ---------- Undo ----------
     document.getElementById('btnUndo').addEventListener('click', () => {
         const last = placed.pop();
-        if (last) last.remove();
+        if (!last) return;
+        if (last.type === 'vector-batch') {
+            last.elements.forEach(el => el.remove());
+        } else if (last.remove) {
+            last.remove();
+        }
     });
 
     // ---------- Clear ----------
     document.getElementById('btnClear').addEventListener('click', () => {
+        if (vectorFillLayer) vectorFillLayer.innerHTML = '';
         if (isImageTemplate && regionGroup) {
-            // Clear flowers but keep the masked group; reset the accumulated mask
             regionGroup.innerHTML = '';
             accumulatedMask.fill(0);
             regionCache.clear();
-            const ctx    = accumulatedCanvas.getContext('2d');
+            const ctx = accumulatedCanvas.getContext('2d');
             ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-            svgMaskImgEl.setAttribute('href', ''); // empty mask hides everything
+            svgMaskImgEl.setAttribute('href', '');
         } else {
             petalLayer.innerHTML = '';
         }
