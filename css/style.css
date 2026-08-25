@@ -1,0 +1,205 @@
+/* ============================================
+   Onam Pookalam Designer — Shared Styles
+   ============================================ */
+
+:root {
+    --brown-dark: #7a4a1e;
+    --brown-mid: #9a6a2f;
+    --cream: #fbf3e3;
+    --gold: #f2c14e;
+    --white: #ffffff;
+    --shadow: rgba(0, 0, 0, 0.15);
+
+    --header-height: 60px;
+    --bottomnav-height: 64px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    background: var(--cream);
+    color: var(--brown-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+}
+
+/* ---------- Top Header ---------- */
+.app-header {
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    background: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+}
+
+.app-header .icon-btn {
+    background: none;
+    font-size: 22px;
+    color: var(--brown-dark);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.app-header .title {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--brown-dark);
+}
+
+/* ---------- Bottom Navigation ---------- */
+.bottom-nav {
+    height: var(--bottomnav-height);
+    background: var(--white);
+    border-top: 1px solid #eee2cc;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+}
+
+.bottom-nav .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-size: 12px;
+    color: #b0a58f;
+    flex: 1;
+    padding: 6px 0;
+}
+
+.bottom-nav .nav-item .nav-icon {
+    font-size: 20px;
+}
+
+.bottom-nav .nav-item.active {
+    color: var(--brown-dark);
+    font-weight: 600;
+}
+
+/* ============================================
+   WELCOME PAGE
+   ============================================ */
+
+.hero-wrap {
+    position: relative;
+    width: 100%;
+    /* Keeps the image's aspect ratio so overlaid buttons
+     (positioned with %) always line up with the artwork */
+    aspect-ratio: 2245 / 1587;
+    overflow: hidden;
+}
+
+.hero-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Buttons positioned as % of the hero image so they
+   stay aligned with the artwork at any screen size.
+   Adjust the top/left/width/height % below if they don't
+   line up perfectly with your image — see instructions. */
+.hero-btn {
+    position: absolute;
+    left: 32%;
+    width: 35%;
+    border-radius: 999px;
+    font-weight: 700;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hero-btn:hover {
+    transform: translateY(-2px);
+}
+
+.hero-btn:active {
+    transform: translateY(0);
+}
+
+.btn-start {
+    top: 63.5%;
+    height: 6.3%;
+    background: transparent;
+    /* image already shows the filled button */
+    color: transparent;
+    /* text is already baked into the image */
+}
+
+.btn-gallery {
+    top: 73%;
+    height: 6%;
+    background: transparent;
+    color: transparent;
+}
+
+/* Focus states for accessibility (keyboard users) */
+.hero-btn:focus-visible {
+    outline: 3px solid var(--gold);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   GENERIC PAGE CONTAINER (design.html, gallery.html)
+   ============================================ */
+
+.page {
+    flex: 1;
+    padding: 24px 20px calc(var(--bottomnav-height) + 20px);
+    max-width: 480px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.page h1 {
+    font-size: 24px;
+    color: var(--brown-dark);
+    margin-bottom: 8px;
+}
+
+.page p.subtitle {
+    color: var(--brown-mid);
+    margin-bottom: 24px;
+}
+
+.placeholder-card {
+    background: var(--white);
+    border: 1px dashed #d8c7a0;
+    border-radius: 16px;
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--brown-mid);
+}
