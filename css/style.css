@@ -110,19 +110,24 @@ button {
    ============================================ */
 
 .hero-wrap {
-    position: relative;
-    width: 100%;
-    /* Keeps the image's aspect ratio so overlaid buttons
-     (positioned with %) always line up with the artwork */
-    aspect-ratio: 2245 / 1587;
+    width: 100vw;
+    height: calc(100vh - var(--bottomnav-height));
     overflow: hidden;
+    position: relative;
+    background: var(--cream);
 }
 
 .hero-bg {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    position: absolute;
     display: block;
+    /* width/height/left/top are all set dynamically by JS below,
+     so the image always fully covers the screen (like object-fit: cover)
+     but buttons still track its exact position */
+}
+
+.hero-btn {
+    position: absolute;
+    /* left/top/width/height set dynamically by JS */
 }
 
 /* Buttons positioned as % of the hero image so they
