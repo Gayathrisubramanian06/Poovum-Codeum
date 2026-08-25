@@ -1,11 +1,16 @@
 // ============================================
 // Onam Pookalam Designer — Design Page Logic
 // Step 1: pick a shape template
+// Step 1.5: pick a sub-template or upload custom
 // Step 2: stamp flower petals onto the canvas
 // ============================================
 
 (function () {
     const templateStep = document.getElementById('templateStep');
+    const subTemplateStep = document.getElementById('subTemplateStep');
+    const predefinedTemplates = document.getElementById('predefinedTemplates');
+    const customTemplateUpload = document.getElementById('customTemplateUpload');
+    const templateFileInput = document.getElementById('templateFileInput');
     const canvasStep = document.getElementById('canvasStep');
     const pageTitle = document.getElementById('pageTitle');
     const btnBack = document.getElementById('btnBack');
@@ -33,7 +38,26 @@
         { name: 'Ivory', hex: '#fdf6e3', center: '#f2c14e' },
     ];
 
-    let currentShape = 'circle';
+    const PREDEFINED_TEMPLATES = {
+        circle: [
+            { id: 'c1',  name: 'Floral Star',      img: 'assets/images/circle-1.jpg' },
+            { id: 'c2',  name: 'Geometric Star',    img: 'assets/images/circle-2.jpg' },
+            { id: 'c3',  name: 'Scalloped Mandala', img: 'assets/images/circle-3.jpg' },
+            { id: 'c4',  name: 'Diamond Burst',     img: 'assets/images/circle-4.jpg' },
+            { id: 'c5',  name: 'Classic Ring',      img: 'assets/images/circle-5.jpg' },
+            { id: 'c6',  name: 'Sunburst',          img: 'assets/images/circle-6.jpg' },
+            { id: 'c7',  name: 'Petal Wave',        img: 'assets/images/circle-7.jpg' },
+            { id: 'c8',  name: 'Lotus Bloom',       img: 'assets/images/circle-8.jpg' },
+            { id: 'c9',  name: 'Intricate Web',     img: 'assets/images/circle-9.jpg' },
+            { id: 'c10', name: 'Royal Core',        img: 'assets/images/circle-10.jpg' }
+        ],
+        square: [
+            { id: 's1', name: 'Grid',     img: null, svg: '<rect x="70" y="70" width="260" height="260" rx="10" fill="none" stroke="rgba(0,0,0,0.15)" stroke-width="2"/><line x1="200" y1="70" x2="200" y2="330" stroke="rgba(0,0,0,0.15)" stroke-width="2"/><line x1="70" y1="200" x2="330" y2="200" stroke="rgba(0,0,0,0.15)" stroke-width="2"/>' },
+            { id: 's2', name: 'Diagonal', img: null, svg: '<rect x="70" y="70" width="260" height="260" rx="10" fill="none" stroke="rgba(0,0,0,0.15)" stroke-width="2"/><line x1="70" y1="70" x2="330" y2="330" stroke="rgba(0,0,0,0.15)" stroke-width="2"/><line x1="330" y1="70" x2="70" y2="330" stroke="rgba(0,0,0,0.15)" stroke-width="2"/>' }
+        ]
+    };
+
+    let currentSubTemplate = null;
     let currentColor = COLORS[0];
     let currentSizeKey = 'medium';
     let placed = []; // stack of {el} for undo
@@ -41,8 +65,51 @@
     const NS = 'http://www.w3.org/2000/svg';
 
     // ---------- Step navigation ----------
-    function goToCanvas(shape) {
-        currentShape = shape;
+    function goToHome() {
+        canvasStep.hidden = true;
+        if (subTemplateStep) subTemplateStep.hidden = true;
+        templateStep.hidden = false;
+        btnBack.hidden = true;
+        pageTitle.textContent = 'Design Your Pookalam';
+    }
+
+    function goToBrowseTemplates() {
+        templateStep.hidden = true;
+        canvasStep.hidden = true;
+        if (subTemplateStep) subTemplateStep.hidden = false;
+        btnBack.hidden = false;
+        pageTitle.textContent = 'Pick a Design';
+
+        predefinedTemplates.hidden = false;
+        customTemplateUpload.hidden = true;
+
+        predefinedTemplates.innerHTML = '';
+        // Show all templates from the circle array
+        PREDEFINED_TEMPLATES.circle.forEach(tpl => {
+            const btn = document.createElement('button');
+            btn.className = 'template-card';
+            btn.innerHTML = `<img src="${tpl.img}" alt="${tpl.name}" loading="lazy" />`;
+            btn.addEventListener('click', () => {
+                currentSubTemplate = `<image href="${tpl.img}" x="0" y="0" width="400" height="400" opacity="0.3" preserveAspectRatio="xMidYMid meet" />`;
+                goToCanvas();
+            });
+            predefinedTemplates.appendChild(btn);
+        });
+    }
+
+    function goToUploadOwn() {
+        templateStep.hidden = true;
+        canvasStep.hidden = true;
+        if (subTemplateStep) subTemplateStep.hidden = false;
+        btnBack.hidden = false;
+        pageTitle.textContent = 'Upload Your Template';
+
+        predefinedTemplates.hidden = true;
+        customTemplateUpload.hidden = false;
+    }
+
+    function goToCanvas() {
+        if (subTemplateStep) subTemplateStep.hidden = true;
         templateStep.hidden = true;
         canvasStep.hidden = false;
         btnBack.hidden = false;
@@ -51,48 +118,43 @@
         updateHint();
     }
 
-    function goToTemplates() {
-        canvasStep.hidden = true;
-        templateStep.hidden = false;
-        btnBack.hidden = true;
-        pageTitle.textContent = 'Design Your Pookalam';
+    document.getElementById('btnChooseTemplate').addEventListener('click', goToBrowseTemplates);
+    document.getElementById('btnUploadOwn').addEventListener('click', goToUploadOwn);
+
+    if (templateFileInput) {
+        templateFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                currentSubTemplate = `<image href="${event.target.result}" x="0" y="0" width="400" height="400" opacity="0.3" preserveAspectRatio="xMidYMid meet" />`;
+                goToCanvas();
+            };
+            reader.readAsDataURL(file);
+        });
     }
 
-    document.querySelectorAll('.template-card').forEach((card) => {
-        card.addEventListener('click', () => goToCanvas(card.dataset.shape));
+    btnBack.addEventListener('click', () => {
+        if (!canvasStep.hidden) {
+            goToBrowseTemplates();
+        } else if (subTemplateStep && !subTemplateStep.hidden) {
+            goToHome();
+        }
     });
 
-    btnBack.addEventListener('click', goToTemplates);
-
     function updateHint() {
-        if (currentShape === 'circle') {
-            canvasHint.textContent = 'Tap inside the circle to place a flower.';
-        } else if (currentShape === 'square') {
-            canvasHint.textContent = 'Tap inside the square to place a flower.';
-        } else {
-            canvasHint.textContent = 'Tap anywhere to place a flower — no boundary, it\u2019s your design.';
-        }
+        canvasHint.textContent = currentSubTemplate
+            ? 'Tap on the design to place a flower.'
+            : 'Tap anywhere to place a flower — no boundary, it’s your design.';
     }
 
     // ---------- Guide outline ----------
     function drawGuide() {
         guideLayer.innerHTML = '';
-        if (currentShape === 'circle') {
-            const c = document.createElementNS(NS, 'circle');
-            c.setAttribute('cx', CENTER);
-            c.setAttribute('cy', CENTER);
-            c.setAttribute('r', CIRCLE_R);
-            guideLayer.appendChild(c);
-        } else if (currentShape === 'square') {
-            const r = document.createElementNS(NS, 'rect');
-            r.setAttribute('x', CENTER - SQUARE_HALF);
-            r.setAttribute('y', CENTER - SQUARE_HALF);
-            r.setAttribute('width', SQUARE_HALF * 2);
-            r.setAttribute('height', SQUARE_HALF * 2);
-            r.setAttribute('rx', 10);
-            guideLayer.appendChild(r);
+        if (currentSubTemplate) {
+            guideLayer.innerHTML = currentSubTemplate;
         }
-        // freeform: no guide drawn
+        // no sub-template means blank canvas (custom free-draw)
     }
 
     // ---------- Colour palette ----------

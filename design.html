@@ -20,34 +20,37 @@
 
         <!-- ===== STEP 1: TEMPLATE SELECTION ===== -->
         <section id="templateStep">
-            <h1>Choose your shape</h1>
-            <p class="subtitle">Pick a shape to start building your pookalam.</p>
+            <h1>Design Your Pookalam</h1>
+            <p class="subtitle">How would you like to start?</p>
 
             <div class="template-grid">
-                <button class="template-card" data-shape="circle">
-                    <svg class="template-preview" viewBox="0 0 100 100" aria-hidden="true">
-                        <circle cx="50" cy="50" r="40" />
-                    </svg>
-                    <span class="template-name">Circle</span>
-                    <span class="template-desc">The classic ringed pookalam</span>
+                <button class="template-card" id="btnChooseTemplate">
+                    <span class="template-icon">🌸</span>
+                    <span class="template-name">Choose a Template</span>
+                    <span class="template-desc">Pick from our ready-made pookalam designs</span>
                 </button>
 
-                <button class="template-card" data-shape="square">
-                    <svg class="template-preview" viewBox="0 0 100 100" aria-hidden="true">
-                        <rect x="12" y="12" width="76" height="76" rx="6" />
-                    </svg>
-                    <span class="template-name">Square</span>
-                    <span class="template-desc">A structured, geometric layout</span>
+                <button class="template-card" id="btnUploadOwn">
+                    <span class="template-icon">📷</span>
+                    <span class="template-name">Upload Your Own</span>
+                    <span class="template-desc">Use your own image as a tracing guide</span>
                 </button>
+            </div>
+        </section>
 
-                <button class="template-card" data-shape="free">
-                    <svg class="template-preview" viewBox="0 0 100 100" aria-hidden="true">
-                        <path
-                            d="M50 12 C70 12 88 25 88 45 C88 62 74 74 58 82 C48 87 40 84 34 76 C22 76 12 64 12 48 C12 28 30 12 50 12 Z" />
-                    </svg>
-                    <span class="template-name">Freeform</span>
-                    <span class="template-desc">No boundary — design your own outline</span>
-                </button>
+        <!-- ===== STEP 1.5: SUB-TEMPLATE SELECTION ===== -->
+        <section id="subTemplateStep" hidden>
+            <h1>Pick a design</h1>
+            <p class="subtitle">Select a layout or upload your own guide.</p>
+            
+            <div id="predefinedTemplates" class="template-grid">
+                <!-- Populated dynamically by JS -->
+            </div>
+
+            <div id="customTemplateUpload" style="text-align: center; padding: 40px; border: 2px dashed var(--gold); border-radius: 12px; margin-top: 20px;" hidden>
+                <p style="margin-bottom: 16px;">Upload a picture to use as a tracing guide.</p>
+                <input type="file" id="templateFileInput" accept="image/*" hidden />
+                <button class="hero-btn-solid" onclick="document.getElementById('templateFileInput').click()">Browse Files</button>
             </div>
         </section>
 
@@ -86,20 +89,7 @@
 
     </main>
 
-    <nav class="bottom-nav">
-        <a href="index.html" class="nav-item">
-            <span class="nav-icon">🏠</span>
-            <span>Home</span>
-        </a>
-        <a href="gallery.html" class="nav-item">
-            <span class="nav-icon">🖼️</span>
-            <span>Gallery</span>
-        </a>
-        <a href="design.html" class="nav-item active">
-            <span class="nav-icon">🎨</span>
-            <span>Create</span>
-        </a>
-    </nav>
+
 
     <script src="js/main.js"></script>
     <script src="js/design.js"></script>

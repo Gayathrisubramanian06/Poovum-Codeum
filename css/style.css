@@ -72,38 +72,6 @@ button {
     color: var(--brown-dark);
 }
 
-/* ---------- Bottom Navigation ---------- */
-.bottom-nav {
-    height: var(--bottomnav-height);
-    background: var(--white);
-    border-top: 1px solid #eee2cc;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    position: sticky;
-    bottom: 0;
-    z-index: 20;
-}
-
-.bottom-nav .nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    font-size: 12px;
-    color: #b0a58f;
-    flex: 1;
-    padding: 6px 0;
-}
-
-.bottom-nav .nav-item .nav-icon {
-    font-size: 20px;
-}
-
-.bottom-nav .nav-item.active {
-    color: var(--brown-dark);
-    font-weight: 600;
-}
 
 /* ============================================
    WELCOME PAGE
@@ -111,7 +79,7 @@ button {
 
 .hero-wrap {
     width: 100vw;
-    height: calc(100vh - var(--bottomnav-height));
+    height: 100vh;
     overflow: hidden;
     position: relative;
     background: var(--cream);
@@ -124,35 +92,38 @@ button {
 
 .hero-btn {
     position: absolute;
-    left: 32%;
-    width: 35%;
+    left: 37.9%;
+    width: 24%;
     border-radius: 999px;
     font-weight: 700;
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    transition: all 0.2s ease;
 }
 
 .hero-btn:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px) scale(1.02);
+    background-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .hero-btn:active {
-    transform: translateY(0);
+    transform: translateY(0) scale(0.98);
 }
 
 .btn-start {
-    top: 63.5%;
-    height: 6.3%;
+    top: 70.9%;
+    height: 6.5%;
     background: transparent;
     color: transparent;
 }
 
 .btn-gallery {
-    top: 73%;
-    height: 6%;
+    top: 79.1%;
+    height: 6.6%;
     background: transparent;
     color: transparent;
 }
@@ -168,7 +139,7 @@ button {
 
 .page {
     flex: 1;
-    padding: 24px 20px calc(var(--bottomnav-height) + 20px);
+    padding: 24px 20px 20px;
     max-width: 480px;
     margin: 0 auto;
     width: 100%;
@@ -198,6 +169,7 @@ button {
    TEMPLATE SELECTION (design.html — step 1)
    ============================================ */
 
+/* Shape-picker grid (step 1) — keeps horizontal card layout */
 .template-grid {
     display: flex;
     flex-direction: column;
@@ -257,6 +229,52 @@ button {
     font-size: 13px;
     color: var(--brown-mid);
     grid-column: 2;
+}
+
+.template-icon {
+    font-size: 32px;
+    line-height: 1;
+    grid-row: span 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+}
+
+/* Sub-template image grid (step 1.5) — 3 per row, image-only */
+#predefinedTemplates {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    flex-direction: unset;
+}
+
+#predefinedTemplates .template-card {
+    display: block;
+    padding: 6px;
+    border-radius: 14px;
+    border: 2.5px solid #eee2cc;
+    background: var(--white);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    overflow: hidden;
+    transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+#predefinedTemplates .template-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 8px 22px var(--shadow);
+}
+
+#predefinedTemplates .template-card img,
+#predefinedTemplates .template-card svg {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+    opacity: 1;
 }
 
 /* ============================================

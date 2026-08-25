@@ -18,8 +18,8 @@ function sizeHero() {
     const btnGallery = document.getElementById('btnGallery');
     if (!wrap || !img) return; // not on this page, skip
 
-    const IMG_W = 2245;
-    const IMG_H = 1587;
+    const IMG_W = 1672;
+    const IMG_H = 941;
 
     const wrapW = wrap.clientWidth;
     const wrapH = wrap.clientHeight;
@@ -33,8 +33,8 @@ function sizeHero() {
     // Button positions as fractions of the ORIGINAL image (0 to 1),
     // measured from your poster. Adjust these 4 numbers per button
     // if a button ever looks slightly off.
-    placeButton(btnStart, 0.32, 0.635, 0.35, 0.063, wrapW, wrapH);
-    placeButton(btnGallery, 0.32, 0.73, 0.35, 0.06, wrapW, wrapH);
+    placeButton(btnStart, 0.365, 0.682, 0.258, 0.063, wrapW, wrapH);
+    placeButton(btnGallery, 0.365, 0.764, 0.258, 0.068, wrapW, wrapH);
 }
 
 function placeButton(el, fx, fy, fw, fh, wrapW, wrapH) {
