@@ -120,20 +120,8 @@ button {
 .hero-bg {
     position: absolute;
     display: block;
-    /* width/height/left/top are all set dynamically by JS below,
-     so the image always fully covers the screen (like object-fit: cover)
-     but buttons still track its exact position */
 }
 
-.hero-btn {
-    position: absolute;
-    /* left/top/width/height set dynamically by JS */
-}
-
-/* Buttons positioned as % of the hero image so they
-   stay aligned with the artwork at any screen size.
-   Adjust the top/left/width/height % below if they don't
-   line up perfectly with your image — see instructions. */
 .hero-btn {
     position: absolute;
     left: 32%;
@@ -159,9 +147,7 @@ button {
     top: 63.5%;
     height: 6.3%;
     background: transparent;
-    /* image already shows the filled button */
     color: transparent;
-    /* text is already baked into the image */
 }
 
 .btn-gallery {
@@ -171,7 +157,6 @@ button {
     color: transparent;
 }
 
-/* Focus states for accessibility (keyboard users) */
 .hero-btn:focus-visible {
     outline: 3px solid var(--gold);
     outline-offset: 2px;
@@ -207,4 +192,203 @@ button {
     padding: 40px 20px;
     text-align: center;
     color: var(--brown-mid);
+}
+
+/* ============================================
+   TEMPLATE SELECTION (design.html — step 1)
+   ============================================ */
+
+.template-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.template-card {
+    background: var(--white);
+    border: 2px solid #eee2cc;
+    border-radius: 18px;
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    align-items: center;
+    gap: 14px;
+    text-align: left;
+    transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.template-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px var(--shadow);
+}
+
+.template-card:focus-visible {
+    outline: 3px solid var(--gold);
+    outline-offset: 2px;
+}
+
+.template-preview {
+    width: 56px;
+    height: 56px;
+    grid-row: span 2;
+}
+
+.template-preview circle,
+.template-preview rect,
+.template-preview path {
+    fill: none;
+    stroke: var(--brown-mid);
+    stroke-width: 5;
+    stroke-dasharray: 6 5;
+}
+
+.template-card[data-shape="free"] .template-preview path {
+    stroke: var(--gold);
+}
+
+.template-name {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--brown-dark);
+}
+
+.template-desc {
+    font-size: 13px;
+    color: var(--brown-mid);
+    grid-column: 2;
+}
+
+/* ============================================
+   THE CANVAS (design.html — step 2)
+   ============================================ */
+
+.palette-row {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    margin-bottom: 12px;
+}
+
+.color-swatch {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    box-shadow: inset 0 0 0 1px var(--shadow);
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.color-swatch.active {
+    border-color: var(--brown-dark);
+    transform: scale(1.12);
+}
+
+.color-swatch:focus-visible {
+    outline: 3px solid var(--brown-dark);
+    outline-offset: 2px;
+}
+
+.size-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.size-btn {
+    flex: 1;
+    background: var(--white);
+    border: 1px solid #eee2cc;
+    border-radius: 999px;
+    padding: 8px 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--brown-mid);
+}
+
+.size-btn.active {
+    background: var(--brown-dark);
+    color: var(--white);
+    border-color: var(--brown-dark);
+}
+
+.canvas-shell {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 12px;
+    box-shadow: 0 6px 18px var(--shadow);
+}
+
+#pookalamCanvas {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 14px;
+    cursor: crosshair;
+    touch-action: none;
+}
+
+#guideLayer {
+    fill: none;
+    stroke: #d8c7a0;
+    stroke-width: 2;
+    stroke-dasharray: 8 6;
+}
+
+.canvas-hint {
+    text-align: center;
+    font-size: 12px;
+    color: var(--brown-mid);
+    margin-top: 8px;
+}
+
+.canvas-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.ghost-btn {
+    flex: 1;
+    background: var(--white);
+    border: 1px solid #d8c7a0;
+    color: var(--brown-dark);
+    border-radius: 999px;
+    padding: 12px 0;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.ghost-btn:hover {
+    border-color: var(--brown-mid);
+}
+
+.hero-btn-solid {
+    flex: 1.4;
+    background: var(--brown-dark);
+    color: var(--white);
+    border-radius: 999px;
+    padding: 12px 0;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.hero-btn-solid:hover {
+    background: #663d17;
+}
+
+@keyframes shakeCanvas {
+    25% {
+        transform: translateX(-4px);
+    }
+
+    75% {
+        transform: translateX(4px);
+    }
+}
+
+#pookalamCanvas.shake {
+    animation: shakeCanvas 0.15s ease-in-out 1;
 }

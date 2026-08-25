@@ -24,32 +24,25 @@ function sizeHero() {
     const wrapW = wrap.clientWidth;
     const wrapH = wrap.clientHeight;
 
-    // scale needed so the image fully covers the screen (may overflow/crop)
-    const scale = Math.max(wrapW / IMG_W, wrapH / IMG_H);
-
-    const scaledW = IMG_W * scale;
-    const scaledH = IMG_H * scale;
-    const offsetX = (wrapW - scaledW) / 2; // negative = cropped on sides
-    const offsetY = (wrapH - scaledH) / 2;
-
-    img.style.width = scaledW + 'px';
-    img.style.height = scaledH + 'px';
-    img.style.left = offsetX + 'px';
-    img.style.top = offsetY + 'px';
+    // Stretch the image to perfectly fit the screen dimensions
+    img.style.width = wrapW + 'px';
+    img.style.height = wrapH + 'px';
+    img.style.left = '0px';
+    img.style.top = '0px';
 
     // Button positions as fractions of the ORIGINAL image (0 to 1),
     // measured from your poster. Adjust these 4 numbers per button
     // if a button ever looks slightly off.
-    placeButton(btnStart, 0.32, 0.635, 0.35, 0.063, offsetX, offsetY, scale, IMG_W, IMG_H);
-    placeButton(btnGallery, 0.32, 0.73, 0.35, 0.06, offsetX, offsetY, scale, IMG_W, IMG_H);
+    placeButton(btnStart, 0.32, 0.635, 0.35, 0.063, wrapW, wrapH);
+    placeButton(btnGallery, 0.32, 0.73, 0.35, 0.06, wrapW, wrapH);
 }
 
-function placeButton(el, fx, fy, fw, fh, offsetX, offsetY, scale, IMG_W, IMG_H) {
+function placeButton(el, fx, fy, fw, fh, wrapW, wrapH) {
     if (!el) return;
-    el.style.left = (offsetX + fx * IMG_W * scale) + 'px';
-    el.style.top = (offsetY + fy * IMG_H * scale) + 'px';
-    el.style.width = (fw * IMG_W * scale) + 'px';
-    el.style.height = (fh * IMG_H * scale) + 'px';
+    el.style.left = (fx * wrapW) + 'px';
+    el.style.top = (fy * wrapH) + 'px';
+    el.style.width = (fw * wrapW) + 'px';
+    el.style.height = (fh * wrapH) + 'px';
 }
 
 window.addEventListener('load', sizeHero);

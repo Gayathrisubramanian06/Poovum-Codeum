@@ -11,21 +11,79 @@
 <body>
 
     <header class="app-header" style="position: sticky; background: var(--cream);">
-        <button class="icon-btn" aria-label="Menu">☰</button>
-        <span class="title">Design Your Pookalam</span>
+        <button class="icon-btn" id="btnBack" aria-label="Back" hidden>←</button>
+        <span class="title" id="pageTitle">Design Your Pookalam</span>
         <button class="icon-btn" aria-label="Profile">👤</button>
     </header>
 
-    <main class="page">
-        <h1>Choose your shape</h1>
-        <p class="subtitle">Pick a shape to start building your pookalam.</p>
+    <main class="page" id="pageContent">
 
-        <div class="placeholder-card">
-            Shape selection (circle / square / freeform) and the
-            pookalam canvas will go here.
-            <br /><br />
-            This is where the actual designer tool gets built next.
-        </div>
+        <!-- ===== STEP 1: TEMPLATE SELECTION ===== -->
+        <section id="templateStep">
+            <h1>Choose your shape</h1>
+            <p class="subtitle">Pick a shape to start building your pookalam.</p>
+
+            <div class="template-grid">
+                <button class="template-card" data-shape="circle">
+                    <svg class="template-preview" viewBox="0 0 100 100" aria-hidden="true">
+                        <circle cx="50" cy="50" r="40" />
+                    </svg>
+                    <span class="template-name">Circle</span>
+                    <span class="template-desc">The classic ringed pookalam</span>
+                </button>
+
+                <button class="template-card" data-shape="square">
+                    <svg class="template-preview" viewBox="0 0 100 100" aria-hidden="true">
+                        <rect x="12" y="12" width="76" height="76" rx="6" />
+                    </svg>
+                    <span class="template-name">Square</span>
+                    <span class="template-desc">A structured, geometric layout</span>
+                </button>
+
+                <button class="template-card" data-shape="free">
+                    <svg class="template-preview" viewBox="0 0 100 100" aria-hidden="true">
+                        <path
+                            d="M50 12 C70 12 88 25 88 45 C88 62 74 74 58 82 C48 87 40 84 34 76 C22 76 12 64 12 48 C12 28 30 12 50 12 Z" />
+                    </svg>
+                    <span class="template-name">Freeform</span>
+                    <span class="template-desc">No boundary — design your own outline</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- ===== STEP 2: THE CANVAS ===== -->
+        <section id="canvasStep" hidden>
+
+            <div class="palette-row" id="colorPalette" role="group" aria-label="Petal colours"></div>
+
+            <div class="size-row" role="group" aria-label="Petal size">
+                <button class="size-btn" data-size="small">Small</button>
+                <button class="size-btn active" data-size="medium">Medium</button>
+                <button class="size-btn" data-size="large">Large</button>
+            </div>
+
+            <div class="canvas-shell">
+                <svg id="pookalamCanvas" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="floorGradient" cx="50%" cy="45%" r="70%">
+                            <stop offset="0%" stop-color="#fffaf0" />
+                            <stop offset="100%" stop-color="#f3e6c8" />
+                        </radialGradient>
+                    </defs>
+                    <rect width="400" height="400" fill="url(#floorGradient)" />
+                    <g id="guideLayer"></g>
+                    <g id="petalLayer"></g>
+                </svg>
+                <p class="canvas-hint" id="canvasHint">Tap inside the circle to place a flower.</p>
+            </div>
+
+            <div class="canvas-actions">
+                <button class="ghost-btn" id="btnUndo">Undo</button>
+                <button class="ghost-btn" id="btnClear">Clear</button>
+                <button class="hero-btn-solid" id="btnDownload">Download</button>
+            </div>
+        </section>
+
     </main>
 
     <nav class="bottom-nav">
@@ -44,6 +102,7 @@
     </nav>
 
     <script src="js/main.js"></script>
+    <script src="js/design.js"></script>
 </body>
 
 </html>
