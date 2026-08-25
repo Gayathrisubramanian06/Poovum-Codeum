@@ -926,86 +926,164 @@
         img.src = url;
     });
 
-    // ---------- Share ----------
+    // ---------- Share Feature (Zero External APIs Required) ----------
     const sharePanel = document.getElementById('sharePanel');
     const shareHint  = document.getElementById('shareHint');
     const shareBtns  = document.getElementById('shareBtns');
 
-    const PROJECT_URL  = 'https://gayathrisubramanian06.github.io/Poovum-Codeum/';
-    const SHARE_TEXT   = 'I just made my Onam Pookalam! 🌸🪔 Design yours too! #Onam #Pookalam #OnamCelebrations';
+    const PROJECT_URL = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '') + '/index.html';
+    const SHARE_TEXT  = 'I just designed a festive Onam Pookalam! 🌸🪔 Create yours too:';
 
     // Toggle share panel visibility
-    document.getElementById('btnShare').addEventListener('click', () => {
-        sharePanel.hidden = !sharePanel.hidden;
-        shareHint.textContent = '';
-    });
+    const btnShare = document.getElementById('btnShare');
+    if (btnShare) {
+        btnShare.addEventListener('click', () => {
+            if (!sharePanel) return;
+            sharePanel.hidden = !sharePanel.hidden;
+            if (!sharePanel.hidden && shareHint) {
+                shareHint.textContent = '';
+                sharePanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        });
+    }
 
-    // Generate a 800×800 PNG blob from the current canvas state
+    // Generate high-resolution PNG blob from current canvas state
     function generatePNG(callback) {
-        const wasHidden = guideLayer.style.display;
-        guideLayer.style.display = 'none';
-        const serializer = new XMLSerializer();
-        const svgString  = serializer.serializeToString(svg);
-        guideLayer.style.display = wasHidden;
+        try {
+            const wasHidden = guideLayer.style.display;
+            guideLayer.style.display = 'none';
 
-        const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
-        const url     = URL.createObjectURL(svgBlob);
-        const img     = new Image();
-        img.onload = function () {
-            const canvas = document.createElement('canvas');
-            canvas.width  = 800;
-            canvas.height = 800;
-            canvas.getContext('2d').drawImage(img, 0, 0, 800, 800);
-            URL.revokeObjectURL(url);
-            canvas.toBlob(callback, 'image/png');
-        };
-        img.src = url;
+            // Clone SVG and set explicit dimensions for robust image rendering
+            const svgClone = svg.cloneNode(true);
+            svgClone.setAttribute('width', '400');
+            svgClone.setAttribute('height', '400');
+
+            const serializer = new XMLSerializer();
+            const svgString  = serializer.serializeToString(svgClone);
+            guideLayer.style.display = wasHidden;
+
+            const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+            const url     = URL.createObjectURL(svgBlob);
+            const img     = new Image();
+
+            img.onload = function () {
+                const canvas = document.createElement('canvas');
+                canvas.width  = 800;
+                canvas.height = 800;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, 800, 800);
+                URL.revokeObjectURL(url);
+                canvas.toBlob(callback, 'image/png');
+            };
+
+            img.onerror = function () {
+                URL.revokeObjectURL(url);
+                if (shareHint) shareHint.textContent = 'Notice: Could not render image preview.';
+            };
+
+            img.src = url;
+        } catch (err) {
+            console.error('PNG export error:', err);
+            if (shareHint) shareHint.textContent = 'Could not generate image. Please try again.';
+        }
     }
 
     function triggerDownload(blob, filename) {
+        if (!blob) return;
         const link    = document.createElement('a');
         link.download = filename;
         link.href     = URL.createObjectURL(blob);
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(link.href), 1000);
     }
 
-    // X / Twitter — opens intent URL + auto-downloads image to attach
-    document.getElementById('shareTwitter').addEventListener('click', () => {
-        const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(SHARE_TEXT)}&url=${encodeURIComponent(PROJECT_URL)}`;
-        window.open(tweetUrl, '_blank', 'noopener');
-        generatePNG((blob) => {
-            triggerDownload(blob, 'my-pookalam.png');
-            shareHint.textContent = '✅ Twitter opened & image saved! Attach the image to your tweet.';
-        });
-    });
-
-    // Instagram — no web API, so download + guide
-    document.getElementById('shareInstagram').addEventListener('click', () => {
-        generatePNG((blob) => {
-            triggerDownload(blob, 'my-pookalam.png');
-            shareHint.textContent = '✅ Image saved! Open Instagram → Create post → pick from your gallery.';
-        });
-    });
-
-    // Web Share API — mobile native share sheet (includes Instagram, WhatsApp etc.)
-    if (navigator.canShare) {
-        const nativeBtn = document.createElement('button');
-        nativeBtn.className = 'share-btn share-native';
-        nativeBtn.innerHTML = '<span>📤</span> Share…';
-        nativeBtn.addEventListener('click', () => {
+    // 1. 𝕏 Post on Twitter/X (Web Intent)
+    const shareTwitterBtn = document.getElementById('shareTwitter');
+    if (shareTwitterBtn) {
+        shareTwitterBtn.addEventListener('click', () => {
+            const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(SHARE_TEXT + ' #Onam #Pookalam #Kerala')}&url=${encodeURIComponent(PROJECT_URL)}`;
+            window.open(tweetUrl, '_blank', 'noopener,noreferrer');
             generatePNG((blob) => {
-                const file = new File([blob], 'my-pookalam.png', { type: 'image/png' });
-                if (navigator.canShare({ files: [file] })) {
-                    navigator.share({
-                        title: 'My Onam Pookalam 🌸',
-                        text:  SHARE_TEXT,
-                        files: [file]
-                    }).catch(() => {});
-                } else {
-                    navigator.share({ title: 'My Onam Pookalam 🌸', text: SHARE_TEXT, url: PROJECT_URL }).catch(() => {});
-                }
+                triggerDownload(blob, 'my-onam-pookalam.png');
+                if (shareHint) shareHint.textContent = '✅ Twitter opened & Pookalam image downloaded to attach!';
             });
         });
-        shareBtns.appendChild(nativeBtn);
+    }
+
+    // 2. 💬 WhatsApp Share (Web Intent)
+    const shareWhatsappBtn = document.getElementById('shareWhatsapp');
+    if (shareWhatsappBtn) {
+        shareWhatsappBtn.addEventListener('click', () => {
+            const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(SHARE_TEXT + ' ' + PROJECT_URL)}`;
+            window.open(waUrl, '_blank', 'noopener,noreferrer');
+            generatePNG((blob) => {
+                triggerDownload(blob, 'my-onam-pookalam.png');
+                if (shareHint) shareHint.textContent = '✅ WhatsApp opened & Pookalam image downloaded to share with family!';
+            });
+        });
+    }
+
+    // 3. 📸 Instagram (Downloads image + guidance)
+    const shareInstagramBtn = document.getElementById('shareInstagram');
+    if (shareInstagramBtn) {
+        shareInstagramBtn.addEventListener('click', () => {
+            generatePNG((blob) => {
+                triggerDownload(blob, 'my-onam-pookalam.png');
+                if (shareHint) shareHint.textContent = '✅ Pookalam saved to your device! Open Instagram → Create Post/Story to share.';
+            });
+        });
+    }
+
+    // 4. 📋 Copy Website Link
+    const shareCopyBtn = document.getElementById('shareCopyLink');
+    if (shareCopyBtn) {
+        shareCopyBtn.addEventListener('click', async () => {
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(PROJECT_URL);
+                } else {
+                    const tempInput = document.createElement('input');
+                    tempInput.value = PROJECT_URL;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+                }
+                if (shareHint) shareHint.textContent = '📋 Link copied to clipboard!';
+            } catch (err) {
+                if (shareHint) shareHint.textContent = 'Link: ' + PROJECT_URL;
+            }
+        });
+    }
+
+    // 5. 📤 Native Web Share API (Mobile / Tablet)
+    if (typeof navigator.share === 'function') {
+        const nativeBtn = document.createElement('button');
+        nativeBtn.className = 'share-btn share-native';
+        nativeBtn.innerHTML = '<span>📤</span> More…';
+        nativeBtn.title = 'Share with other apps';
+        nativeBtn.addEventListener('click', () => {
+            generatePNG((blob) => {
+                if (blob && typeof navigator.canShare === 'function') {
+                    const file = new File([blob], 'my-pookalam.png', { type: 'image/png' });
+                    if (navigator.canShare({ files: [file] })) {
+                        navigator.share({
+                            title: 'My Onam Pookalam 🌸',
+                            text:  SHARE_TEXT,
+                            files: [file]
+                        }).catch(() => {});
+                        return;
+                    }
+                }
+                navigator.share({
+                    title: 'My Onam Pookalam 🌸',
+                    text:  SHARE_TEXT,
+                    url:   PROJECT_URL
+                }).catch(() => {});
+            });
+        });
+        if (shareBtns) shareBtns.appendChild(nativeBtn);
     }
 })();

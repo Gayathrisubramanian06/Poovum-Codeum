@@ -677,6 +677,10 @@ button {
     animation: fadeIn 0.2s ease-out;
 }
 
+.share-panel[hidden] {
+    display: none !important;
+}
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(6px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -725,8 +729,16 @@ button {
     background: #000000;
 }
 
+.share-whatsapp {
+    background: #25d366;
+}
+
 .share-instagram {
     background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.share-copy {
+    background: var(--brown-dark);
 }
 
 .share-native {
