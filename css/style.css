@@ -455,4 +455,84 @@ button {
 
 #musicToggleBtn.music-pulse {
     animation: musicPulse 0.5s ease-out;
-}
+}
+
+/* ============================================
+   SHARE PANEL & SOCIAL BUTTONS
+   ============================================ */
+
+.share-panel {
+    margin-top: 16px;
+    background: var(--white);
+    border: 1.5px solid #eee2cc;
+    border-radius: 18px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 4px 14px var(--shadow);
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.share-panel-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--brown-dark);
+    margin-bottom: 12px;
+}
+
+.share-btns {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.share-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    border: none;
+    color: #ffffff;
+}
+
+.share-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow);
+    filter: brightness(1.05);
+}
+
+.share-btn:active {
+    transform: scale(0.97);
+}
+
+.share-twitter {
+    background: #000000;
+}
+
+.share-instagram {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.share-native {
+    background: var(--brown-mid);
+}
+
+.share-hint {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #4e8c4a;
+    font-weight: 600;
+    min-height: 16px;
+}
+
