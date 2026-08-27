@@ -91,6 +91,34 @@ export default function App() {
                 {isMuted ? '🔇' : '🎵'}
             </button>
 
+            {/* Global Navigation — visible on every page */}
+            <nav className="onam-navbar">
+                <button
+                    className={`nav-link${view === 'home' ? ' active' : ''}`}
+                    onClick={() => setView('home')}
+                >
+                    HOME
+                </button>
+                <button
+                    className={`nav-link${view === 'design' ? ' active' : ''}`}
+                    onClick={() => setView('design')}
+                >
+                    CREATE POOKALAM
+                </button>
+                <button
+                    className={`nav-link${view === 'gallery' ? ' active' : ''}`}
+                    onClick={() => setView('gallery')}
+                >
+                    GALLERY
+                </button>
+                <button
+                    className={`nav-link${view === 'about' ? ' active' : ''}`}
+                    onClick={() => setView('about')}
+                >
+                    ABOUT ONAM
+                </button>
+            </nav>
+
             {/* Page Router with Animated Cross-Fades */}
             <AnimatePresence mode="wait">
                 {view === 'home' && (

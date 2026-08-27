@@ -16,7 +16,7 @@ export default function HomeView({ onNavigate }) {
             ====================================================== */}
 
             <img
-                src="assets/onam-background.jpg"
+                src="assets/onam-background.png"
                 alt="Kerala landscape"
                 className="onam-background"
             />
@@ -39,40 +39,22 @@ export default function HomeView({ onNavigate }) {
 
 
             {/* =====================================================
-                NAVIGATION
+                POOKALAM — TOP CENTER (half visible, spinning)
             ====================================================== */}
 
-            <nav className="onam-navbar">
+            <motion.img
+                src="assets/pookalam.png.png"
+                alt="Pookalam"
+                className="pookalam-top-spin"
+                style={{
+                    // translateX(-50%) centers it; translateY(-50%) hides the top half
+                    x: '-50%',
+                    y: '-52%',
+                }}
+                animate={{ rotate: 360 }}
+                transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
+            />
 
-                <button
-                    className="nav-link active"
-                    onClick={() => onNavigate('home')}
-                >
-                    HOME
-                </button>
-
-                <button
-                    className="nav-link"
-                    onClick={() => onNavigate('design')}
-                >
-                    CREATE POOKALAM
-                </button>
-
-                <button
-                    className="nav-link"
-                    onClick={() => onNavigate('gallery')}
-                >
-                    GALLERY
-                </button>
-
-                <button
-                    className="nav-link"
-                    onClick={() => onNavigate('about')}
-                >
-                    ABOUT ONAM
-                </button>
-
-            </nav>
 
 
             {/* =====================================================
@@ -86,70 +68,62 @@ export default function HomeView({ onNavigate }) {
                 transition={{ duration: 1 }}
             >
                 <div className="happy-text">
-                    Happy
+                    Digital
                 </div>
 
                 <div className="onam-text">
-                    Onam
+                    Pookalam
                 </div>
 
                 <div className="title-line"></div>
 
                 <p>
-                    Celebrate the spirit of Kerala
+                    Design your Digital Pookalam now!
                 </p>
+
+                <div className="home-buttons">
+                    <button
+                        className="create-btn"
+                        onClick={() => onNavigate('design')}
+                    >
+                        Create Pookalam
+                    </button>
+
+                    <button
+                        className="gallery-btn"
+                        onClick={() => onNavigate('gallery')}
+                    >
+                        Explore Gallery
+                    </button>
+                </div>
             </motion.div>
 
 
+
+
+
+
             {/* =====================================================
-                MAVELI — LEFT
+                KATHAKALI / MAVELI — RIGHT
             ====================================================== */}
 
             <motion.img
                 src="assets/maveli.png"
-                alt="King Mahabali"
-                className="maveli-img"
-                initial={{ opacity: 0, x: -40 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1 }}
-            />
-
-
-            {/* =====================================================
-                POOKALAM — CENTER
-            ====================================================== */}
-
-            <motion.img
-                src="assets/pookalam.png"
-                alt="Traditional Onam Pookalam"
-                className="pookalam-img"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1 }}
-            />
-
-
-            {/* =====================================================
-                KATHAKALI — RIGHT
-            ====================================================== */}
-
-            <motion.img
-                src="assets/kathakali.png"
-                alt="Kathakali performer"
+                alt="King Maveli"
                 className="kathakali-img"
-                initial={{ opacity: 0, x: 40 }}
+                initial={{ opacity: 0, x: 60 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1 }}
             />
 
 
             {/* =====================================================
-                SADYA — BOTTOM LEFT
+                SADYA — PLACED TO THE LEFT OF MAVELI
             ====================================================== */}
 
             <motion.img
                 src="assets/sadya.png"
-                alt="Traditional Onam Sadya"
+                alt="Onam Sadya"
                 className="sadya-img"
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -158,59 +132,32 @@ export default function HomeView({ onNavigate }) {
 
 
             {/* =====================================================
-                THIRUVATHIRA — BOTTOM CENTER
+                SNAKE BOAT — BEHIND THIRUVATHIRA
+            ====================================================== */}
+
+            <motion.img
+                src="assets/boat.png"
+                alt="Kerala Snake Boat"
+                className="boat-img"
+                initial={{ opacity: 0, x: -60 }}
+                animate={{ opacity: 0.95, x: 0 }}
+                transition={{ duration: 1.2 }}
+            />
+
+
+            {/* =====================================================
+                THIRUVATHIRA — LEFT SIDE
             ====================================================== */}
 
             <motion.img
                 src="assets/thiruvathira.png"
                 alt="Thiruvathira dancers"
                 className="thiruvathira-img"
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1 }}
-            />
-
-
-            {/* =====================================================
-                BOAT RACE — BOTTOM RIGHT
-            ====================================================== */}
-
-            <motion.img
-                src="assets/boat.png"
-                alt="Kerala snake boat race"
-                className="boat-img"
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1 }}
-            />
-
-
-            {/* =====================================================
-                ACTION BUTTONS
-            ====================================================== */}
-
-            <motion.div
-                className="home-buttons"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.8 }}
-            >
+                transition={{ duration: 1 }}
+            />
 
-                <button
-                    className="create-btn"
-                    onClick={() => onNavigate('design')}
-                >
-                    Create Pookalam
-                </button>
-
-                <button
-                    className="gallery-btn"
-                    onClick={() => onNavigate('gallery')}
-                >
-                    Explore Gallery
-                </button>
-
-            </motion.div>
 
         </motion.div>
     );

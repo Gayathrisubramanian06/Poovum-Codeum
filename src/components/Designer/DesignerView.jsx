@@ -50,7 +50,15 @@ export default function DesignerView({ onNavigate }) {
     };
 
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen" style={{ position: 'relative' }}>
+            {/* Background */}
+            <img
+                src="assets/onam-background.png"
+                alt=""
+                style={{ position: 'fixed', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, pointerEvents: 'none' }}
+            />
+            <div style={{ position: 'fixed', inset: 0, background: 'rgba(246,237,218,0.18)', zIndex: 1, pointerEvents: 'none' }} />
+
             {/* Common Header */}
             <header className="app-header" style={{ position: 'sticky', background: 'var(--cream)', zIndex: 10 }}>
                 <button
@@ -65,7 +73,7 @@ export default function DesignerView({ onNavigate }) {
                 <button className="icon-btn" aria-label="Profile" type="button">👤</button>
             </header>
 
-            <main className="page flex-1 w-full" style={{ padding: '24px 20px 40px', margin: '0 auto' }}>
+            <main className="page flex-1 w-full" style={{ padding: '24px 20px 40px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
                 <AnimatePresence mode="wait">
                     {step === 'template' && (
                         <TemplateStep

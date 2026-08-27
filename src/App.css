@@ -53,11 +53,39 @@
 
 
 /* ================================================================
+   POOKALAM TOP SPIN
+================================================================ */
+
+.pookalam-top-spin {
+    position: absolute;
+
+    /* Shifted to left side — framer-motion owns `transform` for rotation */
+    left: 40%;
+    top: 0;
+
+    /* Size — large enough to look impressive */
+    width: clamp(220px, 38vw, 420px);
+    height: clamp(220px, 38vw, 420px);
+
+    object-fit: contain;
+
+    transform-origin: center center;
+
+    /* Above background & overlay, below navbar */
+    z-index: 10;
+
+    filter: drop-shadow(0 8px 24px rgba(120, 60, 0, 0.35));
+
+    pointer-events: none;
+}
+
+
+/* ================================================================
    NAVIGATION
 ================================================================ */
 
 .onam-navbar {
-    position: absolute;
+    position: fixed;
 
     top: 3.5%;
     left: 50%;
@@ -71,7 +99,7 @@
 
     gap: clamp(25px, 4vw, 65px);
 
-    z-index: 50;
+    z-index: 100;
 
     white-space: nowrap;
 }
@@ -82,7 +110,9 @@
 
     background: transparent;
 
-    color: #5c4a34;
+    color: #2c1a08;
+
+    font-weight: bold;
 
     font-family: Georgia, 'Times New Roman', serif;
 
@@ -132,7 +162,7 @@
 
     z-index: 20;
 
-    pointer-events: none;
+    pointer-events: all;
 }
 
 
@@ -189,7 +219,7 @@
 .maveli-img {
     position: absolute;
 
-    left: 5%;
+    right: 5%;
     bottom: 18%;
 
     width: clamp(170px, 17vw, 300px);
@@ -213,7 +243,7 @@
     position: absolute;
 
     left: 50%;
-    top: 48%;
+    top: 0%;
 
     transform: translate(-50%, -50%);
 
@@ -237,16 +267,16 @@
 .kathakali-img {
     position: absolute;
 
-    left: 28%;
-    bottom: 1%;
+    right: -9%;
+    bottom: -8%;
 
-    width: clamp(300px, 35vw, 560px);
+    width: clamp(320px, 40vw, 620px);
 
     height: auto;
 
     object-fit: contain;
 
-    z-index: 16;
+    z-index: 14;
 
     filter:
         drop-shadow(0 12px 18px rgba(70, 50, 20, 0.16));
@@ -254,39 +284,41 @@
 
 
 /* ================================================================
-   SADYA — BOTTOM LEFT
+   SADYA — PLACED TO THE LEFT OF MAVELI (HALF VISIBLE)
 ================================================================ */
 
 .sadya-img {
     position: absolute;
 
-    left: 1%;
-    bottom: 1%;
+    right: 26%;
+    bottom: -37%;
 
-    width: clamp(220px, 27vw, 430px);
+    width: clamp(200px, 24vw, 410px);
 
     height: auto;
 
     object-fit: contain;
 
-    z-index: 15;
+    z-index: 13;
 
     filter:
         drop-shadow(0 10px 15px rgba(50, 45, 25, 0.18));
 }
 
 
+
+
 /* ================================================================
-   THIRUVATHIRA — BOTTOM CENTER
+   THIRUVATHIRA — MOVED RIGHT BY 5%
 ================================================================ */
 
 .thiruvathira-img {
     position: absolute;
 
-    left: 50%;
-    bottom: 1%;
+    left: 0%;
+    bottom: -14%;
 
-    transform: translateX(-50%);
+    transform: translateX(0%);
 
     width: clamp(300px, 39vw, 620px);
 
@@ -301,27 +333,33 @@
 }
 
 
+
+
 /* ================================================================
-   BOAT — BOTTOM RIGHT
+   SNAKE BOAT — BEHIND THIRUVATHIRA, LARGER & SLIGHTLY ABOVE
 ================================================================ */
 
 .boat-img {
     position: absolute;
 
-    right: -1%;
-    bottom: 1%;
+    left: -2%;
+    bottom: 12%;
 
-    width: clamp(280px, 37vw, 600px);
+    width: clamp(380px, 48vw, 760px);
 
     height: auto;
 
     object-fit: contain;
 
-    z-index: 14;
+    z-index: 10;
+
+    opacity: 0.95;
 
     filter:
-        drop-shadow(0 12px 18px rgba(40, 45, 25, 0.18));
+        drop-shadow(0 10px 18px rgba(40, 35, 20, 0.18));
 }
+
+
 
 
 /* ================================================================
@@ -329,16 +367,13 @@
 ================================================================ */
 
 .home-buttons {
-    position: absolute;
-
-    left: 50%;
-    bottom: 8%;
-
-    transform: translateX(-50%);
-
     display: flex;
 
+    justify-content: center;
+
     gap: 15px;
+
+    margin-top: 20px;
 
     z-index: 40;
 }
@@ -346,13 +381,13 @@
 
 .create-btn,
 .gallery-btn {
-    border-radius: 28px;
+    border-radius: 30px;
 
-    padding: 12px 27px;
+    padding: 14px 30px;
 
     font-family: Georgia, serif;
 
-    font-size: 14px;
+    font-size: 15.5px;
 
     letter-spacing: 1px;
 
@@ -409,6 +444,8 @@
 
     pointer-events: none;
 
+    filter: hue-rotate(85deg) saturate(3) brightness(0.85);
+
     will-change: transform;
 }
 
@@ -425,8 +462,9 @@
     }
 
     .kathakali-img {
-        left: 28%;
-        width: 20vw;
+        right: -3%;
+        bottom: -6%;
+        width: 22vw;
     }
 
     .pookalam-img {
@@ -475,8 +513,8 @@
     }
 
     .kathakali-img {
-        left: 28%;
-        bottom: 1%;
+        right: -2%;
+        bottom: -4%;
         width: 22vw;
     }
 
@@ -533,9 +571,9 @@
     }
 
     .kathakali-img {
-        width: 18vw;
-        left: 26%;
-        bottom: 1%;
+        width: 32vw;
+        right: -2%;
+        bottom: -2%;
     }
 
     .pookalam-img {

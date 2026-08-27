@@ -169,7 +169,16 @@ export default function GalleryView({ onNavigate }) {
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.35 }}
             className="flex flex-col min-h-screen"
+            style={{ position: 'relative' }}
         >
+            {/* Background */}
+            <img
+                src="assets/onam-background.png"
+                alt=""
+                style={{ position: 'fixed', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, pointerEvents: 'none' }}
+            />
+            <div style={{ position: 'fixed', inset: 0, background: 'rgba(246,237,218,0.18)', zIndex: 1, pointerEvents: 'none' }} />
+
             {/* Header */}
             <header className="app-header" style={{ position: 'sticky', background: 'var(--cream)', zIndex: 100 }}>
                 <button
@@ -192,7 +201,7 @@ export default function GalleryView({ onNavigate }) {
                 </button>
             </header>
 
-            <main className="page gallery-page">
+            <main className="page gallery-page" style={{ position: 'relative', zIndex: 2 }}>
                 {/* Hero Banner */}
                 <div className="gallery-hero-banner fade-in visible">
                     <div>

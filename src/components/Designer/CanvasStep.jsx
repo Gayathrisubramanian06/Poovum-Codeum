@@ -19,6 +19,42 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
     const [symmetryFolds, setSymmetryFolds] = useState(8);
     const [currentSizeKey, setCurrentSizeKey] = useState('medium');
 
+    // Real Palette hover state & position mapping for 11 flower items
+    const [hoveredPaletteItem, setHoveredPaletteItem] = useState(null);
+
+    const paletteItems = React.useMemo(() => {
+        const items = [];
+        const positions = [
+            { x: 34, y: 38 }, // 0: Thumba
+            { x: 45, y: 30 }, // 1: Thechi
+            { x: 56, y: 26 }, // 2: Jamanthi
+            { x: 67, y: 28 }, // 3: Rose
+            { x: 78, y: 40 }, // 4: Marigold (Orange)
+            { x: 74, y: 56 }, // 5: Marigold (Yellow)
+            { x: 62, y: 72 }, // 6: Lotus
+            { x: 48, y: 76 }, // 7: Chembarathi
+            { x: 35, y: 70 }, // 8: Pinwheel
+            { x: 26, y: 58 }, // 9: Leaf Green
+            { x: 29, y: 46 }  // 10: Earth Brown
+        ];
+
+        let idx = 0;
+        ONAM_FLOWERS.forEach(flower => {
+            flower.varieties.forEach(v => {
+                if (idx < positions.length) {
+                    items.push({
+                        id: `${flower.id}-${v.name}`,
+                        flower,
+                        variety: v,
+                        pos: positions[idx]
+                    });
+                    idx++;
+                }
+            });
+        });
+        return items;
+    }, []);
+
     // Drawing State stacks
     const [vectorFills, setVectorFills] = useState([]);
     const [stamps, setStamps] = useState([]);
@@ -509,7 +545,7 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                 {/* Left: Flower Palette Sidebar */}
                 <aside className="flower-sidebar">
                     <div className="sidebar-header">
-                        <span className="sidebar-icon">🌸</span>
+                        <span className="sidebar-icon">🎨</span>
                         <div>
                             <h2 className="sidebar-title">Flower Palette</h2>
                             <span className="sidebar-subtitle">പൂക്കൾ തിരഞ്ഞെടുക്കുക</span>
@@ -517,53 +553,74 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                     </div>
 
                     <div className="active-flower-banner">
-                        <div className="active-flower-indicator" style={{ backgroundColor: currentColor.hex }}></div>
+                        <div className="active-flower-indicator-svg">
+                            <svg viewBox="-35 -35 70 70" width="34" height="34">
+                                <FlowerRenderer type={currentFlower.id} size={26} color={currentColor} />
+                            </svg>
+                        </div>
                         <div className="active-flower-info">
                             <span className="active-flower-type">{currentFlower.icon} {currentFlower.nameEn} ({currentFlower.nameMl})</span>
                             <span className="active-flower-color">{currentColor.name}</span>
                         </div>
                     </div>
 
-                    <div className="flower-categories">
-                        {ONAM_FLOWERS.map(flower => {
-                            const isFlowerSelected = flower.id === currentFlower.id;
-                            return (
-                                <div
-                                    key={flower.id}
-                                    className={`flower-palette-row ${isFlowerSelected ? 'selected' : ''}`}
-                                >
-                                    <span className="flower-palette-icon">{flower.icon}</span>
-                                    <div className="flower-palette-label">
-                                        <span className="flower-name-en">{flower.nameEn}</span>
-                                        <span className="flower-name-ml">{flower.nameMl}</span>
+                    <div className="real-palette-wrapper">
+                        <div className="real-palette-container">
+                            <img
+                                src="/assets/palette.png"
+                                alt="Onam Flower Palette"
+                                className="palette-bg-image"
+                                onError={(e) => {
+                                    e.target.src = '/assets/images/palette.png';
+                                }}
+                            />
+
+                            {/* Render every flower as full SVG image on the palette */}
+                            {paletteItems.map((item) => {
+                                const isSelected = currentFlower.id === item.flower.id && currentColor.name === item.variety.name;
+                                const isHovered = hoveredPaletteItem?.id === item.id;
+
+                                return (
+                                    <div
+                                        key={item.id}
+                                        className={`palette-flower-spot ${isSelected ? 'active' : ''}`}
+                                        style={{ left: `${item.pos.x}%`, top: `${item.pos.y}%` }}
+                                        onClick={() => {
+                                            setCurrentFlower(item.flower);
+                                            setCurrentColor(item.variety);
+                                        }}
+                                        onMouseEnter={() => setHoveredPaletteItem(item)}
+                                        onMouseLeave={() => setHoveredPaletteItem(null)}
+                                    >
+                                        <div className="palette-flower-well">
+                                            <svg viewBox="-35 -35 70 70" width="42" height="42" className="palette-flower-svg">
+                                                <FlowerRenderer type={item.flower.id} size={34} color={item.variety} />
+                                            </svg>
+                                        </div>
+
+                                        {/* Hover Tooltip showing Flower Name */}
+                                        <AnimatePresence>
+                                            {isHovered && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 6, scale: 0.9 }}
+                                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                    exit={{ opacity: 0, y: 4, scale: 0.9 }}
+                                                    transition={{ duration: 0.15 }}
+                                                    className="palette-tooltip"
+                                                >
+                                                    <span className="tooltip-flower-title">
+                                                        <span>{item.flower.icon}</span>
+                                                        <span>{item.flower.nameEn}</span>
+                                                    </span>
+                                                    <span className="tooltip-flower-ml">{item.flower.nameMl}</span>
+                                                    <span className="tooltip-flower-color">{item.variety.name}</span>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
                                     </div>
-                                    <div className="flower-palette-swatches">
-                                        {flower.varieties.map(v => {
-                                            const isActive = isFlowerSelected && currentColor.name === v.name;
-                                            return (
-                                                <motion.button
-                                                    key={v.name}
-                                                    whileHover={{ scale: 1.15 }}
-                                                    whileTap={{ scale: 0.9 }}
-                                                    className={`flower-swatch-ball ${isActive ? 'active' : ''}`}
-                                                    style={{
-                                                        backgroundColor: v.hex,
-                                                        borderColor: isActive ? '#f59e0b' : (v.border || '#cbd5e1'),
-                                                        boxShadow: isActive ? `0 0 0 3px #f59e0b66, 0 2px 8px ${v.hex}88` : `0 1px 4px ${v.hex}55`
-                                                    }}
-                                                    onClick={() => {
-                                                        setCurrentFlower(flower);
-                                                        setCurrentColor(v);
-                                                    }}
-                                                    title={v.name}
-                                                    type="button"
-                                                />
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            );
-                        })}
+                                );
+                            })}
+                        </div>
                     </div>
                 </aside>
 
