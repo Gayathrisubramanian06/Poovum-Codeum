@@ -200,11 +200,19 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
             const designCenter = engine.getCenterOfDesign();
 
             if (isSymmetryActive) {
-                const symPoints = getSymmetricPoints(designCenter.x, designCenter.y, pt.x, pt.y, symmetryFolds);
-                symPoints.forEach(p => {
-                    const mask = engine.floodFill(p.x, p.y);
-                    if (mask) masks.push(mask);
-                });
+                const dx = pt.x - designCenter.x;
+                const dy = pt.y - designCenter.y;
+                const r = Math.sqrt(dx * dx + dy * dy);
+                const steps = 120;
+                for (let i = 0; i < steps; i++) {
+                    const angle = (2 * Math.PI / steps) * i;
+                    const px = designCenter.x + r * Math.cos(angle);
+                    const py = designCenter.y + r * Math.sin(angle);
+                    const mask = engine.floodFill(px, py);
+                    if (mask && !masks.includes(mask)) {
+                        masks.push(mask);
+                    }
+                }
             } else {
                 const mask = engine.floodFill(pt.x, pt.y);
                 if (mask) masks.push(mask);
@@ -557,7 +565,10 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                         {/* Shadcn UI Switch Toggle for Symmetry */}
                         <div className="control-group switch-group">
                             <span className="switch-label" id="symmetryLabel">
-                                {isSymmetryActive ? '✨ Symmetry: ON' : 'Symmetry: OFF'}
+                                {isSymmetryActive 
+                                    ? (currentMode === 'whole' ? '✨ Stamp Ring: ON' : '✨ Ring Fill: ON') 
+                                    : (currentMode === 'whole' ? 'Stamp Ring: OFF' : 'Ring Fill: OFF')
+                                }
                             </span>
                             <label className="switch-container">
                                 <input
@@ -573,10 +584,10 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                             </label>
                         </div>
 
-                        {/* Symmetry Folds selector */}
-                        {isSymmetryActive && (
+                        {/* Symmetry Folds selector - only shown in Stamp mode */}
+                        {isSymmetryActive && currentMode === 'whole' && (
                             <div className="control-group" style={{ minWidth: '150px' }}>
-                                <span className="control-label">Symmetry Folds:</span>
+                                <span className="control-label">Flowers in Ring:</span>
                                 <div className="size-row" style={{ display: 'flex', gap: '3px' }}>
                                     {[4, 6, 8, 12, 16, 24].map(folds => (
                                         <button
