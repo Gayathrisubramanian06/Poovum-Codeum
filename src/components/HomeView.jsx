@@ -3,52 +3,71 @@ import { motion } from 'framer-motion';
 
 export default function HomeView({ onNavigate }) {
     return (
-        <div className="onam-home">
+        <motion.div
+            className="onam-home"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+        >
 
             {/* =====================================================
-                BASE BACKGROUND
+                BACKGROUND
             ====================================================== */}
 
             <img
-                src="public/assets/images/onam-background.png"
-                alt="Kerala Onam celebration"
+                src="assets/onam-background.jpg"
+                alt="Kerala landscape"
                 className="onam-background"
             />
 
-            {/* Soft cinematic overlay */}
-            <div className="warm-overlay" />
+            {/* Soft warm overlay */}
+            <div className="warm-overlay"></div>
+
+
+            {/* =====================================================
+                FALLING FLOWERS
+            ====================================================== */}
+
+            <FloatingPetal left="8%" delay="0s" duration="8s" />
+            <FloatingPetal left="18%" delay="2s" duration="10s" />
+            <FloatingPetal left="32%" delay="4s" duration="9s" />
+            <FloatingPetal left="50%" delay="1s" duration="11s" />
+            <FloatingPetal left="68%" delay="3s" duration="9s" />
+            <FloatingPetal left="82%" delay="5s" duration="10s" />
+            <FloatingPetal left="93%" delay="1s" duration="8s" />
 
 
             {/* =====================================================
                 NAVIGATION
             ====================================================== */}
 
-            <nav className="onam-nav">
+            <nav className="onam-navbar">
 
                 <button
+                    className="nav-link active"
                     onClick={() => onNavigate('home')}
-                    className="nav-item active"
                 >
                     HOME
                 </button>
 
                 <button
+                    className="nav-link"
                     onClick={() => onNavigate('design')}
-                    className="nav-item"
                 >
                     CREATE POOKALAM
                 </button>
 
                 <button
+                    className="nav-link"
                     onClick={() => onNavigate('gallery')}
-                    className="nav-item"
                 >
                     GALLERY
                 </button>
 
                 <button
+                    className="nav-link"
                     onClick={() => onNavigate('about')}
-                    className="nav-item"
                 >
                     ABOUT ONAM
                 </button>
@@ -57,292 +76,174 @@ export default function HomeView({ onNavigate }) {
 
 
             {/* =====================================================
-                TITLE
+                HAPPY ONAM TITLE
             ====================================================== */}
 
             <motion.div
                 className="onam-title"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1.2 }}
+                transition={{ duration: 1 }}
             >
-                <div className="title-main">
-                    Digital Pookalam
+                <div className="happy-text">
+                    Happy
                 </div>
 
-                <div className="title-year">
-                    2026
+                <div className="onam-text">
+                    Onam
                 </div>
 
-                <div className="title-sub">
-                    Create your own Digital Pookalam now!
-                </div>
+                <div className="title-line"></div>
+
+                <p>
+                    Celebrate the spirit of Kerala
+                </p>
             </motion.div>
 
 
             {/* =====================================================
-                MAVELI
+                MAVELI — LEFT
             ====================================================== */}
 
             <motion.img
                 src="assets/maveli.png"
-                alt="Maveli"
-                className="maveli-character"
-                initial={{ opacity: 0, x: -80 }}
-                animate={{
-                    opacity: 1,
-                    x: 0,
-                    y: [0, -5, 0]
-                }}
-                transition={{
-                    opacity: { duration: 1 },
-                    x: { duration: 1 },
-                    y: {
-                        duration: 4,
-                        repeat: Infinity,
-                        ease: 'easeInOut'
-                    }
-                }}
+                alt="King Mahabali"
+                className="maveli-img"
+                initial={{ opacity: 0, x: -40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1 }}
             />
 
 
             {/* =====================================================
-                KATHAKALI
+                POOKALAM — CENTER
+            ====================================================== */}
+
+            <motion.img
+                src="assets/pookalam.png"
+                alt="Traditional Onam Pookalam"
+                className="pookalam-img"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1 }}
+            />
+
+
+            {/* =====================================================
+                KATHAKALI — RIGHT
             ====================================================== */}
 
             <motion.img
                 src="assets/kathakali.png"
                 alt="Kathakali performer"
-                className="kathakali-character"
-                initial={{ opacity: 0, x: 80 }}
-                animate={{
-                    opacity: 1,
-                    x: 0,
-                    rotate: [0, -1.5, 1.5, 0]
-                }}
-                transition={{
-                    opacity: { duration: 1 },
-                    x: { duration: 1 },
-                    rotate: {
-                        duration: 5,
-                        repeat: Infinity,
-                        ease: 'easeInOut'
-                    }
-                }}
+                className="kathakali-img"
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1 }}
             />
 
 
             {/* =====================================================
-                POOKALAM
-            ====================================================== */}
-
-            <motion.img
-                src="assets/pookalam.png"
-                alt="Onam Pookalam"
-                className="pookalam-center"
-                initial={{
-                    opacity: 0,
-                    scale: 0.65
-                }}
-                animate={{
-                    opacity: 1,
-                    scale: [1, 1.025, 1]
-                }}
-                transition={{
-                    opacity: { duration: 1.2 },
-                    scale: {
-                        duration: 5,
-                        repeat: Infinity,
-                        ease: 'easeInOut'
-                    }
-                }}
-            />
-
-
-            {/* =====================================================
-                THIRUVATHIRA
-            ====================================================== */}
-
-            <motion.img
-                src="assets/thiruvathira.png"
-                alt="Thiruvathira dancers"
-                className="thiruvathira-group"
-                initial={{
-                    opacity: 0,
-                    y: 50
-                }}
-                animate={{
-                    opacity: 1,
-                    y: [0, -4, 0]
-                }}
-                transition={{
-                    opacity: { duration: 1.2 },
-                    y: {
-                        duration: 4,
-                        repeat: Infinity,
-                        ease: 'easeInOut'
-                    }
-                }}
-            />
-
-
-            {/* =====================================================
-                SADYA
+                SADYA — BOTTOM LEFT
             ====================================================== */}
 
             <motion.img
                 src="assets/sadya.png"
                 alt="Traditional Onam Sadya"
-                className="sadya-plate"
-                initial={{
-                    opacity: 0,
-                    scale: 0.8
-                }}
-                animate={{
-                    opacity: 1,
-                    scale: [1, 1.015, 1]
-                }}
-                transition={{
-                    opacity: { duration: 1.2 },
-                    scale: {
-                        duration: 4,
-                        repeat: Infinity,
-                        ease: 'easeInOut'
-                    }
-                }}
+                className="sadya-img"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1 }}
             />
 
 
             {/* =====================================================
-                BOAT
+                THIRUVATHIRA — BOTTOM CENTER
+            ====================================================== */}
+
+            <motion.img
+                src="assets/thiruvathira.png"
+                alt="Thiruvathira dancers"
+                className="thiruvathira-img"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1 }}
+            />
+
+
+            {/* =====================================================
+                BOAT RACE — BOTTOM RIGHT
             ====================================================== */}
 
             <motion.img
                 src="assets/boat.png"
                 alt="Kerala snake boat race"
-                className="snake-boat"
-                initial={{
-                    opacity: 0,
-                    x: '-20vw'
-                }}
-                animate={{
-                    opacity: 1,
-                    x: ['-2vw', '2vw', '-2vw']
-                }}
-                transition={{
-                    opacity: {
-                        duration: 1
-                    },
-                    x: {
-                        duration: 7,
-                        repeat: Infinity,
-                        ease: 'easeInOut'
-                    }
-                }}
+                className="boat-img"
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1 }}
             />
 
 
             {/* =====================================================
-                FLOATING FLOWER PETALS
-            ====================================================== */}
-
-            <FloatingPetal left="8%" delay="0s" duration="8s" />
-            <FloatingPetal left="18%" delay="2s" duration="9s" />
-            <FloatingPetal left="31%" delay="4s" duration="7s" />
-            <FloatingPetal left="48%" delay="1s" duration="10s" />
-            <FloatingPetal left="64%" delay="3s" duration="8s" />
-            <FloatingPetal left="79%" delay="0s" duration="9s" />
-            <FloatingPetal left="91%" delay="5s" duration="7s" />
-
-
-            {/* =====================================================
-                BUTTONS
+                ACTION BUTTONS
             ====================================================== */}
 
             <motion.div
-                className="onam-buttons"
+                className="home-buttons"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{
-                    duration: 1,
-                    delay: 1
-                }}
+                transition={{ delay: 0.5, duration: 0.8 }}
             >
 
-                <motion.button
-                    className="create-button"
+                <button
+                    className="create-btn"
                     onClick={() => onNavigate('design')}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 15 }}
                 >
                     Create Pookalam
-                </motion.button>
+                </button>
 
-                <motion.button
-                    className="gallery-button"
+                <button
+                    className="gallery-btn"
                     onClick={() => onNavigate('gallery')}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 15 }}
                 >
                     Explore Gallery
-                </motion.button>
+                </button>
 
             </motion.div>
 
-
-            {/* =====================================================
-                SCROLL INDICATOR
-            ====================================================== */}
-
-            <motion.div
-                className="scroll-indicator"
-                animate={{
-                    y: [0, 8, 0],
-                    opacity: [0.5, 1, 0.5]
-                }}
-                transition={{
-                    duration: 2,
-                    repeat: Infinity
-                }}
-            >
-                ↓
-            </motion.div>
-
-        </div>
+        </motion.div>
     );
 }
 
 
 /* ================================================================
-   FLOWER PETAL COMPONENT
+   FALLING PETAL COMPONENT
 ================================================================ */
 
 function FloatingPetal({ left, delay, duration }) {
 
     return (
         <motion.div
-            className="floating-petal"
-            style={{
-                left: left
-            }}
+            className="falling-petal"
             initial={{
                 y: '-10vh',
-                opacity: 0,
-                rotate: 0
+                opacity: 0
             }}
             animate={{
                 y: '110vh',
-                opacity: [0, 0.9, 0.8, 0],
-                x: [0, 25, -20, 20, 0],
-                rotate: [0, 90, 180, 270, 360]
+                x: [0, 20, -15, 20, 0],
+                rotate: [0, 90, 180, 270, 360],
+                opacity: [0, 0.8, 0.8, 0.6, 0]
             }}
             transition={{
                 duration: Number(duration.replace('s', '')),
                 delay: Number(delay.replace('s', '')),
                 repeat: Infinity,
                 ease: 'linear'
+            }}
+            style={{
+                left: left
             }}
         >
             🌸
