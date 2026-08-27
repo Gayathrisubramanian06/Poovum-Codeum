@@ -10,7 +10,7 @@ export default function HomeView({ onNavigate }) {
             ====================================================== */}
 
             <img
-                src="assets/images/hero-welcome.png"
+                src="public/assets/images/onam-background.png"
                 alt="Kerala Onam celebration"
                 className="onam-background"
             />
@@ -67,7 +67,7 @@ export default function HomeView({ onNavigate }) {
                 transition={{ duration: 1.2 }}
             >
                 <div className="title-main">
-                    ONAM
+                    Digital Pookalam
                 </div>
 
                 <div className="title-year">
@@ -75,7 +75,7 @@ export default function HomeView({ onNavigate }) {
                 </div>
 
                 <div className="title-sub">
-                    Welcome to the celebration
+                    Create your own Digital Pookalam now!
                 </div>
             </motion.div>
 
