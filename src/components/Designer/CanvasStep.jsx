@@ -91,7 +91,7 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
     };
 
     // Vector Path click filling
-    const handleVectorPathClick = (e, index, groupKey) => {
+    const handleVectorPathClick = (e, index) => {
         e.stopPropagation();
 
         if (currentMode === 'whole') {
@@ -101,44 +101,22 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
             return;
         }
 
-        // Fill path
+        // In color-fill (shredded) mode, always color only the exact clicked shape.
+        // Symmetry ring-fill only applies to stamp mode.
         const nextFills = [...vectorFills];
+        const prevColor = nextFills[index];
+        nextFills[index] = currentColor.hex;
+        setVectorFills(nextFills);
+
         const nextHistory = [...placedHistory];
-
-        if (isSymmetryActive && groupKey) {
-            // Find all indices sharing same groupKey
-            const affectedIndices = [];
-            const prevColors = [];
-            paths.forEach((p, idx) => {
-                if (p.groupKey === groupKey) {
-                    affectedIndices.push(idx);
-                    prevColors.push(nextFills[idx]);
-                    nextFills[idx] = currentColor.hex;
-                }
-            });
-
-            setVectorFills(nextFills);
-            nextHistory.push({
-                type: 'vector-fill',
-                indices: affectedIndices,
-                prevColors,
-                nextColor: currentColor.hex
-            });
-            setCanvasHint(`✨ Filled ${affectedIndices.length} shapes with ${currentColor.name}!`);
-        } else {
-            const prevColor = nextFills[index];
-            nextFills[index] = currentColor.hex;
-            setVectorFills(nextFills);
-            nextHistory.push({
-                type: 'vector-fill',
-                indices: [index],
-                prevColors: [prevColor],
-                nextColor: currentColor.hex
-            });
-            setCanvasHint(`✨ Colored shape with ${currentColor.name}!`);
-        }
-
+        nextHistory.push({
+            type: 'vector-fill',
+            indices: [index],
+            prevColors: [prevColor],
+            nextColor: currentColor.hex
+        });
         setPlacedHistory(nextHistory);
+        setCanvasHint(`✨ Colored shape with ${currentColor.name}!`);
     };
 
     // stamp petal drawing
@@ -730,7 +708,7 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                                             transform={p.scale ? `translate(${CENTER}, ${CENTER}) scale(${p.scale}) translate(-${CENTER}, -${CENTER})` : undefined}
                                             onMouseEnter={() => setHoveredGroup(p.groupKey)}
                                             onMouseLeave={() => setHoveredGroup(null)}
-                                            onClick={(e) => handleVectorPathClick(e, idx, p.groupKey)}
+                                            onClick={(e) => handleVectorPathClick(e, idx)}
                                         />
                                     ))
                                 ) : (

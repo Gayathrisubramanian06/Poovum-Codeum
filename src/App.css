@@ -1,1 +1,627 @@
-/* App.css is emptied to prevent conflicts with global index.css */
+/* ================================================================
+   MAIN ONAM HOME
+================================================================ */
+
+.onam-home {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    min-height: 700px;
+
+    overflow: hidden;
+
+    background: #f5ead8;
+
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+
+/* ================================================================
+   BACKGROUND
+================================================================ */
+
+.onam-background {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    object-position: center;
+
+    z-index: 0;
+
+    transform: scale(1.02);
+}
+
+
+/* ================================================================
+   WARM OVERLAY
+================================================================ */
+
+.warm-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 1;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(circle at 50% 40%,
+            rgba(255, 220, 130, 0.15),
+            transparent 45%);
+}
+
+
+/* ================================================================
+   NAVIGATION
+================================================================ */
+
+.onam-nav {
+
+    position: absolute;
+
+    top: 22px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    z-index: 50;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: clamp(25px, 4vw, 65px);
+
+    white-space: nowrap;
+}
+
+
+.nav-item {
+
+    border: none;
+
+    background: transparent;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: clamp(12px, 1.1vw, 18px);
+
+    letter-spacing: 2px;
+
+    color: #4e4030;
+
+    cursor: pointer;
+
+    padding: 8px 4px;
+
+    transition:
+        color 0.3s ease,
+        transform 0.3s ease;
+}
+
+
+.nav-item:hover {
+
+    color: #9a701e;
+
+    transform: translateY(-2px);
+}
+
+
+.nav-item.active {
+
+    color: #9a701e;
+
+    font-weight: bold;
+}
+
+
+/* ================================================================
+   TITLE
+================================================================ */
+
+.onam-title {
+
+    position: absolute;
+
+    top: 16%;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    z-index: 20;
+
+    text-align: center;
+
+    pointer-events: none;
+}
+
+
+.title-main {
+
+    font-size: clamp(45px, 6vw, 90px);
+
+    letter-spacing: 10px;
+
+    color: #936b20;
+
+    font-weight: 500;
+}
+
+
+.title-year {
+
+    margin-top: -5px;
+
+    font-size: clamp(18px, 2vw, 30px);
+
+    letter-spacing: 7px;
+
+    color: #4d4032;
+}
+
+
+.title-sub {
+
+    margin-top: 18px;
+
+    font-family: Arial, sans-serif;
+
+    font-size: clamp(13px, 1.2vw, 18px);
+
+    letter-spacing: 2px;
+
+    color: #5e5143;
+}
+
+
+/* ================================================================
+   MAVELI
+================================================================ */
+
+.maveli-character {
+
+    position: absolute;
+
+    left: 10%;
+
+    bottom: 18%;
+
+    width: clamp(170px, 20vw, 330px);
+
+    height: auto;
+
+    object-fit: contain;
+
+    z-index: 14;
+
+    filter:
+        drop-shadow(0 12px 15px rgba(60, 40, 20, 0.18));
+}
+
+
+/* ================================================================
+   KATHAKALI
+================================================================ */
+
+.kathakali-character {
+
+    position: absolute;
+
+    right: 8%;
+
+    bottom: 19%;
+
+    width: clamp(160px, 19vw, 320px);
+
+    height: auto;
+
+    object-fit: contain;
+
+    z-index: 14;
+
+    filter:
+        drop-shadow(0 12px 15px rgba(60, 40, 20, 0.18));
+}
+
+
+/* ================================================================
+   POOKALAM
+================================================================ */
+
+.pookalam-center {
+
+    position: absolute;
+
+    left: 50%;
+
+    bottom: 19%;
+
+    transform: translateX(-50%);
+
+    width: clamp(190px, 24vw, 390px);
+
+    height: auto;
+
+    object-fit: contain;
+
+    z-index: 13;
+
+    filter:
+        drop-shadow(0 15px 20px rgba(70, 50, 20, 0.2));
+}
+
+
+/* ================================================================
+   THIRUVATHIRA
+================================================================ */
+
+.thiruvathira-group {
+
+    position: absolute;
+
+    left: 50%;
+
+    bottom: 4%;
+
+    transform: translateX(-50%);
+
+    width: clamp(250px, 32vw, 520px);
+
+    height: auto;
+
+    object-fit: contain;
+
+    z-index: 16;
+
+    filter:
+        drop-shadow(0 12px 15px rgba(60, 40, 20, 0.18));
+}
+
+
+/* ================================================================
+   SADYA
+================================================================ */
+
+.sadya-plate {
+
+    position: absolute;
+
+    right: 13%;
+
+    bottom: 4%;
+
+    width: clamp(230px, 30vw, 480px);
+
+    height: auto;
+
+    object-fit: contain;
+
+    z-index: 15;
+
+    filter:
+        drop-shadow(0 15px 20px rgba(60, 40, 20, 0.2));
+}
+
+
+/* ================================================================
+   BOAT
+================================================================ */
+
+.snake-boat {
+
+    position: absolute;
+
+    left: 50%;
+
+    bottom: 24%;
+
+    transform: translateX(-50%);
+
+    width: clamp(350px, 55vw, 900px);
+
+    height: auto;
+
+    object-fit: contain;
+
+    z-index: 11;
+
+    pointer-events: none;
+
+    filter:
+        drop-shadow(0 10px 12px rgba(40, 40, 30, 0.25));
+}
+
+
+/* ================================================================
+   FLOATING PETALS
+================================================================ */
+
+.floating-petal {
+
+    position: absolute;
+
+    top: -30px;
+
+    z-index: 40;
+
+    font-size: clamp(14px, 1.4vw, 22px);
+
+    pointer-events: none;
+}
+
+
+/* ================================================================
+   BUTTONS
+================================================================ */
+
+.onam-buttons {
+
+    position: absolute;
+
+    left: 50%;
+
+    bottom: 12%;
+
+    transform: translateX(-50%);
+
+    z-index: 60;
+
+    display: flex;
+
+    gap: 20px;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+}
+
+
+.create-button,
+.gallery-button {
+
+    padding: 16px 36px;
+
+    border-radius: 35px;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 18px;
+
+    font-weight: 600;
+
+    letter-spacing: 1.2px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        background-color 0.25s ease;
+}
+
+
+.create-button {
+
+    border: none;
+
+    background: #8d681e;
+
+    color: #fffaf0;
+
+    box-shadow:
+        0 8px 20px rgba(70, 45, 15, 0.2);
+}
+
+
+.gallery-button {
+
+    border: 2px solid rgba(110, 80, 30, 0.65);
+
+    background: rgba(255, 250, 238, 0.85);
+
+    color: #684d21;
+}
+
+
+.create-button:hover,
+.gallery-button:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 12px 25px rgba(70, 45, 15, 0.25);
+}
+
+
+/* ================================================================
+   SCROLL INDICATOR
+================================================================ */
+
+.scroll-indicator {
+
+    position: absolute;
+
+    bottom: 3%;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    z-index: 50;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 24px;
+
+    color: #8c681f;
+
+    pointer-events: none;
+}
+
+
+/* ================================================================
+   RESPONSIVE
+================================================================ */
+
+@media (max-width: 900px) {
+
+    .onam-nav {
+
+        gap: 18px;
+    }
+
+    .nav-item {
+
+        font-size: 10px;
+
+        letter-spacing: 1px;
+    }
+
+    .maveli-character {
+
+        left: 2%;
+
+        bottom: 22%;
+
+        width: 170px;
+    }
+
+    .kathakali-character {
+
+        right: 2%;
+
+        bottom: 23%;
+
+        width: 160px;
+    }
+
+    .pookalam-center {
+
+        width: 220px;
+
+        bottom: 24%;
+    }
+
+    .thiruvathira-group {
+
+        width: 300px;
+
+        bottom: 7%;
+    }
+
+    .sadya-plate {
+
+        width: 230px;
+
+        right: 1%;
+
+        bottom: 6%;
+    }
+
+    .snake-boat {
+
+        width: 600px;
+
+        max-width: 80vw;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .onam-nav {
+
+        top: 12px;
+
+        gap: 10px;
+
+        max-width: 95vw;
+
+        overflow-x: auto;
+    }
+
+    .nav-item {
+
+        font-size: 8px;
+
+        letter-spacing: 0.5px;
+    }
+
+    .onam-title {
+
+        top: 12%;
+    }
+
+    .title-main {
+
+        letter-spacing: 5px;
+    }
+
+    .maveli-character {
+
+        width: 120px;
+
+        left: 0;
+
+        bottom: 25%;
+    }
+
+    .kathakali-character {
+
+        width: 115px;
+
+        right: 0;
+
+        bottom: 26%;
+    }
+
+    .pookalam-center {
+
+        width: 180px;
+
+        bottom: 28%;
+    }
+
+    .thiruvathira-group {
+
+        width: 230px;
+
+        bottom: 10%;
+    }
+
+    .sadya-plate {
+
+        width: 170px;
+
+        right: -5px;
+
+        bottom: 7%;
+    }
+
+    .snake-boat {
+
+    width: 450px;
+
+    max-width: 110vw;
+
+    bottom: 24%;
+}
+
+    .onam-buttons {
+
+        bottom: 16%;
+
+        transform: translateX(-50%) scale(0.85);
+    }
+}
