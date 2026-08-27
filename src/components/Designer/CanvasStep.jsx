@@ -15,6 +15,7 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
     const [currentColor, setCurrentColor] = useState(ONAM_FLOWERS[4].varieties[0]); // Default: Bright Orange
     const [currentMode, setCurrentMode] = useState('shredded'); // 'shredded' (color fill) or 'whole' (stamp)
     const [isSymmetryActive, setIsSymmetryActive] = useState(true);
+    const [symmetryFolds, setSymmetryFolds] = useState(8);
     const [currentSizeKey, setCurrentSizeKey] = useState('medium');
 
     // Drawing State stacks
@@ -147,12 +148,12 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
         const batchIds = [];
 
         if (isSymmetryActive) {
-            const symPoints = getSymmetricPoints(CENTER, CENTER, x, y, 8);
+            const symPoints = getSymmetricPoints(CENTER, CENTER, x, y, symmetryFolds);
             symPoints.forEach((pt, idx) => {
                 const id = `stamp-${Date.now()}-${idx}-${Math.random()}`;
                 batchIds.push(id);
                 // Radial rotation alignment
-                const baseRot = (idx * 45) + randomRot;
+                const baseRot = (idx * (360 / symmetryFolds)) + randomRot;
                 newStamps.push({
                     id,
                     cx: pt.x,
@@ -163,7 +164,7 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                     size
                 });
             });
-            setCanvasHint(`🌸 Symmetrically stamped 8 ${currentFlower.nameEn} blooms!`);
+            setCanvasHint(`🌸 Symmetrically stamped ${symmetryFolds} ${currentFlower.nameEn} blooms!`);
         } else {
             const id = `stamp-${Date.now()}-${Math.random()}`;
             batchIds.push(id);
@@ -199,7 +200,7 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
             const designCenter = engine.getCenterOfDesign();
 
             if (isSymmetryActive) {
-                const symPoints = getSymmetricPoints(designCenter.x, designCenter.y, pt.x, pt.y, 8);
+                const symPoints = getSymmetricPoints(designCenter.x, designCenter.y, pt.x, pt.y, symmetryFolds);
                 symPoints.forEach(p => {
                     const mask = engine.floodFill(p.x, p.y);
                     if (mask) masks.push(mask);
@@ -571,6 +572,26 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                                 </span>
                             </label>
                         </div>
+
+                        {/* Symmetry Folds selector */}
+                        {isSymmetryActive && (
+                            <div className="control-group" style={{ minWidth: '150px' }}>
+                                <span className="control-label">Symmetry Folds:</span>
+                                <div className="size-row" style={{ display: 'flex', gap: '3px' }}>
+                                    {[4, 6, 8, 12, 16, 24].map(folds => (
+                                        <button
+                                            key={folds}
+                                            className={`size-btn ${symmetryFolds === folds ? 'active' : ''}`}
+                                            onClick={() => setSymmetryFolds(folds)}
+                                            style={{ padding: '3px 5px', fontSize: '10.5px', minWidth: '26px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                            type="button"
+                                        >
+                                            {folds}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                         {/* Size controller */}
                         <div className="control-group">
