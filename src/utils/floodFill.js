@@ -26,7 +26,31 @@ export class ImageTemplateEngine {
             const img = new Image();
             img.crossOrigin = 'anonymous';
             img.onload = () => {
-                this.templateCtx.drawImage(img, 0, 0, this.canvasSize, this.canvasSize);
+                const imgW = img.width || 1;
+                const imgH = img.height || 1;
+
+                let drawW = this.canvasSize;
+                let drawH = this.canvasSize;
+                let drawX = 0;
+                let drawY = 0;
+
+                const imgRatio = imgW / imgH;
+                const canvasRatio = 1.0;
+
+                if (imgRatio > canvasRatio) {
+                    drawW = this.canvasSize;
+                    drawH = this.canvasSize / imgRatio;
+                    drawY = (this.canvasSize - drawH) / 2;
+                } else if (imgRatio < canvasRatio) {
+                    drawH = this.canvasSize;
+                    drawW = this.canvasSize * imgRatio;
+                    drawX = (this.canvasSize - drawW) / 2;
+                }
+
+                this.templateCtx.fillStyle = '#ffffff';
+                this.templateCtx.fillRect(0, 0, this.canvasSize, this.canvasSize);
+
+                this.templateCtx.drawImage(img, drawX, drawY, drawW, drawH);
                 this.preprocess();
                 resolve(this.getFillDataUrl());
             };
@@ -39,6 +63,7 @@ export class ImageTemplateEngine {
         const imgData = this.templateCtx.getImageData(0, 0, this.canvasSize, this.canvasSize);
         const px = imgData.data;
         const total = this.canvasSize * this.canvasSize;
+        const size = this.canvasSize;
 
         // 1. Grayscale
         const lums = new Uint8Array(total);
@@ -47,45 +72,60 @@ export class ImageTemplateEngine {
             lums[i] = Math.round(0.299 * px[idx] + 0.587 * px[idx + 1] + 0.114 * px[idx + 2]);
         }
 
-        // 2. Otsu's threshold
-        const hist = new Int32Array(256);
-        for (let i = 0; i < total; i++) hist[lums[i]]++;
+        // 2. Adaptive Local Thresholding using Integral Image
+        const R = 6;
+        const C = 10;
+        const thresholded = new Uint8Array(total);
 
-        let sumAll = 0;
-        for (let t = 0; t < 256; t++) sumAll += t * hist[t];
-
-        let wBg = 0, sumBg = 0, bestVar = 0, otsuThresh = 128;
-        for (let t = 0; t < 256; t++) {
-            wBg += hist[t];
-            if (!wBg) continue;
-            const wFg = total - wBg;
-            if (!wFg) break;
-            sumBg += t * hist[t];
-            const mBg = sumBg / wBg;
-            const mFg = (sumAll - sumBg) / wFg;
-            const v = wBg * wFg * (mBg - mFg) * (mBg - mFg);
-            if (v > bestVar) { bestVar = v; otsuThresh = t; }
+        const integral = new Float64Array((size + 1) * (size + 1));
+        for (let y = 0; y < size; y++) {
+            let rowSum = 0;
+            for (let x = 0; x < size; x++) {
+                rowSum += lums[y * size + x];
+                integral[(y + 1) * (size + 1) + (x + 1)] = integral[y * (size + 1) + (x + 1)] + rowSum;
+            }
         }
-        otsuThresh = Math.max(55, Math.min(215, otsuThresh));
 
-        // 3. Binarize
+        for (let y = 0; y < size; y++) {
+            for (let x = 0; x < size; x++) {
+                const p = y * size + x;
+                
+                const ymin = Math.max(0, y - R);
+                const ymax = Math.min(size - 1, y + R);
+                const xmin = Math.max(0, x - R);
+                const xmax = Math.min(size - 1, x + R);
+                
+                const count = (ymax - ymin + 1) * (xmax - xmin + 1);
+                const sum = integral[(ymax + 1) * (size + 1) + (xmax + 1)]
+                          - integral[ymin * (size + 1) + (xmax + 1)]
+                          - integral[(ymax + 1) * (size + 1) + xmin]
+                          + integral[ymin * (size + 1) + xmin];
+                
+                const avg = sum / count;
+                thresholded[p] = lums[p] < (avg - C) ? 0 : 255;
+            }
+        }
+
+        // 3. Write back thresholded pixels
         for (let i = 0; i < total; i++) {
             const idx = i * 4;
-            const v = lums[i] < otsuThresh ? 0 : 255;
+            const v = thresholded[i];
             px[idx] = px[idx + 1] = px[idx + 2] = v;
             px[idx + 3] = 255;
         }
 
-        // 4. Dilate borders by 1 pixel
+        // 4. 8-Direction Dilation to close micro-gaps
         const snapshot = new Uint8Array(total);
         for (let i = 0; i < total; i++) snapshot[i] = px[i * 4] > 0 ? 1 : 0;
 
-        for (let y = 1; y < this.canvasSize - 1; y++) {
-            for (let x = 1; x < this.canvasSize - 1; x++) {
-                const p = y * this.canvasSize + x;
+        for (let y = 1; y < size - 1; y++) {
+            for (let x = 1; x < size - 1; x++) {
+                const p = y * size + x;
                 if (snapshot[p] === 1 && (
                     snapshot[p - 1] === 0 || snapshot[p + 1] === 0 ||
-                    snapshot[p - this.canvasSize] === 0 || snapshot[p + this.canvasSize] === 0
+                    snapshot[p - size] === 0 || snapshot[p + size] === 0 ||
+                    snapshot[p - size - 1] === 0 || snapshot[p - size + 1] === 0 ||
+                    snapshot[p + size - 1] === 0 || snapshot[p + size + 1] === 0
                 )) {
                     const idx = p * 4;
                     px[idx] = px[idx + 1] = px[idx + 2] = 0;
@@ -118,7 +158,7 @@ export class ImageTemplateEngine {
         let startPos = startY * this.canvasSize + startX;
         if (lum(startPos) < thresh) {
             let foundPos = -1;
-            for (let r = 1; r <= 8; r++) {
+            for (let r = 1; r <= 18; r++) {
                 for (let dy = -r; dy <= r; dy++) {
                     for (let dx = -r; dx <= r; dx++) {
                         const nx = startX + dx;
@@ -219,5 +259,40 @@ export class ImageTemplateEngine {
         this.fillCtx.clearRect(0, 0, this.canvasSize, this.canvasSize);
         this.regionCache.clear();
         return this.getFillDataUrl();
+    }
+
+    getCenterOfDesign() {
+        const imgData = this.templateCtx.getImageData(0, 0, this.canvasSize, this.canvasSize);
+        const px = imgData.data;
+        const size = this.canvasSize;
+        
+        let sumX = 0;
+        let sumY = 0;
+        let count = 0;
+        
+        // Ignore margins (outer 5%) to avoid edge noise / crop borders
+        const margin = Math.round(size * 0.05);
+        
+        for (let y = margin; y < size - margin; y++) {
+            for (let x = margin; x < size - margin; x++) {
+                const idx = (y * size + x) * 4;
+                // If it is a black border outline pixel
+                if (px[idx] === 0) {
+                    sumX += x;
+                    sumY += y;
+                    count++;
+                }
+            }
+        }
+        
+        if (count > 80) {
+            return {
+                x: sumX / count,
+                y: sumY / count
+            };
+        }
+        
+        // Fallback to absolute center
+        return { x: size / 2, y: size / 2 };
     }
 }

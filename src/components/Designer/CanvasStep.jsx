@@ -196,9 +196,10 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
             const engine = engineRef.current;
             const prevSnapshot = engine.getFillState();
             const masks = [];
+            const designCenter = engine.getCenterOfDesign();
 
             if (isSymmetryActive) {
-                const symPoints = getSymmetricPoints(CENTER, CENTER, pt.x, pt.y, 8);
+                const symPoints = getSymmetricPoints(designCenter.x, designCenter.y, pt.x, pt.y, 8);
                 symPoints.forEach(p => {
                     const mask = engine.floodFill(p.x, p.y);
                     if (mask) masks.push(mask);
@@ -372,6 +373,12 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
     // Share text and copy image to clipboard, then open WhatsApp Web/App link
     const handleWhatsApp = () => {
         setShareMessage('⏳ Preparing WhatsApp share...');
+        // Open the window IMMEDIATELY on the click thread to avoid popup blocker!
+        const whatsappWindow = window.open('', '_blank');
+        if (whatsappWindow) {
+            whatsappWindow.document.write('<p style="font-family:sans-serif;text-align:center;margin-top:40px;color:#7a4a1e;">Opening WhatsApp... Please wait 🪔</p>');
+        }
+
         generatePNGAndAction((blob) => {
             const shareText = "Check out this Onam Pookalam I designed! 🪔🌸 Created using Onam Pookalam Designer.";
             
@@ -379,6 +386,9 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
             if (navigator.share && navigator.canShare) {
                 const file = new File([blob], 'my-pookalam.png', { type: 'image/png' });
                 if (navigator.canShare({ files: [file] })) {
+                    // Close the popup window since we are opening native share sheet
+                    if (whatsappWindow) whatsappWindow.close();
+
                     navigator.share({
                         files: [file],
                         title: 'My Onam Pookalam',
@@ -390,45 +400,50 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                     })
                     .catch(err => {
                         console.log('Native share failed/cancelled:', err);
-                        redirectToWhatsApp(shareText, blob);
+                        // Re-open/update fallback
+                        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
+                        copyToClipboardFallback(blob);
                     });
                     return;
                 }
             }
 
-            redirectToWhatsApp(shareText, blob);
+            // Fallback for desktop: update the open window location
+            if (whatsappWindow) {
+                whatsappWindow.location.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+            }
+            copyToClipboardFallback(blob);
         });
     };
 
-    const redirectToWhatsApp = (text, blob) => {
-        // Copy image first so they can paste it directly in their chat
+    const copyToClipboardFallback = (blob) => {
         try {
             navigator.clipboard.write([
                 new ClipboardItem({ 'image/png': blob })
             ]).then(() => {
-                setShareMessage('📋 Image copied! Opening WhatsApp... Paste (Ctrl+V) the image in the chat.');
+                setShareMessage('📋 Image copied directly to clipboard! You can paste (Ctrl+V) it in the chat.');
+                setTimeout(() => setShareMessage(''), 4000);
             }).catch(() => {
-                setShareMessage('📋 Opening WhatsApp chat link...');
+                setShareMessage('');
             });
         } catch (e) {
-            setShareMessage('📋 Opening WhatsApp chat link...');
-        }
-
-        setTimeout(() => {
-            const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
-            window.open(url, '_blank');
             setShareMessage('');
-        }, 1600);
+        }
     };
 
     // Share text to Twitter/X
     const handleTwitter = () => {
         setShareMessage('⏳ Preparing Twitter share...');
+        // Open the window IMMEDIATELY on the click thread to avoid popup blocker!
+        const twitterWindow = window.open('', '_blank');
+        if (twitterWindow) {
+            twitterWindow.document.write('<p style="font-family:sans-serif;text-align:center;margin-top:40px;color:#7a4a1e;">Opening Twitter / X... Please wait 🪔</p>');
+        }
+
         generatePNGAndAction((blob) => {
             const shareText = "Check out this Onam Pookalam I designed! 🪔🌸 #Onam #Pookalam #Kerala";
             const tweetUrl = "https://github.com/Gayathrisubramanian06/Poovum-Codeum";
             
-            // Try to copy image to clipboard too so they can paste it in the tweet
             try {
                 navigator.clipboard.write([
                     new ClipboardItem({ 'image/png': blob })
@@ -436,7 +451,9 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
             } catch (e) {}
 
             const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(tweetUrl)}`;
-            window.open(url, '_blank');
+            if (twitterWindow) {
+                twitterWindow.location.href = url;
+            }
             setShareMessage('');
         });
     };

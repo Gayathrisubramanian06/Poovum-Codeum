@@ -258,10 +258,11 @@ export default function GalleryView({ onNavigate }) {
                                 return (
                                     <motion.div
                                         layout
-                                        initial={{ opacity: 0, scale: 0.92 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.9 }}
-                                        transition={{ duration: 0.28, delay: Math.min(5, idx) * 0.05 }}
+                                        initial={{ opacity: 0, y: 32 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true, margin: "-40px" }}
+                                        exit={{ opacity: 0, scale: 0.92 }}
+                                        transition={{ duration: 0.5, ease: "easeOut" }}
                                         key={item.id}
                                         className={`gallery-item-card ${item.type === 'community' ? 'community-created' : ''}`}
                                     >
