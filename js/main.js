@@ -63,63 +63,6 @@ function initScrollFadeIn() {
 }
 
 
-/* ------------------------------------------------
-   FEATURE 2 — FALLING PETAL RAIN
-   Only runs on the hero/index page (needs #heroWrap).
-   Spawns 22 petals with randomised position, size,
-   colour, duration and delay. All via CSS custom props.
-   ------------------------------------------------ */
-const PETAL_COLORS = [
-    '#f97316', // marigold orange
-    '#facc15', // golden yellow
-    '#fb7185', // lotus pink
-    '#dc2626', // thechi red
-    '#ffffff',  // thumba white
-    '#fde68a', // pale gold
-    '#4ade80', // leaf green
-    '#f472b6', // jasmine pink
-];
-
-function spawnPetals() {
-    if (!document.getElementById('heroWrap')) return; // hero page only
-
-    // Create the container if it doesn't exist
-    let rain = document.getElementById('petalRain');
-    if (!rain) {
-        rain = document.createElement('div');
-        rain.id = 'petalRain';
-        document.body.appendChild(rain);
-    }
-
-    const COUNT = 22;
-    for (let i = 0; i < COUNT; i++) {
-        const petal = document.createElement('div');
-        petal.className = 'falling-petal';
-
-        const left     = Math.random() * 100;           // % across screen
-        const dur      = 6 + Math.random() * 8;         // 6–14 s fall
-        const delay    = -(Math.random() * dur);         // stagger start (negative = already mid-fall)
-        const size     = 10 + Math.random() * 14;        // 10–24 px
-        const color    = PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)];
-        const rotate   = Math.random() * 360;
-        const opacity  = 0.55 + Math.random() * 0.35;
-
-        petal.style.cssText = `
-            left: ${left}%;
-            width: ${size}px;
-            height: ${size * 1.3}px;
-            background: ${color};
-            opacity: ${opacity};
-            border-radius: ${Math.random() > 0.5 ? '50% 0 50% 0' : '0 50% 0 50%'};
-            transform: rotate(${rotate}deg);
-            --fall-dur: ${dur}s;
-            --fall-delay: ${delay}s;
-        `;
-
-        rain.appendChild(petal);
-    }
-}
-
 
 /* ------------------------------------------------
    FEATURE 3 — CLICK RIPPLE MICRO-INTERACTION
@@ -245,7 +188,6 @@ function watchGalleryCards() {
    ------------------------------------------------ */
 document.addEventListener('DOMContentLoaded', () => {
     initScrollFadeIn();
-    spawnPetals();
     initRipple();
     initPageTransitions();
     watchGalleryCards();

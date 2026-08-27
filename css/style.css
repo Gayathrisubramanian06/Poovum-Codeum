@@ -646,32 +646,78 @@ button {
     box-shadow: 0 2px 8px rgba(122, 74, 30, 0.3);
 }
 
-.symmetry-toggle-btn {
-    background: #fdfaf3;
-    border: 1.5px solid #ebdcc5;
-    border-radius: 999px;
-    padding: 6px 12px;
-    font-size: 11.5px;
-    font-weight: 600;
-    color: var(--brown-dark);
-    cursor: pointer;
-    transition: all 0.15s ease;
+/* Shadcn-like Custom Switch Toggle */
+.switch-group {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
 }
 
-.symmetry-toggle-btn:hover {
-    border-color: var(--gold);
-    background: #ffffff;
+.switch-label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--brown-dark);
+    cursor: pointer;
 }
 
-.symmetry-toggle-btn.active {
-    background: linear-gradient(135deg, #7a4a1e 0%, #9a6a2f 100%);
-    color: #ffffff;
-    border-color: var(--gold);
-    box-shadow: 0 2px 8px rgba(122, 74, 30, 0.25);
+.switch-container {
+    position: relative;
+    display: inline-block;
+    width: 38px;
+    height: 22px;
+    cursor: pointer;
 }
+
+.switch-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.switch-track {
+    position: absolute;
+    inset: 0;
+    background-color: #ebdcc5;
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.2s ease;
+}
+
+.switch-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+    background-color: var(--white);
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Checked States */
+.switch-input:checked + .switch-track {
+    background-color: var(--brown-dark);
+}
+
+.switch-input:checked + .switch-track .switch-thumb {
+    transform: translateX(16px);
+}
+
+/* Focus & Hover Rings */
+.switch-container:hover .switch-track {
+    border-color: var(--gold);
+}
+
+.switch-input:focus-visible + .switch-track {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+}
+
 
 .size-row {
     display: flex;
@@ -1422,31 +1468,117 @@ button {
     margin-top: 2px;
 }
 
-/* Empty State */
-.gallery-empty-state {
+/* Shadcn Empty Component Replica */
+.empty-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    padding: 60px 20px;
+    padding: 64px 24px;
     background: var(--white);
     border-radius: 20px;
     border: 2px dashed #ebdcc5;
-    margin-top: 20px;
+    margin-top: 24px;
+    box-shadow: 0 4px 14px var(--shadow);
+    max-width: 620px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
 }
 
-.empty-icon {
-    font-size: 48px;
-    display: block;
-    margin-bottom: 12px;
+.empty-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
 }
 
-.gallery-empty-state h3 {
-    font-size: 18px;
+.empty-media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: #fdfaf3;
+    border: 1.5px solid #ebdcc5;
     color: var(--brown-dark);
-    margin-bottom: 6px;
 }
 
-.gallery-empty-state p {
-    font-size: 13px;
+.empty-media-svg {
+    stroke-width: 1.8;
+}
+
+.empty-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--brown-dark);
+}
+
+.empty-description {
+    font-size: 13.5px;
     color: var(--brown-mid);
+    max-width: 420px;
+    line-height: 1.5;
+}
+
+.empty-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.empty-content a {
+    min-width: 155px;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.empty-outline-btn {
+    border: 1.5px solid #ebdcc5;
+    background: transparent;
+    color: var(--brown-dark);
+    padding: 12px 18px;
+    font-size: 14px;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.empty-outline-btn:hover {
+    border-color: var(--brown-dark);
+    background: rgba(122, 74, 30, 0.05);
+}
+
+.empty-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--brown-mid);
+    text-decoration: none;
+    transition: color 0.15s ease;
+    margin-top: 8px;
+}
+
+.empty-link:hover {
+    color: var(--brown-dark);
+}
+
+.empty-link-arrow {
+    transition: transform 0.15s ease;
+}
+
+.empty-link:hover .empty-link-arrow {
+    transform: translate(2px, -2px);
 }
 
 /* ============================================
@@ -1780,55 +1912,8 @@ button {
     transform: scale(1);
 }
 
-/* ============================================
-   FEATURE 2 — FLOATING PETALS (hero page)
-   JS spawns .falling-petal elements inside #petalRain
-   ============================================ */
 
-#petalRain {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: 5; /* above hero image, below buttons */
-}
 
-@keyframes petalFall {
-    0%   { transform: translateY(-60px) rotate(0deg);   opacity: 0; }
-    8%   { opacity: 0.85; }
-    90%  { opacity: 0.75; }
-    100% { transform: translateY(110vh) rotate(540deg); opacity: 0; }
-}
-
-@keyframes petalSway {
-    0%,100% { margin-left: 0px; }
-    25%      { margin-left: 18px; }
-    75%      { margin-left: -18px; }
-}
-
-.falling-petal {
-    position: absolute;
-    top: -60px;
-    width: 18px;
-    height: 22px;
-    border-radius: 50% 0 50% 0;
-    opacity: 0;
-    animation: petalFall var(--fall-dur, 7s) var(--fall-delay, 0s) linear infinite,
-               petalSway calc(var(--fall-dur, 7s) * 0.6) var(--fall-delay, 0s) ease-in-out infinite;
-}
-
-/* Static floating bob for hero decorative elements */
-@keyframes floatBob {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50%       { transform: translateY(-14px) rotate(6deg); }
-}
-
-.float-bob {
-    animation: floatBob 4s ease-in-out infinite;
-}
-.float-bob-slow {
-    animation: floatBob 6s ease-in-out infinite;
-}
 
 /* ============================================
    FEATURE 3 — BUTTON MICRO-INTERACTIONS

@@ -421,12 +421,14 @@
                             </div>
                         </div>
 
-                        <div class="control-group">
-                            <span class="control-label">Symmetry:</span>
-                            <button type="button" class="symmetry-toggle-btn active" id="btnSymmetry"
-                                title="Toggle radial symmetry for all designs and stamping">
-                                ✨ Symmetry: ON
-                            </button>
+                        <div class="control-group switch-group">
+                            <span class="switch-label" id="symmetryLabel">✨ Symmetry: ON</span>
+                            <label class="switch-container" title="Toggle radial symmetry for all designs and stamping">
+                                <input type="checkbox" id="btnSymmetry" class="switch-input" checked />
+                                <span class="switch-track">
+                                    <span class="switch-thumb"></span>
+                                </span>
+                            </label>
                         </div>
 
                         <div class="control-group" id="sizeControlGroup">

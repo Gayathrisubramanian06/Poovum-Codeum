@@ -43,11 +43,31 @@
         </div>
 
         <!-- Empty state placeholder (if no community designs yet) -->
-        <div id="galleryEmptyState" class="gallery-empty-state" hidden>
-            <span class="empty-icon">🪔</span>
-            <h3>Be the first to publish a Pookalam!</h3>
-            <p>Design your own floral creation and share it with the community.</p>
-            <a href="design.html" class="hero-btn-solid" style="display:inline-block; margin-top:14px;">Start Designing 🌸</a>
+        <div id="galleryEmptyState" class="empty-container fade-in" hidden>
+            <div class="empty-header">
+                <div class="empty-media">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="empty-media-svg">
+                        <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z"></path>
+                        <path d="m10 11-2 2 2 2"></path>
+                        <path d="m14 15 2-2-2-2"></path>
+                    </svg>
+                </div>
+                <h3 class="empty-title">No Creations Yet</h3>
+                <p class="empty-description">
+                    No community designs have been published to this gallery view yet. Get started by creating your very first Onam Pookalam.
+                </p>
+            </div>
+            <div class="empty-content flex-row justify-center gap-2">
+                <a href="design.html" class="hero-btn-solid">Create Pookalam 🌸</a>
+                <a href="design.html" class="ghost-btn empty-outline-btn">Import Outline 📥</a>
+            </div>
+            <a href="about.html" class="empty-link">
+                Learn More About Onam Pookalams 
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="empty-link-arrow">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                </svg>
+            </a>
         </div>
 
         <!-- Image Fullscreen Lightbox Modal -->

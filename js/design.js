@@ -2133,12 +2133,15 @@
 
     buildFlowerSidebar();
 
-    // ---------- Symmetry Toggle Button ----------
+    // ---------- Symmetry Toggle (Switch) ----------
+    const symmetryLabel = document.getElementById('symmetryLabel');
     if (btnSymmetry) {
-        btnSymmetry.addEventListener('click', () => {
-            isSymmetryActive = !isSymmetryActive;
-            btnSymmetry.classList.toggle('active', isSymmetryActive);
-            btnSymmetry.textContent = isSymmetryActive ? '✨ Symmetry: ON' : 'Symmetry: OFF';
+        btnSymmetry.checked = isSymmetryActive;
+        btnSymmetry.addEventListener('change', () => {
+            isSymmetryActive = btnSymmetry.checked;
+            if (symmetryLabel) {
+                symmetryLabel.textContent = isSymmetryActive ? '✨ Symmetry: ON' : 'Symmetry: OFF';
+            }
             updateHint();
         });
     }
