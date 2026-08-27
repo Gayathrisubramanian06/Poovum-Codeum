@@ -290,7 +290,7 @@
 .sadya-img {
     position: absolute;
 
-    right: 26%;
+    right: 21%;
     bottom: -37%;
 
     width: clamp(200px, 24vw, 410px);
@@ -309,13 +309,13 @@
 
 
 /* ================================================================
-   THIRUVATHIRA — MOVED RIGHT BY 5%
+   THIRUVATHIRA — MOVED LEFT BY 10%
 ================================================================ */
 
 .thiruvathira-img {
     position: absolute;
 
-    left: 0%;
+    left: -10%;
     bottom: -14%;
 
     transform: translateX(0%);
@@ -342,8 +342,8 @@
 .boat-img {
     position: absolute;
 
-    left: -2%;
-    bottom: 12%;
+    left: 8%;
+    bottom: -38%;
 
     width: clamp(380px, 48vw, 760px);
 
