@@ -4,6 +4,7 @@ import { ONAM_FLOWERS } from '../../utils/flowers';
 import { generateMandalaPaths, generateCustomMandalaPaths, getSymmetricPoints } from '../../utils/mandalas';
 import { ImageTemplateEngine } from '../../utils/floodFill';
 import { FlowerRenderer } from '../FlowerRenderer';
+import { supabase } from '../../lib/supabase';
 
 const CENTER = 200;
 const CANVAS_SIZE = 400;
@@ -326,26 +327,40 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
         img.src = blobURL;
     };
 
-    // Publish to local community gallery
+    // Publish to shared community gallery via Supabase
     const handlePublish = () => {
         setShareMessage('⏳ Publishing to Gallery...');
-        generatePNGAndAction((blob, dataUrl) => {
+        generatePNGAndAction(async (blob) => {
             try {
-                const raw = localStorage.getItem('pookalam_community_gallery');
-                const list = raw ? JSON.parse(raw) : [];
-                const newItem = {
-                    id: `comm-${Date.now()}-${Math.random()}`,
-                    title: pookalamTitle || 'Onam Rangoli',
-                    creator: creatorName || 'Festive Designer',
-                    city: creatorCity ? `${creatorCity} 🪔` : 'Kerala 🌸',
-                    date: 'Aug 2026',
-                    img: dataUrl,
-                    likes: 0
-                };
-                list.unshift(newItem);
-                localStorage.setItem('pookalam_community_gallery', JSON.stringify(list));
+                // 1. Upload image blob to Supabase Storage
+                const filename = `pookalam-${Date.now()}-${Math.random().toString(36).slice(2)}.png`;
+                const { error: uploadError } = await supabase.storage
+                    .from('pookalam-gallery')
+                    .upload(filename, blob, { contentType: 'image/png', upsert: false });
 
-                setShareMessage('✨ Published to Community Gallery successfully!');
+                if (uploadError) throw uploadError;
+
+                // 2. Get public URL of the uploaded image
+                const { data: urlData } = supabase.storage
+                    .from('pookalam-gallery')
+                    .getPublicUrl(filename);
+
+                const imgUrl = urlData.publicUrl;
+
+                // 3. Insert row into gallery_items table
+                const { error: insertError } = await supabase
+                    .from('gallery_items')
+                    .insert({
+                        title: pookalamTitle || 'Onam Rangoli',
+                        creator: creatorName || 'Festive Designer',
+                        city: creatorCity ? `${creatorCity} 🪔` : 'Kerala 🌸',
+                        img_url: imgUrl,
+                        likes: 0
+                    });
+
+                if (insertError) throw insertError;
+
+                setShareMessage('✨ Published to Community Gallery!');
                 setTimeout(() => {
                     setShowPublish(false);
                     onNavigate('gallery');
@@ -353,7 +368,7 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                 }, 1500);
             } catch (err) {
                 console.error(err);
-                setShareMessage('⚠️ Failed to save to local storage.');
+                setShareMessage('⚠️ Failed to publish. Check Supabase credentials in .env.local.');
             }
         });
     };

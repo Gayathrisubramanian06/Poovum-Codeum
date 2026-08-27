@@ -1,89 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { supabase } from '../lib/supabase';
 
-// Curated starter showcase items with classic Onam pookalams
-const CURATED_DESIGNS = [
-    {
-        id: 'curated-1',
-        title: 'Royal Mahabali Lotus',
-        creator: 'Anjali Menon',
-        city: 'Thiruvananthapuram 🪔',
-        date: 'Aug 2026',
-        img: 'assets/images/circle-1.jpg',
-        likes: 42,
-        type: 'classic'
-    },
-    {
-        id: 'curated-2',
-        title: 'Geometric Star Mandapam',
-        creator: 'Rahul & Family',
-        city: 'Kochi 🌸',
-        date: 'Aug 2026',
-        img: 'assets/images/circle-2.jpg',
-        likes: 38,
-        type: 'classic'
-    },
-    {
-        id: 'curated-3',
-        title: 'Heritage Chendumalli Ring',
-        creator: 'Devika Nair',
-        city: 'Kozhikode 🌼',
-        date: 'Aug 2026',
-        img: 'assets/images/circle-8.jpg',
-        likes: 29,
-        type: 'classic'
-    },
-    {
-        id: 'curated-4',
-        title: 'Radiant Peacock Wheel',
-        creator: 'Sreekanth V.',
-        city: 'Thrissur 🦚',
-        date: 'Aug 2026',
-        img: 'assets/images/circle-14.jpg',
-        likes: 56,
-        type: 'classic'
-    },
-    {
-        id: 'curated-5',
-        title: 'Grand Sunflower Pookalam',
-        creator: 'Meera Krishnan',
-        city: 'Palakkad 🌻',
-        date: 'Aug 2026',
-        img: 'assets/images/circle-20.jpg',
-        likes: 35,
-        type: 'classic'
-    },
-    {
-        id: 'curated-6',
-        title: 'Thumba & Chethi Bloom',
-        creator: 'Arjun K.',
-        city: 'Alappuzha 🌺',
-        date: 'Aug 2026',
-        img: 'assets/images/circle-16.jpg',
-        likes: 47,
-        type: 'classic'
-    }
-];
-
-const STORAGE_KEY = 'pookalam_community_gallery';
 const LIKES_STORAGE_KEY = 'pookalam_gallery_likes';
 
 export default function GalleryView({ onNavigate }) {
-    const [communityItems, setCommunityItems] = useState([]);
+    const [items, setItems] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [likesMap, setLikesMap] = useState({});
     const [filter, setFilter] = useState('all');
     const [lightboxItem, setLightboxItem] = useState(null);
 
-    // Load initial storage items
+    // Fetch from Supabase on mount
     useEffect(() => {
-        try {
-            const rawUploads = localStorage.getItem(STORAGE_KEY);
-            const uploads = rawUploads ? JSON.parse(rawUploads) : [];
-            setCommunityItems(uploads.map(item => ({ ...item, type: 'community' })));
-        } catch (e) {
-            console.error('Failed to load uploads:', e);
+        async function fetchGallery() {
+            setLoading(true);
+            setError(null);
+            try {
+                const { data, error: sbError } = await supabase
+                    .from('gallery_items')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (sbError) throw sbError;
+                setItems((data || []).map(item => ({ ...item, type: 'community' })));
+            } catch (err) {
+                console.error('Gallery fetch error:', err);
+                setError('Could not load gallery. Check your Supabase credentials in .env.local.');
+            } finally {
+                setLoading(false);
+            }
         }
 
+        fetchGallery();
+
+        // Load per-device likes from localStorage
         try {
             const rawLikes = localStorage.getItem(LIKES_STORAGE_KEY);
             setLikesMap(rawLikes ? JSON.parse(rawLikes) : {});
@@ -92,12 +44,9 @@ export default function GalleryView({ onNavigate }) {
         }
     }, []);
 
-    const allItems = [...communityItems, ...CURATED_DESIGNS];
-
-    const filteredItems = allItems.filter(item => {
+    const filteredItems = items.filter(item => {
         if (filter === 'all') return true;
         if (filter === 'community') return item.type === 'community';
-        if (filter === 'classic') return item.type === 'classic';
         return true;
     });
 
@@ -186,22 +135,50 @@ export default function GalleryView({ onNavigate }) {
                         >
                             Community Uploads ✨
                         </button>
-                        <button
-                            className={`gallery-tab ${filter === 'classic' ? 'active' : ''}`}
-                            onClick={() => setFilter('classic')}
-                            type="button"
-                        >
-                            Festive Classics
-                        </button>
                     </div>
                     <span className="gallery-counter">
-                        {filteredItems.length} {filteredItems.length === 1 ? 'Design' : 'Designs'}
+                        {loading ? 'Loading…' : `${filteredItems.length} ${filteredItems.length === 1 ? 'Design' : 'Designs'}`}
                     </span>
                 </div>
 
-                {/* Main Content Area */}
-                {filteredItems.length === 0 ? (
-                    /* Shadcn-like Custom Empty Component */
+                {/* Error Banner */}
+                {error && (
+                    <div style={{
+                        margin: '16px 20px 0',
+                        padding: '12px 16px',
+                        background: '#fff3cd',
+                        border: '1px solid #ffc107',
+                        borderRadius: '10px',
+                        color: '#856404',
+                        fontSize: '13px',
+                        fontFamily: 'inherit'
+                    }}>
+                        ⚠️ {error}
+                    </div>
+                )}
+
+                {/* Loading Spinner */}
+                {loading ? (
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '80px 20px',
+                        gap: '16px',
+                        color: 'var(--text-muted, #888)'
+                    }}>
+                        <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
+                            style={{ fontSize: '36px', display: 'inline-block' }}
+                        >
+                            🌸
+                        </motion.div>
+                        <p style={{ margin: 0, fontSize: '14px' }}>Loading gallery…</p>
+                    </div>
+                ) : filteredItems.length === 0 ? (
+                    /* Empty State */
                     <div className="empty-container fade-in visible">
                         <div className="empty-header">
                             <div className="empty-media">
@@ -211,9 +188,9 @@ export default function GalleryView({ onNavigate }) {
                                     <path d="m14 15 2-2-2-2"></path>
                                 </svg>
                             </div>
-                            <h3 className="empty-title">No Creations Yet</h3>
+                            <h3 className="empty-title">Gallery is Empty</h3>
                             <p className="empty-description">
-                                No community designs have been published to this gallery view yet. Get started by creating your very first Onam Pookalam.
+                                No community designs have been shared yet. Be the first to create and publish your Onam Pookalam!
                             </p>
                         </div>
                         <div className="empty-content">
@@ -245,13 +222,10 @@ export default function GalleryView({ onNavigate }) {
                         </button>
                     </div>
                 ) : (
-                    /* Dynamic Grid with Staggered Framer Motion entries */
-                    <motion.div
-                        layout
-                        className="community-gallery-grid"
-                    >
+                    /* Gallery Grid */
+                    <motion.div layout className="community-gallery-grid">
                         <AnimatePresence mode="popLayout">
-                            {filteredItems.map((item, idx) => {
+                            {filteredItems.map((item) => {
                                 const isLiked = !!likesMap[item.id];
                                 const currentLikes = (item.likes || 0) + (isLiked ? 1 : 0);
 
@@ -260,20 +234,18 @@ export default function GalleryView({ onNavigate }) {
                                         layout
                                         initial={{ opacity: 0, y: 32 }}
                                         whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: true, margin: "-40px" }}
+                                        viewport={{ once: true, margin: '-40px' }}
                                         exit={{ opacity: 0, scale: 0.92 }}
-                                        transition={{ duration: 0.5, ease: "easeOut" }}
+                                        transition={{ duration: 0.5, ease: 'easeOut' }}
                                         key={item.id}
-                                        className={`gallery-item-card ${item.type === 'community' ? 'community-created' : ''}`}
+                                        className="gallery-item-card community-created"
                                     >
                                         <div
                                             className="gallery-card-img-wrap"
                                             onClick={() => setLightboxItem(item)}
                                         >
-                                            <img src={item.img} alt={item.title || 'Pookalam'} loading="lazy" />
-                                            {item.type === 'community' && (
-                                                <span className="gallery-badge-new">Community ✨</span>
-                                            )}
+                                            <img src={item.img_url} alt={item.title || 'Pookalam'} loading="lazy" />
+                                            <span className="gallery-badge-new">Community ✨</span>
                                             <div className="gallery-card-overlay">
                                                 <span>🔍 Click to Zoom</span>
                                             </div>
@@ -281,7 +253,7 @@ export default function GalleryView({ onNavigate }) {
                                         <div className="gallery-card-body">
                                             <div className="gallery-card-meta">
                                                 <h3 className="gallery-card-creator">{item.creator || 'Anonymous Creator'}</h3>
-                                                <p className="gallery-card-caption">{item.city || item.caption || 'Happy Onam! 🌸'}</p>
+                                                <p className="gallery-card-caption">{item.city || 'Happy Onam! 🌸'}</p>
                                             </div>
                                             <div className="gallery-card-actions">
                                                 <button
@@ -295,7 +267,7 @@ export default function GalleryView({ onNavigate }) {
                                                 </button>
                                                 <button
                                                     className="gallery-download-btn"
-                                                    onClick={(e) => handleDownload(item.img, item.creator, e)}
+                                                    onClick={(e) => handleDownload(item.img_url, item.creator, e)}
                                                     title="Download Pookalam"
                                                     type="button"
                                                 >
@@ -310,7 +282,7 @@ export default function GalleryView({ onNavigate }) {
                     </motion.div>
                 )}
 
-                {/* Image Fullscreen Lightbox Modal */}
+                {/* Lightbox Modal */}
                 <AnimatePresence>
                     {lightboxItem && (
                         <div
@@ -335,7 +307,7 @@ export default function GalleryView({ onNavigate }) {
                                     ✕
                                 </button>
                                 <div className="lightbox-img-wrap">
-                                    <img src={lightboxItem.img} alt="Pookalam Zoom" />
+                                    <img src={lightboxItem.img_url} alt="Pookalam Zoom" />
                                 </div>
                                 <div className="lightbox-info">
                                     <div>
@@ -345,7 +317,7 @@ export default function GalleryView({ onNavigate }) {
                                         </p>
                                     </div>
                                     <button
-                                        onClick={(e) => handleDownload(lightboxItem.img, lightboxItem.creator, e)}
+                                        onClick={(e) => handleDownload(lightboxItem.img_url, lightboxItem.creator, e)}
                                         className="hero-btn-solid animate-none"
                                         style={{ padding: '8px 18px', fontSize: '13px', minWidth: 'auto' }}
                                         type="button"

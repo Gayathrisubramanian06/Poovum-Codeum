@@ -46,17 +46,18 @@ export default function HomeView({ onNavigate }) {
         >
 
             {/* =====================================================
-                BASE KERALA ENVIRONMENT
+                BASE KERALA BACKGROUND
             ====================================================== */}
 
             <motion.img
-                src="assets/images/hero-welcome.png"
+                src="assets/onam-background.png"
                 alt="Kerala Onam celebration"
+                initial={{ scale: 1.02 }}
                 animate={{
-                    scale: [1, 1.025, 1]
+                    scale: [1.02, 1.04, 1.02]
                 }}
                 transition={{
-                    duration: 14,
+                    duration: 18,
                     repeat: Infinity,
                     ease: 'easeInOut'
                 }}
@@ -70,9 +71,14 @@ export default function HomeView({ onNavigate }) {
                 }}
             />
 
-            {/* Warm cinematic overlay */}
+            {/* =====================================================
+                SOFT CINEMATIC OVERLAY
+            ====================================================== */}
+
             <motion.div
-                animate={{ opacity: [0.15, 0.27, 0.15] }}
+                animate={{
+                    opacity: [0.12, 0.22, 0.12]
+                }}
                 transition={{
                     duration: 7,
                     repeat: Infinity,
@@ -82,7 +88,7 @@ export default function HomeView({ onNavigate }) {
                     position: 'absolute',
                     inset: 0,
                     background:
-                        'radial-gradient(circle at 50% 35%, rgba(255,220,130,.25), transparent 50%)',
+                        'radial-gradient(circle at 50% 35%, rgba(255,220,130,.25), transparent 55%)',
                     pointerEvents: 'none',
                     zIndex: 1
                 }}
@@ -116,6 +122,7 @@ export default function HomeView({ onNavigate }) {
                     whiteSpace: 'nowrap'
                 }}
             >
+
                 <NavButton
                     text="HOME"
                     onClick={() => onNavigate('home')}
@@ -136,20 +143,32 @@ export default function HomeView({ onNavigate }) {
                     text="ABOUT ONAM"
                     onClick={() => onNavigate('about')}
                 />
+
             </div>
 
             {/* =====================================================
-                WELCOME TEXT
+                WELCOME
             ====================================================== */}
 
             <AnimatePresence>
                 {scene === 'welcome' && (
                     <motion.div
                         key="welcome"
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -25 }}
-                        transition={{ duration: 1 }}
+                        initial={{
+                            opacity: 0,
+                            y: 30
+                        }}
+                        animate={{
+                            opacity: 1,
+                            y: 0
+                        }}
+                        exit={{
+                            opacity: 0,
+                            y: -25
+                        }}
+                        transition={{
+                            duration: 1
+                        }}
                         style={{
                             position: 'absolute',
                             zIndex: 10,
@@ -160,13 +179,15 @@ export default function HomeView({ onNavigate }) {
                             width: '90%'
                         }}
                     >
+
                         <div
                             style={{
                                 fontFamily: 'Georgia, serif',
                                 fontSize: 'clamp(42px, 6vw, 90px)',
                                 letterSpacing: '8px',
                                 color: '#8b641d',
-                                fontWeight: 500
+                                fontWeight: 500,
+                                textShadow: '0 3px 15px rgba(255,255,255,.45)'
                             }}
                         >
                             ONAM
@@ -185,7 +206,9 @@ export default function HomeView({ onNavigate }) {
                         </div>
 
                         <motion.p
-                            animate={{ opacity: [0.45, 1, 0.45] }}
+                            animate={{
+                                opacity: [0.45, 1, 0.45]
+                            }}
                             transition={{
                                 duration: 2.5,
                                 repeat: Infinity
@@ -199,6 +222,7 @@ export default function HomeView({ onNavigate }) {
                         >
                             Welcome to the celebration
                         </motion.p>
+
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -211,7 +235,6 @@ export default function HomeView({ onNavigate }) {
                 show={scene === 'pookalam'}
                 src="assets/pookalam.png"
                 alt="Traditional Onam Pookalam"
-                className="pookalam"
                 style={{
                     width: 'clamp(240px, 32vw, 520px)',
                     left: '50%',
@@ -229,7 +252,6 @@ export default function HomeView({ onNavigate }) {
                 }}
             />
 
-            {/* Pookalam caption */}
             <SceneCaption
                 show={scene === 'pookalam'}
                 title="THE BEAUTY OF ONAM"
@@ -323,10 +345,12 @@ export default function HomeView({ onNavigate }) {
                 }}
             />
 
+            {/* Lamp glow */}
+
             <motion.div
                 animate={{
                     scale: [1, 1.08, 1],
-                    opacity: [0.65, 1, 0.65]
+                    opacity: [0.5, 0.9, 0.5]
                 }}
                 transition={{
                     duration: 2,
@@ -336,12 +360,12 @@ export default function HomeView({ onNavigate }) {
                     position: 'absolute',
                     left: '50%',
                     top: '64%',
-                    width: '70px',
-                    height: '70px',
+                    width: '90px',
+                    height: '90px',
                     transform: 'translate(-50%, -50%)',
                     borderRadius: '50%',
                     background:
-                        'radial-gradient(circle, rgba(255,198,50,.4), transparent 65%)',
+                        'radial-gradient(circle, rgba(255,198,50,.45), transparent 65%)',
                     zIndex: 11,
                     pointerEvents: 'none'
                 }}
@@ -405,7 +429,7 @@ export default function HomeView({ onNavigate }) {
                         src="assets/boat.png"
                         alt="Kerala snake boat race"
                         initial={{
-                            x: '-60vw',
+                            x: '-70vw',
                             opacity: 0
                         }}
                         animate={{
@@ -444,9 +468,17 @@ export default function HomeView({ onNavigate }) {
                 {scene === 'final' && (
                     <motion.div
                         key="final"
-                        initial={{ opacity: 0, scale: 0.85 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 1.2 }}
+                        initial={{
+                            opacity: 0,
+                            scale: 0.85
+                        }}
+                        animate={{
+                            opacity: 1,
+                            scale: 1
+                        }}
+                        transition={{
+                            duration: 1.2
+                        }}
                         style={{
                             position: 'absolute',
                             left: '50%',
@@ -457,12 +489,14 @@ export default function HomeView({ onNavigate }) {
                             width: '90%'
                         }}
                     >
+
                         <div
                             style={{
                                 fontFamily: 'Georgia, serif',
                                 fontSize: 'clamp(38px, 5vw, 76px)',
                                 color: '#8c681f',
-                                letterSpacing: '3px'
+                                letterSpacing: '3px',
+                                textShadow: '0 3px 15px rgba(255,255,255,.5)'
                             }}
                         >
                             Happy Onam
@@ -495,6 +529,7 @@ export default function HomeView({ onNavigate }) {
                         >
                             🌸 🌼 🌺
                         </motion.div>
+
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -538,10 +573,21 @@ export default function HomeView({ onNavigate }) {
             <AnimatePresence>
                 {scene === 'welcome' && (
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ delay: 1, duration: 0.8 }}
+                        initial={{
+                            opacity: 0,
+                            y: 20
+                        }}
+                        animate={{
+                            opacity: 1,
+                            y: 0
+                        }}
+                        exit={{
+                            opacity: 0
+                        }}
+                        transition={{
+                            delay: 1,
+                            duration: 0.8
+                        }}
                         style={{
                             position: 'absolute',
                             left: '50%',
@@ -554,6 +600,7 @@ export default function HomeView({ onNavigate }) {
                             justifyContent: 'center'
                         }}
                     >
+
                         <button
                             onClick={() => onNavigate('design')}
                             style={mainButtonStyle}
@@ -567,6 +614,7 @@ export default function HomeView({ onNavigate }) {
                         >
                             Explore Gallery
                         </button>
+
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -577,7 +625,41 @@ export default function HomeView({ onNavigate }) {
 
 
 /* ================================================================
-   REUSABLE COMPONENTS
+   NAVIGATION BUTTON
+================================================================ */
+
+function NavButton({ text, onClick, active }) {
+    return (
+        <motion.button
+            onClick={onClick}
+            whileHover={{
+                y: -2,
+                scale: 1.03
+            }}
+            whileTap={{
+                scale: 0.96
+            }}
+            style={{
+                border: 'none',
+                background: 'transparent',
+                color: active ? '#8b651e' : '#4e4030',
+                fontFamily: 'Georgia, serif',
+                fontSize: 'clamp(11px, 1vw, 15px)',
+                letterSpacing: '1.5px',
+                cursor: 'pointer',
+                padding: '6px 4px',
+                fontWeight: active ? 600 : 400,
+                textShadow: '0 1px 5px rgba(255,255,255,.6)'
+            }}
+        >
+            {text}
+        </motion.button>
+    );
+}
+
+
+/* ================================================================
+   REUSABLE SCENE IMAGE
 ================================================================ */
 
 function SceneImage({
@@ -600,7 +682,9 @@ function SceneImage({
                     exit={{
                         opacity: 0,
                         scale: 0.9,
-                        transition: { duration: 0.6 }
+                        transition: {
+                            duration: 0.6
+                        }
                     }}
                     transition={{
                         duration: 1.1,
@@ -611,7 +695,8 @@ function SceneImage({
                         transform: 'translateX(-50%)',
                         objectFit: 'contain',
                         zIndex: 12,
-                        filter: 'drop-shadow(0 15px 20px rgba(0,0,0,.18))',
+                        filter:
+                            'drop-shadow(0 15px 20px rgba(0,0,0,.18))',
                         ...style
                     }}
                 />
@@ -621,14 +706,31 @@ function SceneImage({
 }
 
 
-function SceneCaption({ show, title, text }) {
+/* ================================================================
+   SCENE CAPTION
+================================================================ */
+
+function SceneCaption({
+    show,
+    title,
+    text
+}) {
     return (
         <AnimatePresence>
             {show && (
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -15 }}
+                    initial={{
+                        opacity: 0,
+                        y: 20
+                    }}
+                    animate={{
+                        opacity: 1,
+                        y: 0
+                    }}
+                    exit={{
+                        opacity: 0,
+                        y: -15
+                    }}
                     transition={{
                         duration: 0.8,
                         delay: 0.3
@@ -644,12 +746,15 @@ function SceneCaption({ show, title, text }) {
                         pointerEvents: 'none'
                     }}
                 >
+
                     <div
                         style={{
                             fontFamily: 'Georgia, serif',
                             fontSize: 'clamp(20px, 2vw, 30px)',
                             letterSpacing: '4px',
-                            color: '#72541e'
+                            color: '#72541e',
+                            textShadow:
+                                '0 2px 10px rgba(255,255,255,.5)'
                         }}
                     >
                         {title}
@@ -660,11 +765,14 @@ function SceneCaption({ show, title, text }) {
                             marginTop: '10px',
                             fontSize: 'clamp(13px, 1.2vw, 18px)',
                             color: '#514538',
-                            letterSpacing: '1px'
+                            letterSpacing: '1px',
+                            textShadow:
+                                '0 1px 8px rgba(255,255,255,.5)'
                         }}
                     >
                         {text}
                     </div>
+
                 </motion.div>
             )}
         </AnimatePresence>
@@ -672,17 +780,26 @@ function SceneCaption({ show, title, text }) {
 }
 
 
-function FloatingPetal({ left, delay, duration }) {
+/* ================================================================
+   FALLING FLOWERS
+================================================================ */
+
+function FloatingPetal({
+    left,
+    delay,
+    duration
+}) {
     return (
         <motion.div
             initial={{
-                y: '110vh',
+                y: '-15vh',
                 x: 0,
                 opacity: 0
             }}
             animate={{
-                y: '-20vh',
-                x: [0, 30, -20, 25, 0],
+                y: '110vh',
+                x: [0, 25, -20, 30, 0],
+                rotate: [0, 90, 180, 270, 360],
                 opacity: [0, 0.8, 0.8, 0.5, 0]
             }}
             transition={{
@@ -706,29 +823,9 @@ function FloatingPetal({ left, delay, duration }) {
 }
 
 
-function NavButton({ text, onClick, active }) {
-    return (
-        <button
-            onClick={onClick}
-            type="button"
-            style={{
-                border: 'none',
-                background: 'transparent',
-                cursor: 'pointer',
-                color: active ? '#8a651f' : '#55483a',
-                fontSize: 'clamp(10px, 0.8vw, 14px)',
-                fontWeight: active ? 700 : 500,
-                letterSpacing: '1.2px',
-                padding: '8px 4px',
-                fontFamily: 'Arial, sans-serif',
-                transition: 'all .25s ease'
-            }}
-        >
-            {text}
-        </button>
-    );
-}
-
+/* ================================================================
+   BUTTON STYLES
+================================================================ */
 
 const mainButtonStyle = {
     border: 'none',
