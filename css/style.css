@@ -251,18 +251,51 @@ button {
     height: 56px;
 }
 
-/* Sub-template image grid (step 1.5) — 4 per row, image-only */
+/* Sub-template image grid (step 1.5) */
 #predefinedTemplates {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    flex-direction: unset;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
 }
 
-#predefinedTemplates .template-card {
+.template-section-divider {
+    width: 100%;
+    margin-top: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ebdcc5;
+    padding-bottom: 6px;
+}
+
+.template-section-divider h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--brown-dark);
+}
+
+.template-section-divider p {
+    font-size: 12.5px;
+    color: var(--brown-mid);
+    margin-top: 2px;
+}
+
+.templates-subgrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .templates-subgrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.templates-subgrid .template-card {
     display: block;
-    padding: 4px;
-    border-radius: 12px;
+    padding: 6px;
+    border-radius: 14px;
     border: 2.5px solid #eee2cc;
     background: var(--white);
     box-shadow: 0 2px 8px rgba(0,0,0,0.07);
@@ -270,14 +303,14 @@ button {
     transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
-#predefinedTemplates .template-card:hover {
+.templates-subgrid .template-card:hover {
     border-color: var(--gold);
-    transform: translateY(-3px) scale(1.04);
+    transform: translateY(-3px) scale(1.03);
     box-shadow: 0 8px 22px var(--shadow);
 }
 
-#predefinedTemplates .template-card img,
-#predefinedTemplates .template-card svg {
+.templates-subgrid .template-card img,
+.templates-subgrid .template-card svg {
     width: 100%;
     aspect-ratio: 1 / 1;
     object-fit: cover;
@@ -1375,5 +1408,197 @@ button {
 .gallery-empty-state p {
     font-size: 13px;
     color: var(--brown-mid);
+}
+
+/* ============================================
+   DESIGN MY OWN TEMPLATE BUILDER STYLES
+   ============================================ */
+
+.custom-builder-header {
+    margin-bottom: 20px;
+}
+
+.custom-builder-container {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 28px;
+    align-items: start;
+}
+
+@media (max-width: 950px) {
+    .custom-builder-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.custom-builder-controls {
+    background: var(--white);
+    border: 2px solid #eee2cc;
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 0 4px 16px var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.builder-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #f3e8d7;
+}
+
+.builder-group:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.builder-group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.builder-label {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--brown-dark);
+}
+
+/* Size Slider Component */
+.size-slider-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #faf4e8;
+    padding: 4px 10px;
+    border-radius: 12px;
+    border: 1px solid #ebdcc5;
+}
+
+.size-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--brown-mid);
+}
+
+.builder-slider {
+    width: 80px;
+    height: 4px;
+    accent-color: var(--gold);
+    cursor: pointer;
+}
+
+.size-val {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--brown-dark);
+    min-width: 28px;
+    text-align: right;
+}
+
+/* Visual Shape Selector Grid — Pure Visual Cards */
+.visual-shape-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(62px, 1fr));
+    gap: 10px;
+}
+
+.builder-shape-card {
+    background: #fdfaf3;
+    border: 2px solid #ebdcc5;
+    border-radius: 14px;
+    padding: 8px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    aspect-ratio: 1 / 1;
+}
+
+.builder-shape-card:hover {
+    border-color: var(--gold);
+    background: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px var(--shadow);
+}
+
+.builder-shape-card.active {
+    background: #fff9ed;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2.5px var(--gold), 0 6px 16px rgba(242, 193, 78, 0.45);
+    transform: translateY(-2px) scale(1.04);
+}
+
+.shape-mini-svg {
+    width: 44px;
+    height: 44px;
+    display: block;
+}
+
+/* Big Live Preview Box (Expansive Canvas Studio) */
+.custom-builder-preview-box {
+    background: var(--white);
+    border: 2px solid #eee2cc;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 8px 28px var(--shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: sticky;
+    top: 85px;
+}
+
+.preview-header-bar {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.preview-label {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--brown-dark);
+}
+
+.custom-preview-svg-wrapper.large-canvas-preview {
+    background: radial-gradient(circle at center, #fffdf8 0%, #fbf3e2 100%);
+    border-radius: 24px;
+    border: 2.5px solid #ebdcc5;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 440px;
+    aspect-ratio: 1 / 1;
+    box-shadow: inset 0 2px 14px rgba(0,0,0,0.06), 0 8px 24px rgba(122, 74, 30, 0.08);
+}
+
+.custom-preview-svg-wrapper svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.preview-hint {
+    font-size: 12px;
+    color: var(--brown-mid);
+    margin: 16px 0 12px;
+    line-height: 1.4;
+}
+
+.start-designing-btn {
+    width: 100%;
+    padding: 15px 0;
+    font-size: 16px;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(122, 74, 30, 0.35);
 }
 
