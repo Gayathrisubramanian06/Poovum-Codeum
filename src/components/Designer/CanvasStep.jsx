@@ -496,45 +496,45 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                     </div>
 
                     <div className="flower-categories">
-                        {ONAM_FLOWERS.map(flower => (
-                            <div
-                                key={flower.id}
-                                className={`flower-category-card ${flower.id === currentFlower.id ? 'selected' : ''}`}
-                            >
-                                <div className="flower-category-header">
-                                    <span className="flower-category-icon">{flower.icon}</span>
-                                    <div className="flower-category-names">
+                        {ONAM_FLOWERS.map(flower => {
+                            const isFlowerSelected = flower.id === currentFlower.id;
+                            return (
+                                <div
+                                    key={flower.id}
+                                    className={`flower-palette-row ${isFlowerSelected ? 'selected' : ''}`}
+                                >
+                                    <span className="flower-palette-icon">{flower.icon}</span>
+                                    <div className="flower-palette-label">
                                         <span className="flower-name-en">{flower.nameEn}</span>
                                         <span className="flower-name-ml">{flower.nameMl}</span>
                                     </div>
+                                    <div className="flower-palette-swatches">
+                                        {flower.varieties.map(v => {
+                                            const isActive = isFlowerSelected && currentColor.name === v.name;
+                                            return (
+                                                <motion.button
+                                                    key={v.name}
+                                                    whileHover={{ scale: 1.15 }}
+                                                    whileTap={{ scale: 0.9 }}
+                                                    className={`flower-swatch-ball ${isActive ? 'active' : ''}`}
+                                                    style={{
+                                                        backgroundColor: v.hex,
+                                                        borderColor: isActive ? '#f59e0b' : (v.border || '#cbd5e1'),
+                                                        boxShadow: isActive ? `0 0 0 3px #f59e0b66, 0 2px 8px ${v.hex}88` : `0 1px 4px ${v.hex}55`
+                                                    }}
+                                                    onClick={() => {
+                                                        setCurrentFlower(flower);
+                                                        setCurrentColor(v);
+                                                    }}
+                                                    title={v.name}
+                                                    type="button"
+                                                />
+                                            );
+                                        })}
+                                    </div>
                                 </div>
-
-                                <div className="flower-swatches-grid">
-                                    {flower.varieties.map(v => (
-                                        <motion.button
-                                            key={v.name}
-                                            whileHover={{ scale: 1.1 }}
-                                            whileTap={{ scale: 0.92 }}
-                                            className={`flower-swatch-item ${currentColor.name === v.name && flower.id === currentFlower.id ? 'active' : ''}`}
-                                            onClick={() => {
-                                                setCurrentFlower(flower);
-                                                setCurrentColor(v);
-                                            }}
-                                            type="button"
-                                        >
-                                            <div
-                                                className="flower-swatch-circle"
-                                                style={{
-                                                    backgroundColor: v.hex,
-                                                    borderColor: v.border || '#cbd5e1'
-                                                }}
-                                            />
-                                            <span className="flower-swatch-name">{v.name}</span>
-                                        </motion.button>
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </aside>
 

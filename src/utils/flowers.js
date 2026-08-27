@@ -10,7 +10,7 @@ export const ONAM_FLOWERS = [
         icon: '🌿',
         description: 'Sacred white Onam flower',
         varieties: [
-            { name: 'Pure White', hex: '#ffffff', center: '#16a34a', border: '#cbd5e1' }
+            { name: 'Pure White', hex: '#f8fafc', center: '#16a34a', border: '#94a3b8' }
         ]
     },
     {
@@ -20,9 +20,7 @@ export const ONAM_FLOWERS = [
         icon: '🌺',
         description: 'Vibrant 4-petal Ixora flower',
         varieties: [
-            { name: 'Scarlet Red', hex: '#dc2626', center: '#fca5a5', border: '#991b1b' },
-            { name: 'Golden Yellow', hex: '#facc15', center: '#854d0e', border: '#ca8a04' },
-            { name: 'Coral Orange', hex: '#ea580c', center: '#fed7aa', border: '#9a3412' }
+            { name: 'Scarlet Red', hex: '#dc2626', center: '#fca5a5', border: '#991b1b' }
         ]
     },
     {
@@ -32,9 +30,7 @@ export const ONAM_FLOWERS = [
         icon: '🌼',
         description: 'Radiating pom-pom Chrysanthemum',
         varieties: [
-            { name: 'Sunshine Yellow', hex: '#fbbf24', center: '#d97706', border: '#b45309' },
-            { name: 'Warm Orange', hex: '#f97316', center: '#c2410c', border: '#7c2d12' },
-            { name: 'Pure White', hex: '#ffffff', center: '#facc15', border: '#cbd5e1' }
+            { name: 'Sunshine Yellow', hex: '#fbbf24', center: '#d97706', border: '#b45309' }
         ]
     },
     {
@@ -44,8 +40,7 @@ export const ONAM_FLOWERS = [
         icon: '🌹',
         description: 'Layered fragrant Rose petals',
         varieties: [
-            { name: 'Rose Red', hex: '#e11d48', center: '#881337', border: '#9f1239' },
-            { name: 'Paneer Pink', hex: '#f472b6', center: '#be185d', border: '#db2777' }
+            { name: 'Rose Pink', hex: '#f472b6', center: '#be185d', border: '#db2777' }
         ]
     },
     {
@@ -66,8 +61,7 @@ export const ONAM_FLOWERS = [
         icon: '🪷',
         description: 'Sacred pointed Lotus petals',
         varieties: [
-            { name: 'Lotus Pink', hex: '#fb7185', center: '#facc15', border: '#e11d48' },
-            { name: 'Sacred White', hex: '#ffffff', center: '#facc15', border: '#cbd5e1' }
+            { name: 'Lotus Pink', hex: '#fb7185', center: '#facc15', border: '#e11d48' }
         ]
     },
     {
@@ -77,33 +71,28 @@ export const ONAM_FLOWERS = [
         icon: '🌺',
         description: 'Classic 5-petal flared Hibiscus',
         varieties: [
-            { name: 'Crimson Red', hex: '#dc2626', center: '#7f1d1d', border: '#991b1b', stamen: '#fbbf24' },
-            { name: 'Bright Pink', hex: '#ec4899', center: '#831843', border: '#be185d', stamen: '#fde047' }
+            { name: 'Crimson Red', hex: '#c0392b', center: '#7f1d1d', border: '#922b21', stamen: '#fbbf24' }
         ]
     },
     {
         id: 'pinwheel',
-        nameEn: 'Pinwheel (Nanthyarvattom)',
+        nameEn: 'Nanthyarvattom',
         nameMl: 'നന്ത്യാർവട്ടം',
         icon: '💮',
         description: 'Fragrant 5-petal pinwheel Crape Jasmine',
         varieties: [
-            { name: 'Pure White', hex: '#ffffff', center: '#facc15', border: '#cbd5e1' },
-            { name: 'Soft Cream', hex: '#fef3c7', center: '#eab308', border: '#e2e8f0' }
+            { name: 'Creamy White', hex: '#fef9ee', center: '#facc15', border: '#e2d9c4' }
         ]
     },
     {
         id: 'backdrops',
-        nameEn: 'Leaves & Earth Tones',
+        nameEn: 'Leaves & Earth',
         nameMl: 'ഇലകളും പശ്ചാത്തലവും',
         icon: '🍃',
         description: 'Plantain leaf green and earthy background tones',
         varieties: [
-            { name: 'Tulsi Green', hex: '#14532d', center: '#22c55e', border: '#052e16' },
-            { name: 'Forest Green', hex: '#1b4332', center: '#40916c', border: '#081c15' },
-            { name: 'Earth Brown', hex: '#4e3620', center: '#8c6239', border: '#2b1d0c' },
-            { name: 'Dark Clay', hex: '#382314', center: '#6f4e37', border: '#1f130b' },
-            { name: 'Temple Ochre', hex: '#b45309', center: '#f59e0b', border: '#78350f' }
+            { name: 'Leaf Green', hex: '#16a34a', center: '#22c55e', border: '#052e16' },
+            { name: 'Earth Brown', hex: '#6b4226', center: '#8c6239', border: '#3b1f0e' }
         ]
     }
 ];
