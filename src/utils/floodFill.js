@@ -73,8 +73,8 @@ export class ImageTemplateEngine {
         }
 
         // 2. Adaptive Local Thresholding using Integral Image
-        const R = 6;
-        const C = 10;
+        const R = 3;
+        const C = 6;
         const thresholded = new Uint8Array(total);
 
         const integral = new Float64Array((size + 1) * (size + 1));
