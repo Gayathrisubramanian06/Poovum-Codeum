@@ -4,6 +4,7 @@ import TemplateStep from './TemplateStep';
 import BrowserStep from './BrowserStep';
 import CustomStep from './CustomStep';
 import CanvasStep from './CanvasStep';
+import UploadStep from './UploadStep';
 
 const DEFAULT_CUSTOM_CONFIG = {
     core: 'ganapathi',
@@ -17,7 +18,7 @@ const DEFAULT_CUSTOM_CONFIG = {
 };
 
 export default function DesignerView({ onNavigate }) {
-    const [step, setStep] = useState('template'); // 'template' | 'browser' | 'custom' | 'canvas'
+    const [step, setStep] = useState('template'); // 'template' | 'browser' | 'custom' | 'canvas' | 'upload'
     const [previousStep, setPreviousStep] = useState('browse'); // 'browse' | 'upload' | 'custom'
     const [selectedTemplate, setSelectedTemplate] = useState(null); // id of vector template, or full template object
     const [isImageTemplate, setIsImageTemplate] = useState(false);
@@ -29,11 +30,11 @@ export default function DesignerView({ onNavigate }) {
             if (previousStep === 'custom') {
                 setStep('custom');
             } else if (previousStep === 'upload') {
-                setStep('template'); // Go back to start
+                setStep('upload'); // Go back to upload step instead of start!
             } else {
                 setStep('browser');
             }
-        } else if (step === 'browser' || step === 'custom') {
+        } else if (step === 'browser' || step === 'custom' || step === 'upload') {
             setStep('template');
         } else {
             onNavigate('home');
@@ -44,6 +45,7 @@ export default function DesignerView({ onNavigate }) {
         if (step === 'canvas') return 'Color Your Pookalam';
         if (step === 'browser') return 'Choose a Template';
         if (step === 'custom') return 'Design Your Template';
+        if (step === 'upload') return 'Upload Outline';
         return 'Design Your Pookalam';
     };
 
@@ -72,17 +74,27 @@ export default function DesignerView({ onNavigate }) {
                                 setStep('browser');
                                 setPreviousStep('browse');
                             }}
-                            onSelectUpload={(src) => {
+                            onSelectUpload={() => {
+                                setStep('upload');
+                            }}
+                            onSelectCustom={() => {
+                                setStep('custom');
+                                setPreviousStep('custom');
+                            }}
+                        />
+                    )}
+
+                    {step === 'upload' && (
+                        <UploadStep
+                            key="upload"
+                            onStartColoring={(src) => {
                                 setIsImageTemplate(true);
                                 setImageSrc(src);
                                 setSelectedTemplate({ id: 'upload', name: 'Uploaded Outline', img: src });
                                 setPreviousStep('upload');
                                 setStep('canvas');
                             }}
-                            onSelectCustom={() => {
-                                setStep('custom');
-                                setPreviousStep('custom');
-                            }}
+                            onBack={() => setStep('template')}
                         />
                     )}
 

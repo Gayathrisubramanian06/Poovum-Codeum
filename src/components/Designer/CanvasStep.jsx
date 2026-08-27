@@ -289,8 +289,8 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
         img.src = blobURL;
     };
 
-    // Publish to community gallery
-    const handlePublish = () => {
+    // Helper to generate PNG blob and trigger custom actions
+    const generatePNGAndAction = (actionCallback) => {
         const svgEl = svgRef.current;
         if (!svgEl) return;
 
@@ -303,14 +303,23 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
         const img = new Image();
         img.onload = () => {
             const canvas = document.createElement('canvas');
-            canvas.width = 500;
-            canvas.height = 500;
+            canvas.width = 600;
+            canvas.height = 600;
             const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, 500, 500);
+            ctx.drawImage(img, 0, 0, 600, 600);
 
-            const pngUrl = canvas.toDataURL('image/png');
-            
-            // Save to localStorage community key
+            canvas.toBlob((blob) => {
+                actionCallback(blob, canvas.toDataURL('image/png'));
+                URL.revokeObjectURL(blobURL);
+            }, 'image/png');
+        };
+        img.src = blobURL;
+    };
+
+    // Publish to local community gallery
+    const handlePublish = () => {
+        setShareMessage('⏳ Publishing to Gallery...');
+        generatePNGAndAction((blob, dataUrl) => {
             try {
                 const raw = localStorage.getItem('pookalam_community_gallery');
                 const list = raw ? JSON.parse(raw) : [];
@@ -320,23 +329,116 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                     creator: creatorName || 'Festive Designer',
                     city: creatorCity ? `${creatorCity} 🪔` : 'Kerala 🌸',
                     date: 'Aug 2026',
-                    img: pngUrl,
+                    img: dataUrl,
                     likes: 0
                 };
                 list.unshift(newItem);
                 localStorage.setItem('pookalam_community_gallery', JSON.stringify(list));
-                
-                setShareMessage('✨ Successfully published to the Community Gallery! Navigate to Gallery to see it.');
+
+                setShareMessage('✨ Published to Community Gallery successfully!');
                 setTimeout(() => {
                     setShowPublish(false);
                     onNavigate('gallery');
-                }, 1800);
+                    setShareMessage('');
+                }, 1500);
             } catch (err) {
                 console.error(err);
+                setShareMessage('⚠️ Failed to save to local storage.');
             }
-            URL.revokeObjectURL(blobURL);
-        };
-        img.src = blobURL;
+        });
+    };
+
+    // Copy PNG Image to clipboard
+    const handleCopyImage = () => {
+        setShareMessage('⏳ Copying image to clipboard...');
+        generatePNGAndAction((blob) => {
+            try {
+                navigator.clipboard.write([
+                    new ClipboardItem({ 'image/png': blob })
+                ]).then(() => {
+                    setShareMessage('📋 Image copied directly to clipboard! You can paste (Ctrl+V) it in chat apps.');
+                    setTimeout(() => setShareMessage(''), 4000);
+                }).catch(e => {
+                    console.error(e);
+                    setShareMessage('⚠️ Browser blocked clipboard paste. Try downloading instead.');
+                });
+            } catch (err) {
+                console.error(err);
+                setShareMessage('⚠️ Copy to clipboard is not supported on this browser. Try downloading.');
+            }
+        });
+    };
+
+    // Share text and copy image to clipboard, then open WhatsApp Web/App link
+    const handleWhatsApp = () => {
+        setShareMessage('⏳ Preparing WhatsApp share...');
+        generatePNGAndAction((blob) => {
+            const shareText = "Check out this Onam Pookalam I designed! 🪔🌸 Created using Onam Pookalam Designer.";
+            
+            // Native Share tray (perfect on mobile)
+            if (navigator.share && navigator.canShare) {
+                const file = new File([blob], 'my-pookalam.png', { type: 'image/png' });
+                if (navigator.canShare({ files: [file] })) {
+                    navigator.share({
+                        files: [file],
+                        title: 'My Onam Pookalam',
+                        text: shareText
+                    })
+                    .then(() => {
+                        setShareMessage('✨ Shared successfully via WhatsApp!');
+                        setTimeout(() => setShareMessage(''), 2500);
+                    })
+                    .catch(err => {
+                        console.log('Native share failed/cancelled:', err);
+                        redirectToWhatsApp(shareText, blob);
+                    });
+                    return;
+                }
+            }
+
+            redirectToWhatsApp(shareText, blob);
+        });
+    };
+
+    const redirectToWhatsApp = (text, blob) => {
+        // Copy image first so they can paste it directly in their chat
+        try {
+            navigator.clipboard.write([
+                new ClipboardItem({ 'image/png': blob })
+            ]).then(() => {
+                setShareMessage('📋 Image copied! Opening WhatsApp... Paste (Ctrl+V) the image in the chat.');
+            }).catch(() => {
+                setShareMessage('📋 Opening WhatsApp chat link...');
+            });
+        } catch (e) {
+            setShareMessage('📋 Opening WhatsApp chat link...');
+        }
+
+        setTimeout(() => {
+            const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+            setShareMessage('');
+        }, 1600);
+    };
+
+    // Share text to Twitter/X
+    const handleTwitter = () => {
+        setShareMessage('⏳ Preparing Twitter share...');
+        generatePNGAndAction((blob) => {
+            const shareText = "Check out this Onam Pookalam I designed! 🪔🌸 #Onam #Pookalam #Kerala";
+            const tweetUrl = "https://github.com/Gayathrisubramanian06/Poovum-Codeum";
+            
+            // Try to copy image to clipboard too so they can paste it in the tweet
+            try {
+                navigator.clipboard.write([
+                    new ClipboardItem({ 'image/png': blob })
+                ]).catch(() => {});
+            } catch (e) {}
+
+            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(tweetUrl)}`;
+            window.open(url, '_blank');
+            setShareMessage('');
+        });
     };
 
     return (
@@ -383,8 +485,10 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
 
                                 <div className="flower-swatches-grid">
                                     {flower.varieties.map(v => (
-                                        <button
+                                        <motion.button
                                             key={v.name}
+                                            whileHover={{ scale: 1.1 }}
+                                            whileTap={{ scale: 0.92 }}
                                             className={`flower-swatch-item ${currentColor.name === v.name && flower.id === currentFlower.id ? 'active' : ''}`}
                                             onClick={() => {
                                                 setCurrentFlower(flower);
@@ -400,7 +504,7 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                                                 }}
                                             />
                                             <span className="flower-swatch-name">{v.name}</span>
-                                        </button>
+                                        </motion.button>
                                     ))}
                                 </div>
                             </div>
@@ -574,7 +678,7 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                 </div>
             </div>
 
-            {/* Publish Modal Dialog */}
+            {/* Share & Publish Modal Dialog */}
             <AnimatePresence>
                 {showPublish && (
                     <div className="modal-overlay show" style={{ display: 'flex' }} onClick={() => setShowPublish(false)}>
@@ -588,8 +692,8 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                             <div className="modal-header">
                                 <span className="modal-icon">🪔</span>
                                 <div>
-                                    <h3 className="modal-title">Publish to Gallery</h3>
-                                    <span className="modal-subtitle">Share your Onam Pookalam with the community!</span>
+                                    <h3 className="modal-title">Share Your Pookalam</h3>
+                                    <span className="modal-subtitle">Publish to showcase or share on social media!</span>
                                 </div>
                             </div>
 
@@ -623,8 +727,6 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                                     />
                                 </div>
 
-                                {shareMessage && <p className="share-hint" style={{ marginTop: '8px' }}>{shareMessage}</p>}
-
                                 <div className="modal-actions" style={{ marginTop: '16px' }}>
                                     <button
                                         className="ghost-btn"
@@ -641,9 +743,51 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                                         type="button"
                                         disabled={!creatorName}
                                     >
-                                        Publish Now ✨
+                                        Publish to Gallery ✨
                                     </button>
                                 </div>
+
+                                <div style={{ borderTop: '1px solid rgba(122,74,30,0.08)', margin: '20px 0 16px', position: 'relative', textAlign: 'center' }}>
+                                    <span style={{ background: '#ffffff', padding: '0 10px', fontSize: '11px', color: 'var(--brown-mid)', fontWeight: '600', position: 'relative', top: '-10px' }}>
+                                        OR SHARE ON SOCIALS
+                                    </span>
+                                </div>
+
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+                                    <button
+                                        type="button"
+                                        className="ghost-btn"
+                                        onClick={handleWhatsApp}
+                                        style={{ padding: '10px 0', fontSize: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', borderColor: '#25D366', color: '#128C7E', borderRadius: '12px' }}
+                                    >
+                                        <span style={{ fontSize: '20px' }}>💬</span>
+                                        <strong>WhatsApp</strong>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="ghost-btn"
+                                        onClick={handleTwitter}
+                                        style={{ padding: '10px 0', fontSize: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', borderColor: '#1DA1F2', color: '#1A8CD8', borderRadius: '12px' }}
+                                    >
+                                        <span style={{ fontSize: '20px' }}>🐦</span>
+                                        <strong>Twitter / X</strong>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="ghost-btn"
+                                        onClick={handleCopyImage}
+                                        style={{ padding: '10px 0', fontSize: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', borderColor: '#dfc698', color: '#7a4a1e', borderRadius: '12px' }}
+                                    >
+                                        <span style={{ fontSize: '20px' }}>📋</span>
+                                        <strong>Copy Image</strong>
+                                    </button>
+                                </div>
+
+                                {shareMessage && (
+                                    <p className="share-hint" style={{ marginTop: '14px', fontSize: '11.5px', color: 'var(--brown-mid)', textAlign: 'center', padding: '8px', background: 'rgba(242,193,78,0.08)', borderRadius: '8px', border: '1px solid rgba(242,193,78,0.18)' }}>
+                                        {shareMessage}
+                                    </p>
+                                )}
                             </div>
                         </motion.div>
                     </div>

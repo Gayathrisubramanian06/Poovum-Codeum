@@ -4,6 +4,63 @@ import { generateCustomMandalaPaths } from '../../utils/mandalas';
 
 const CENTER = 200;
 
+function MotifPreview({ category, shape }) {
+    const config = {
+        core: category === 'core' ? shape : 'none',
+        coreScale: 1.0,
+        mid: category === 'mid' ? shape : 'none',
+        midScale: 1.0,
+        rings: category === 'rings' ? shape : 'none',
+        ringScale: 1.0,
+        outer: category === 'outer' ? shape : 'none',
+        outerScale: 1.0
+    };
+
+    const { outerPaths, ringPaths, midPaths, corePaths } = generateCustomMandalaPaths(config);
+
+    let viewBox = "0 0 400 400";
+    let paths = [];
+
+    if (category === 'core') {
+        viewBox = "136 136 128 128";
+        paths = corePaths;
+    } else if (category === 'mid') {
+        viewBox = "90 90 220 220";
+        paths = midPaths;
+    } else if (category === 'rings') {
+        viewBox = "80 80 240 240";
+        paths = ringPaths;
+    } else if (category === 'outer') {
+        viewBox = "40 40 320 320";
+        paths = outerPaths;
+    }
+
+    if (shape === 'none') {
+        return (
+            <svg viewBox="0 0 100 100" className="shape-mini-svg" style={{ width: '38px', height: '38px', display: 'block' }}>
+                <circle cx="50" cy="50" r="40" fill="none" stroke="#7a4a1e" strokeWidth="6" opacity="0.3" />
+                <line x1="20" y1="20" x2="80" y2="80" stroke="#7a4a1e" strokeWidth="6" opacity="0.6" />
+            </svg>
+        );
+    }
+
+    return (
+        <svg viewBox={viewBox} className="shape-mini-svg" style={{ width: '38px', height: '38px', display: 'block' }}>
+            {paths.map((p, idx) => (
+                <path
+                    key={idx}
+                    d={p.d}
+                    fill="none"
+                    stroke="#7a4a1e"
+                    strokeWidth="3.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                />
+            ))}
+        </svg>
+    );
+}
+
 const BUILDER_LAYERS = {
     core: { key: 'core', scaleKey: 'coreScale', name: 'Center Sacred Motif', min: 0.55, max: 1.55 },
     mid: { key: 'mid', scaleKey: 'midScale', name: 'Mid Petals & Stars', min: 0.55, max: 1.55 },
@@ -158,8 +215,8 @@ export default function CustomStep({ config, onChangeConfig, onStartColoring }) 
                 <div className="custom-builder-controls">
                     {/* 1. Center Sacred Motif */}
                     <div className="builder-group">
-                        <label className="builder-label">1. Center Sacred Motif</label>
-                        <div className="builder-options visual-shape-grid">
+                        <label className="builder-label" style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: 'var(--brown-dark)', marginBottom: '6px' }}>1. Center Sacred Motif</label>
+                        <div className="builder-options visual-shape-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
                             {['ganapathi', 'lotus', 'nilavilakku', 'peacock', 'jasmine', 'diamond', 'circle'].map(shape => (
                                 <button
                                     key={shape}
@@ -168,9 +225,7 @@ export default function CustomStep({ config, onChangeConfig, onStartColoring }) 
                                     title={shape}
                                     type="button"
                                 >
-                                    <span style={{ fontSize: '18px', fontWeight: 'bold', textTransform: 'capitalize' }}>
-                                        {shape.slice(0, 3)}
-                                    </span>
+                                    <MotifPreview category="core" shape={shape} />
                                 </button>
                             ))}
                         </div>
@@ -178,8 +233,8 @@ export default function CustomStep({ config, onChangeConfig, onStartColoring }) 
 
                     {/* 2. Mid Ring Motifs */}
                     <div className="builder-group">
-                        <label className="builder-label">2. Mid Petal / Star Pattern</label>
-                        <div className="builder-options visual-shape-grid">
+                        <label className="builder-label" style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: 'var(--brown-dark)', marginBottom: '6px', marginTop: '14px' }}>2. Mid Petal / Star Pattern</label>
+                        <div className="builder-options visual-shape-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
                             {['pointed-12', 'dual-interlock', 'diamond-star', 'heart-petals', 'peacock-fan'].map(shape => (
                                 <button
                                     key={shape}
@@ -188,9 +243,7 @@ export default function CustomStep({ config, onChangeConfig, onStartColoring }) 
                                     title={shape}
                                     type="button"
                                 >
-                                    <span style={{ fontSize: '13px', fontWeight: 'bold', textTransform: 'capitalize' }}>
-                                        {shape.replace('-', ' ').slice(0, 8)}
-                                    </span>
+                                    <MotifPreview category="mid" shape={shape} />
                                 </button>
                             ))}
                         </div>
@@ -198,8 +251,8 @@ export default function CustomStep({ config, onChangeConfig, onStartColoring }) 
 
                     {/* 3. Rings */}
                     <div className="builder-group">
-                        <label className="builder-label">3. Concentric Rings</label>
-                        <div className="builder-options visual-shape-grid">
+                        <label className="builder-label" style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: 'var(--brown-dark)', marginBottom: '6px', marginTop: '14px' }}>3. Concentric Rings</label>
+                        <div className="builder-options visual-shape-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
                             {['double-ring', 'single-ring', 'fluted-ring', 'none'].map(shape => (
                                 <button
                                     key={shape}
@@ -208,9 +261,7 @@ export default function CustomStep({ config, onChangeConfig, onStartColoring }) 
                                     title={shape}
                                     type="button"
                                 >
-                                    <span style={{ fontSize: '13px', fontWeight: 'bold', textTransform: 'capitalize' }}>
-                                        {shape.replace('-', ' ').slice(0, 8)}
-                                    </span>
+                                    <MotifPreview category="rings" shape={shape} />
                                 </button>
                             ))}
                         </div>
@@ -218,8 +269,8 @@ export default function CustomStep({ config, onChangeConfig, onStartColoring }) 
 
                     {/* 4. Outer Border */}
                     <div className="builder-group">
-                        <label className="builder-label">4. Outer Border Motifs</label>
-                        <div className="builder-options visual-shape-grid">
+                        <label className="builder-label" style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: 'var(--brown-dark)', marginBottom: '6px', marginTop: '14px' }}>4. Outer Border Motifs</label>
+                        <div className="builder-options visual-shape-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
                             {['scallop-16', 'sunburst-24', 'diamond-chevron', 'crest-waves', 'plain-circle'].map(shape => (
                                 <button
                                     key={shape}
@@ -228,9 +279,7 @@ export default function CustomStep({ config, onChangeConfig, onStartColoring }) 
                                     title={shape}
                                     type="button"
                                 >
-                                    <span style={{ fontSize: '13px', fontWeight: 'bold', textTransform: 'capitalize' }}>
-                                        {shape.replace('-', ' ').slice(0, 8)}
-                                    </span>
+                                    <MotifPreview category="outer" shape={shape} />
                                 </button>
                             ))}
                         </div>

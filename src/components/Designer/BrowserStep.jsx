@@ -38,19 +38,18 @@ export default function BrowserStep({ onSelectVector, onSelectImage }) {
                 <div>
                     <h2 className="template-section-divider">Section A: Interactive Vector Mandalas</h2>
                     <div className="templates-subgrid">
-                        {VECTOR_TEMPLATES.map((tpl) => (
-                            <button
+                        {VECTOR_TEMPLATES.map((tpl, idx) => (
+                            <motion.button
                                 key={tpl.id}
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: Math.min(5, idx) * 0.04, duration: 0.25 }}
                                 className="template-card-preview-container"
                                 onClick={() => onSelectVector(tpl.id)}
                                 type="button"
-                                style={{ background: 'var(--white)', border: '1.5px solid #eee2cc', borderRadius: '18px', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', cursor: 'pointer' }}
                             >
                                 <VectorPreview templateId={tpl.id} />
-                                <span className="template-name" style={{ fontSize: '14px', fontWeight: '700', textAlign: 'center' }}>
-                                    {tpl.name}
-                                </span>
-                            </button>
+                            </motion.button>
                         ))}
                     </div>
                 </div>
@@ -59,26 +58,25 @@ export default function BrowserStep({ onSelectVector, onSelectImage }) {
                 <div>
                     <h2 className="template-section-divider">Section B: Classic Pookalam Tracing Outlines</h2>
                     <div className="templates-subgrid">
-                        {PREDEFINED_TEMPLATES.circle.map((tpl) => (
-                            <button
+                        {PREDEFINED_TEMPLATES.circle.map((tpl, idx) => (
+                            <motion.button
                                 key={tpl.id}
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: Math.min(5, idx) * 0.04, duration: 0.25 }}
                                 className="template-card-preview-container"
                                 onClick={() => onSelectImage(tpl)}
                                 type="button"
-                                style={{ background: 'var(--white)', border: '1.5px solid #eee2cc', borderRadius: '18px', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', cursor: 'pointer' }}
                             >
-                                <div className="template-card-preview" style={{ overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <div className="template-card-preview">
                                     <img
                                         src={tpl.img}
                                         alt={tpl.name}
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px' }}
                                         loading="lazy"
                                     />
                                 </div>
-                                <span className="template-name" style={{ fontSize: '14px', fontWeight: '700', textAlign: 'center' }}>
-                                    {tpl.name}
-                                </span>
-                            </button>
+                            </motion.button>
                         ))}
                     </div>
                 </div>

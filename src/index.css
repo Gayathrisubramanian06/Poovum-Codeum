@@ -26,7 +26,7 @@
 
 body {
     font-family: 'Poppins', 'Segoe UI', sans-serif;
-    background: var(--cream);
+    background: radial-gradient(circle at top left, #fffdf8 0%, #f7ecd7 50%, #eddaba 100%);
     color: var(--brown-dark);
     min-height: 100vh;
     display: flex;
@@ -50,13 +50,17 @@ button {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 16px;
-    background: transparent;
-    position: absolute;
+    padding: 0 20px;
+    background: rgba(251, 243, 227, 0.76) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(122, 74, 30, 0.08);
+    box-shadow: 0 4px 14px rgba(122, 74, 30, 0.04);
+    position: sticky;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 10;
+    z-index: 100;
 }
 
 .app-header .icon-btn {
@@ -71,9 +75,10 @@ button {
 }
 
 .app-header .title {
-    font-weight: 700;
-    font-size: 18px;
+    font-weight: 800;
+    font-size: 18.5px;
     color: var(--brown-dark);
+    letter-spacing: -0.3px;
 }
 
 
@@ -203,26 +208,28 @@ button {
 }
 
 .template-card {
-    background: var(--white);
-    border: 2.5px solid #f13910;
-    border-radius: 20px;
-    padding: 22px 24px;
+    background: rgba(255, 255, 255, 0.75) !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1.5px solid rgba(242, 193, 78, 0.26) !important;
+    border-radius: 24px;
+    padding: 26px 28px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    gap: 6px;
+    gap: 8px;
     cursor: pointer;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
-    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 6px 20px rgba(122, 74, 30, 0.04);
+    transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
     width: 100%;
 }
 
 .template-card:hover {
-    border-color: var(--gold);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(242, 193, 78, 0.28);
+    border-color: var(--gold) !important;
+    transform: translateY(-5px) scale(1.018);
+    box-shadow: 0 14px 36px rgba(122, 74, 30, 0.12) !important;
 }
 
 .template-card:focus-visible {
@@ -242,9 +249,9 @@ button {
 
 .template-name {
     font-weight: 800;
-    font-size: 28px;
+    font-size: 26px;
     color: var(--brown-dark);
-    letter-spacing: 0.6px;
+    letter-spacing: 0.5px;
     line-height: 1.25;
     text-align: center;
 }
@@ -299,52 +306,59 @@ button {
     }
 }
 
-.templates-subgrid .template-card {
-    display: block;
-    padding: 6px;
-    border-radius: 14px;
-    border: 2.5px solid #eee2cc;
-    background: var(--white);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+.template-card-preview-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 16px !important;
+    border-radius: 22px !important;
+    border: 1.5px solid rgba(242, 193, 78, 0.25) !important;
+    background: rgba(255, 255, 255, 0.72) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 16px rgba(122, 74, 30, 0.03);
+    cursor: pointer;
+    transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    width: 100%;
     overflow: hidden;
-    transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
-.templates-subgrid .template-card:hover {
-    border-color: var(--gold);
-    transform: translateY(-3px) scale(1.03);
-    box-shadow: 0 8px 22px var(--shadow);
+.template-card-preview-container:hover {
+    border-color: var(--gold) !important;
+    transform: translateY(-5px) scale(1.03) !important;
+    box-shadow: 0 12px 32px rgba(122, 74, 30, 0.12) !important;
 }
 
-.templates-subgrid .template-card img,
-.templates-subgrid .template-card svg {
+.template-card-preview-container img,
+.template-card-preview-container svg {
     width: 100%;
     aspect-ratio: 1 / 1;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 14px;
     display: block;
-    opacity: 1;
-}
-
-.template-card.vector-card {
-    background: #fffdfa;
-    border-color: #e2cca6;
-    display: flex;
-    flex-direction: column;
+    background: #fbf8f0;
+    border: 1px solid rgba(122, 74, 30, 0.05);
     padding: 8px;
+    transition: transform 0.25s ease;
 }
 
-.template-card.vector-card:hover {
-    border-color: var(--gold);
-    box-shadow: 0 8px 24px rgba(242, 193, 78, 0.35);
+.template-card-preview-container:hover img,
+.template-card-preview-container:hover svg {
+    transform: scale(1.02);
 }
 
 .template-card-preview {
     width: 100%;
     aspect-ratio: 1 / 1;
-    background: #faf6ee;
-    border-radius: 8px;
-    padding: 4px;
+    background: #fbf8f0;
+    border-radius: 14px;
+    padding: 8px;
+    border: 1px solid rgba(122, 74, 30, 0.05);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .template-card-title {
@@ -394,11 +408,13 @@ button {
 
 /* ---------- Flower Sidebar ---------- */
 .flower-sidebar {
-    background: var(--white);
-    border: 2px solid #eee2cc;
-    border-radius: 20px;
-    padding: 18px 16px;
-    box-shadow: 0 6px 20px var(--shadow);
+    background: rgba(255, 255, 255, 0.72) !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1.5px solid rgba(242, 193, 78, 0.28) !important;
+    border-radius: 24px;
+    padding: 22px 18px;
+    box-shadow: 0 8px 32px rgba(122, 74, 30, 0.06);
     max-height: 82vh;
     overflow-y: auto;
     scrollbar-width: thin;
@@ -419,8 +435,8 @@ button {
     align-items: center;
     gap: 10px;
     padding-bottom: 12px;
-    border-bottom: 1.5px solid #eee2cc;
-    margin-bottom: 14px;
+    border-bottom: 1.5px solid rgba(122, 74, 30, 0.08);
+    margin-bottom: 16px;
 }
 
 .sidebar-icon {
@@ -445,11 +461,11 @@ button {
     display: flex;
     align-items: center;
     gap: 12px;
-    background: #fdf8ee;
-    border: 1.5px solid var(--gold);
-    border-radius: 12px;
-    padding: 10px 12px;
-    margin-bottom: 16px;
+    background: rgba(253, 248, 238, 0.7);
+    border: 1.5px solid rgba(242, 193, 78, 0.6);
+    border-radius: 14px;
+    padding: 10px 14px;
+    margin-bottom: 18px;
 }
 
 .active-flower-indicator {
@@ -487,17 +503,17 @@ button {
 }
 
 .flower-category-card {
-    background: #faf6ee;
-    border: 1px solid #ebdcc5;
-    border-radius: 14px;
-    padding: 10px 12px;
-    transition: border-color 0.15s ease, background 0.15s ease;
+    background: rgba(250, 246, 238, 0.5);
+    border: 1px solid rgba(122, 74, 30, 0.06);
+    border-radius: 16px;
+    padding: 12px 14px;
+    transition: all 0.22s ease;
 }
 
 .flower-category-card.selected {
     border-color: var(--gold);
-    background: #fffdf9;
-    box-shadow: 0 2px 8px rgba(242, 193, 78, 0.25);
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 4px 14px rgba(242, 193, 78, 0.16);
 }
 
 .flower-category-header {
@@ -746,11 +762,15 @@ button {
 }
 
 .canvas-shell {
-    background: var(--white);
-    border-radius: 20px;
-    padding: 12px;
-    box-shadow: 0 6px 18px var(--shadow);
+    background: rgba(255, 255, 255, 0.72) !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 2px solid rgba(242, 193, 78, 0.35) !important;
+    border-radius: 28px;
+    padding: 16px;
+    box-shadow: 0 12px 40px rgba(122, 74, 30, 0.08) !important;
     position: relative;
+    transition: all 0.3s ease;
 }
 
 /* ============================================
@@ -769,7 +789,7 @@ button {
 
 .pookalam-segment:hover,
 .pookalam-segment.symm-highlight {
-    fill: rgba(242, 193, 78, 0.4) !important;
+    fill: rgba(242, 193, 78, 0.45) !important;
     stroke: #e67e22 !important;
     stroke-width: 2.4 !important;
 }
@@ -782,7 +802,8 @@ button {
     width: 100%;
     height: auto;
     display: block;
-    border-radius: 14px;
+    border-radius: 18px;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05), 0 4px 16px rgba(122, 74, 30, 0.04);
     cursor: crosshair;
     touch-action: none;
 }

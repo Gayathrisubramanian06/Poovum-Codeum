@@ -65,6 +65,71 @@ export default function HomeView({ onNavigate }) {
                 }}
             />
 
+            {/* Glowing Golden Light Leak */}
+            <motion.div
+                animate={{ opacity: [0.14, 0.28, 0.14] }}
+                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    background: 'radial-gradient(circle at 12% 20%, rgba(242, 193, 78, 0.28) 0%, transparent 40%)',
+                    pointerEvents: 'none',
+                    zIndex: 1
+                }}
+            />
+
+            {/* Glowing Rose Light Leak */}
+            <motion.div
+                animate={{ opacity: [0.16, 0.32, 0.16] }}
+                transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+                style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    right: 0,
+                    width: '100%',
+                    height: '100%',
+                    background: 'radial-gradient(circle at 88% 80%, rgba(225, 29, 72, 0.2) 0%, transparent 42%)',
+                    pointerEvents: 'none',
+                    zIndex: 1
+                }}
+            />
+
+            {/* Floating flower ornaments */}
+            <motion.div
+                animate={{ y: [0, -16, 0], rotate: [0, 8, 0] }}
+                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+                style={{
+                    position: 'absolute',
+                    left: '4%',
+                    top: '25%',
+                    fontSize: '28px',
+                    opacity: 0.65,
+                    pointerEvents: 'none',
+                    zIndex: 2
+                }}
+            >
+                🌸
+            </motion.div>
+
+            <motion.div
+                animate={{ y: [0, 14, 0], rotate: [0, -12, 0] }}
+                transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+                style={{
+                    position: 'absolute',
+                    right: '5%',
+                    top: '42%',
+                    fontSize: '32px',
+                    opacity: 0.6,
+                    pointerEvents: 'none',
+                    zIndex: 2
+                }}
+            >
+                🌼
+            </motion.div>
+
             {/* Top Nav Bar Clickable Areas — calibrated to hero-welcome.png */}
             <button
                 onClick={() => onNavigate('home')}
