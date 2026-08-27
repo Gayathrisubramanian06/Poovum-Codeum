@@ -4,6 +4,70 @@ import { supabase } from '../lib/supabase';
 
 const LIKES_STORAGE_KEY = 'pookalam_gallery_likes';
 
+// Curated starter showcase items with classic Onam pookalams
+const CURATED_DESIGNS = [
+    {
+        id: 'curated-1',
+        title: 'Royal Mahabali Lotus',
+        creator: 'Anjali Menon',
+        city: 'Thiruvananthapuram 🪔',
+        date: 'Aug 2026',
+        img_url: 'assets/images/circle-1.jpg',
+        likes: 42,
+        type: 'classic'
+    },
+    {
+        id: 'curated-2',
+        title: 'Geometric Star Mandapam',
+        creator: 'Rahul & Family',
+        city: 'Kochi 🌸',
+        date: 'Aug 2026',
+        img_url: 'assets/images/circle-2.jpg',
+        likes: 38,
+        type: 'classic'
+    },
+    {
+        id: 'curated-3',
+        title: 'Heritage Chendumalli Ring',
+        creator: 'Devika Nair',
+        city: 'Kozhikode 🌼',
+        date: 'Aug 2026',
+        img_url: 'assets/images/circle-8.jpg',
+        likes: 29,
+        type: 'classic'
+    },
+    {
+        id: 'curated-4',
+        title: 'Radiant Peacock Wheel',
+        creator: 'Sreekanth V.',
+        city: 'Thrissur 🦚',
+        date: 'Aug 2026',
+        img_url: 'assets/images/circle-14.jpg',
+        likes: 56,
+        type: 'classic'
+    },
+    {
+        id: 'curated-5',
+        title: 'Grand Sunflower Pookalam',
+        creator: 'Meera Krishnan',
+        city: 'Palakkad 🌻',
+        date: 'Aug 2026',
+        img_url: 'assets/images/circle-20.jpg',
+        likes: 35,
+        type: 'classic'
+    },
+    {
+        id: 'curated-6',
+        title: 'Thumba & Chethi Bloom',
+        creator: 'Arjun K.',
+        city: 'Alappuzha 🌺',
+        date: 'Aug 2026',
+        img_url: 'assets/images/circle-16.jpg',
+        likes: 47,
+        type: 'classic'
+    }
+];
+
 export default function GalleryView({ onNavigate }) {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -17,20 +81,45 @@ export default function GalleryView({ onNavigate }) {
         async function fetchGallery() {
             setLoading(true);
             setError(null);
-            try {
-                const { data, error: sbError } = await supabase
-                    .from('gallery_items')
-                    .select('*')
-                    .order('created_at', { ascending: false });
+            
+            const hasSupabase = 
+                import.meta.env.VITE_SUPABASE_URL && 
+                import.meta.env.VITE_SUPABASE_ANON_KEY && 
+                import.meta.env.VITE_SUPABASE_URL !== 'YOUR_SUPABASE_PROJECT_URL' && 
+                import.meta.env.VITE_SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY';
 
-                if (sbError) throw sbError;
-                setItems((data || []).map(item => ({ ...item, type: 'community' })));
-            } catch (err) {
-                console.error('Gallery fetch error:', err);
-                setError('Could not load gallery. Check your Supabase credentials in .env.local.');
-            } finally {
-                setLoading(false);
+            let communityData = [];
+            let useLocalFallback = false;
+
+            if (hasSupabase) {
+                try {
+                    const { data, error: sbError } = await supabase
+                        .from('gallery_items')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+
+                    if (sbError) throw sbError;
+                    communityData = (data || []).map(item => ({ ...item, type: 'community' }));
+                } catch (err) {
+                    console.error('Gallery Supabase fetch error, falling back to LocalStorage:', err);
+                    useLocalFallback = true;
+                }
+            } else {
+                useLocalFallback = true;
             }
+
+            if (useLocalFallback) {
+                try {
+                    const rawUploads = localStorage.getItem('pookalam_community_gallery');
+                    const uploads = rawUploads ? JSON.parse(rawUploads) : [];
+                    communityData = uploads.map(item => ({ ...item, type: 'community' }));
+                } catch (e) {
+                    console.error('Failed to load local uploads:', e);
+                }
+            }
+
+            setItems([...communityData, ...CURATED_DESIGNS]);
+            setLoading(false);
         }
 
         fetchGallery();
@@ -47,6 +136,7 @@ export default function GalleryView({ onNavigate }) {
     const filteredItems = items.filter(item => {
         if (filter === 'all') return true;
         if (filter === 'community') return item.type === 'community';
+        if (filter === 'classic') return item.type === 'classic';
         return true;
     });
 
@@ -134,6 +224,13 @@ export default function GalleryView({ onNavigate }) {
                             type="button"
                         >
                             Community Uploads ✨
+                        </button>
+                        <button
+                            className={`gallery-tab ${filter === 'classic' ? 'active' : ''}`}
+                            onClick={() => setFilter('classic')}
+                            type="button"
+                        >
+                            Classic Designs 🪔
                         </button>
                     </div>
                     <span className="gallery-counter">

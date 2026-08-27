@@ -29,6 +29,50 @@ export default function HomeView({ onNavigate }) {
 
     const sceneIndex = scenes.indexOf(scene);
 
+    const [containerStyle, setContainerStyle] = useState({
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '100%',
+        height: '100%',
+        zIndex: 0
+    });
+
+    useEffect(() => {
+        const handleResize = () => {
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const viewportRatio = vw / vh;
+            const targetRatio = 1.5; // 3:2 aspect ratio of the 735x490 background image
+
+            let width, height;
+            if (viewportRatio > targetRatio) {
+                // Viewport is wider than 3:2: fill width, scale height
+                width = vw;
+                height = vw / targetRatio;
+            } else {
+                // Viewport is taller than 3:2: fill height, scale width
+                height = vh;
+                width = vh * targetRatio;
+            }
+
+            setContainerStyle({
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: `${width}px`,
+                height: `${height}px`,
+                zIndex: 0
+            });
+        };
+
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return (
         <motion.div
             className="onam-home"
@@ -44,60 +88,418 @@ export default function HomeView({ onNavigate }) {
                 background: '#f5ead8'
             }}
         >
+            {/* =====================================================
+                RESPONSIVE GRAPHICS CANVAS CONTAINER (3:2 Aspect Ratio)
+            ====================================================== */}
+            <div style={containerStyle}>
+
+                {/* BASE KERALA BACKGROUND */}
+                <motion.img
+                    src="assets/onam-background.jpg"
+                    alt="Kerala Onam celebration"
+                    initial={{ scale: 1.02 }}
+                    animate={{
+                        scale: [1.02, 1.04, 1.02]
+                    }}
+                    transition={{
+                        duration: 18,
+                        repeat: Infinity,
+                        ease: 'easeInOut'
+                    }}
+                    style={{
+                        position: 'absolute',
+                        inset: 0,
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'fill',
+                        zIndex: 0
+                    }}
+                />
+
+                {/* SOFT CINEMATIC OVERLAY */}
+                <motion.div
+                    animate={{
+                        opacity: [0.12, 0.22, 0.12]
+                    }}
+                    transition={{
+                        duration: 7,
+                        repeat: Infinity,
+                        ease: 'easeInOut'
+                    }}
+                    style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background:
+                            'radial-gradient(circle at 50% 35%, rgba(255,220,130,.25), transparent 55%)',
+                        pointerEvents: 'none',
+                        zIndex: 1
+                    }}
+                />
+
+                {/* WELCOME SCREEN TEXT LAYER */}
+                <AnimatePresence>
+                    {scene === 'welcome' && (
+                        <motion.div
+                            key="welcome"
+                            initial={{
+                                opacity: 0,
+                                y: 20
+                            }}
+                            animate={{
+                                opacity: 1,
+                                y: 0
+                            }}
+                            exit={{
+                                opacity: 0,
+                                y: -20
+                            }}
+                            transition={{
+                                duration: 1
+                            }}
+                            style={{
+                                position: 'absolute',
+                                zIndex: 10,
+                                left: '50%',
+                                top: '18%',
+                                transform: 'translateX(-50%)',
+                                textAlign: 'center',
+                                width: '90%'
+                            }}
+                        >
+                            <div
+                                style={{
+                                    fontFamily: 'Georgia, serif',
+                                    fontSize: 'clamp(42px, 6vw, 90px)',
+                                    letterSpacing: '8px',
+                                    color: '#8b641d',
+                                    fontWeight: 500,
+                                    textShadow: '0 3px 15px rgba(255,255,255,.45)'
+                                }}
+                            >
+                                ONAM
+                            </div>
+
+                            <div
+                                style={{
+                                    fontFamily: 'Georgia, serif',
+                                    fontSize: 'clamp(18px, 2vw, 30px)',
+                                    letterSpacing: '6px',
+                                    color: '#493a29',
+                                    marginTop: '-5px'
+                                }}
+                            >
+                                2026
+                            </div>
+
+                            <motion.p
+                                animate={{
+                                    opacity: [0.45, 1, 0.45]
+                                }}
+                                transition={{
+                                    duration: 2.5,
+                                    repeat: Infinity
+                                }}
+                                style={{
+                                    marginTop: '24px',
+                                    fontSize: 'clamp(14px, 1.3vw, 20px)',
+                                    color: '#594936',
+                                    letterSpacing: '2px'
+                                }}
+                            >
+                                Welcome to the celebration
+                            </motion.p>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* POOKALAM OVERLAY (Aligned bottom left) */}
+                <SceneImage
+                    show={scene === 'pookalam'}
+                    src="assets/pookalam.png"
+                    alt="Traditional Onam Pookalam"
+                    style={{
+                        width: '39%',
+                        left: '30%',
+                        top: '73.5%'
+                    }}
+                    initial={{
+                        scale: 0.1,
+                        opacity: 0,
+                        rotate: -25
+                    }}
+                    animate={{
+                        scale: 1,
+                        opacity: 1,
+                        rotate: 0
+                    }}
+                />
+
+                <SceneCaption
+                    show={scene === 'pookalam'}
+                    title="THE BEAUTY OF ONAM"
+                    text="Where every flower becomes a celebration."
+                />
+
+                {/* MAVELI OVERLAY (Aligned middle left) */}
+                <SceneImage
+                    show={scene === 'maveli'}
+                    src="assets/maveli.png"
+                    alt="King Mahabali"
+                    style={{
+                        width: '18%',
+                        left: '18.5%',
+                        top: '30%'
+                    }}
+                    initial={{
+                        x: '-100%',
+                        opacity: 0,
+                        rotate: -4
+                    }}
+                    animate={{
+                        x: '-50%',
+                        opacity: 1,
+                        rotate: 0
+                    }}
+                />
+
+                <SceneCaption
+                    show={scene === 'maveli'}
+                    title="WELCOME, MAVELI"
+                    text="The beloved king returns to his people."
+                />
+
+                {/* SADYA OVERLAY (Aligned bottom right) */}
+                <SceneImage
+                    show={scene === 'sadya'}
+                    src="assets/sadya.png"
+                    alt="Traditional Onam Sadya"
+                    style={{
+                        width: '43%',
+                        left: '75%',
+                        top: '78%'
+                    }}
+                    initial={{
+                        opacity: 0,
+                        scale: 0.7,
+                        y: 100
+                    }}
+                    animate={{
+                        opacity: 1,
+                        scale: 1,
+                        y: 0
+                    }}
+                />
+
+                <SceneCaption
+                    show={scene === 'sadya'}
+                    title="ONAM SADYA"
+                    text="A feast served with love, tradition and togetherness."
+                />
+
+                {/* THIRUVATHIRA OVERLAY (Aligned middle center) */}
+                <SceneImage
+                    show={scene === 'thiruvathira'}
+                    src="assets/thiruvathira.png"
+                    alt="Thiruvathira dancers"
+                    style={{
+                        width: '33%',
+                        left: '49%',
+                        top: '42%'
+                    }}
+                    initial={{
+                        opacity: 0,
+                        scale: 0.85,
+                        y: 70
+                    }}
+                    animate={{
+                        opacity: 1,
+                        scale: 1,
+                        y: 0
+                    }}
+                />
+
+                {/* Center Lamp Glow effect during Thiruvathira dancers display */}
+                <AnimatePresence>
+                    {(scene === 'thiruvathira' || scene === 'final') && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            animate={{
+                                opacity: [0.5, 0.9, 0.5],
+                                scale: [1, 1.08, 1]
+                            }}
+                            exit={{ opacity: 0 }}
+                            transition={{
+                                duration: 2,
+                                repeat: Infinity
+                            }}
+                            style={{
+                                position: 'absolute',
+                                left: '49.5%',
+                                top: '64%',
+                                width: '90px',
+                                height: '90px',
+                                transform: 'translate(-50%, -50%)',
+                                borderRadius: '50%',
+                                background:
+                                    'radial-gradient(circle, rgba(255,198,50,.45), transparent 65%)',
+                                zIndex: 11,
+                                pointerEvents: 'none'
+                            }}
+                        />
+                    )}
+                </AnimatePresence>
+
+                <SceneCaption
+                    show={scene === 'thiruvathira'}
+                    title="THIRUVATHIRA"
+                    text="Grace, rhythm and tradition around the glowing lamp."
+                />
+
+                {/* KATHAKALI OVERLAY (Aligned middle right) */}
+                <SceneImage
+                    show={scene === 'kathakali'}
+                    src="assets/kathakali.png"
+                    alt="Kathakali performer"
+                    style={{
+                        width: '22%',
+                        left: '68.5%',
+                        top: '45%'
+                    }}
+                    initial={{
+                        opacity: 0,
+                        scale: 0.6,
+                        rotate: -8,
+                        y: 80
+                    }}
+                    animate={{
+                        opacity: 1,
+                        scale: 1,
+                        rotate: [0, -2, 2, 0],
+                        y: 0
+                    }}
+                    transition={{
+                        duration: 1.2,
+                        rotate: {
+                            duration: 3,
+                            repeat: Infinity,
+                            ease: 'easeInOut'
+                        }
+                    }}
+                />
+
+                <SceneCaption
+                    show={scene === 'kathakali'}
+                    title="THE SPIRIT OF KERALA"
+                    text="Colour, expression and stories come alive."
+                />
+
+                {/* VALLAM KALI BOAT OVERLAY (Aligned middle far-right) */}
+                <SceneImage
+                    show={scene === 'boat' || scene === 'final'}
+                    src="assets/boat.png"
+                    alt="Kerala snake boat race"
+                    style={{
+                        width: '32%',
+                        left: '87.5%',
+                        top: '38%',
+                        zIndex: 12
+                    }}
+                    initial={{
+                        x: '-150%',
+                        opacity: 0
+                    }}
+                    animate={{
+                        x: '-50%',
+                        opacity: 1
+                    }}
+                />
+
+                <SceneCaption
+                    show={scene === 'boat'}
+                    title="VALLAM KALI"
+                    text="The final celebration races across Kerala's backwaters."
+                />
+
+                {/* FINAL SCREEN CONTENT */}
+                <AnimatePresence>
+                    {scene === 'final' && (
+                        <motion.div
+                            key="final"
+                            initial={{
+                                opacity: 0,
+                                scale: 0.85
+                            }}
+                            animate={{
+                                opacity: 1,
+                                scale: 1
+                            }}
+                            exit={{
+                                opacity: 0,
+                                scale: 0.95
+                            }}
+                            transition={{
+                                duration: 1.2
+                            }}
+                            style={{
+                                position: 'absolute',
+                                left: '50%',
+                                top: '18%',
+                                transform: 'translateX(-50%)',
+                                textAlign: 'center',
+                                zIndex: 20,
+                                width: '90%'
+                            }}
+                        >
+                            <div
+                                style={{
+                                    fontFamily: 'Georgia, serif',
+                                    fontSize: 'clamp(38px, 5vw, 76px)',
+                                    color: '#8c681f',
+                                    letterSpacing: '3px',
+                                    textShadow: '0 3px 15px rgba(255,255,255,.5)'
+                                }}
+                            >
+                                Happy Onam
+                            </div>
+
+                            <div
+                                style={{
+                                    marginTop: '15px',
+                                    fontSize: 'clamp(15px, 1.5vw, 22px)',
+                                    color: '#584938',
+                                    letterSpacing: '2px'
+                                }}
+                            >
+                                May the spirit of Onam fill your heart with joy.
+                            </div>
+
+                            <motion.div
+                                animate={{
+                                    y: [0, 8, 0],
+                                    opacity: [0.5, 1, 0.5]
+                                }}
+                                transition={{
+                                    duration: 2,
+                                    repeat: Infinity
+                                }}
+                                style={{
+                                    marginTop: '30px',
+                                    fontSize: '25px'
+                                }}
+                            >
+                                🌸 🌼 🌺
+                            </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+            </div>
 
             {/* =====================================================
-                BASE KERALA BACKGROUND
+                VIEWPORT OVERLAYS (Navigation, Floating Petals, Progress dots)
             ====================================================== */}
 
-            <motion.img
-                src="assets/onam-background.png"
-                alt="Kerala Onam celebration"
-                initial={{ scale: 1.02 }}
-                animate={{
-                    scale: [1.02, 1.04, 1.02]
-                }}
-                transition={{
-                    duration: 18,
-                    repeat: Infinity,
-                    ease: 'easeInOut'
-                }}
-                style={{
-                    position: 'absolute',
-                    inset: 0,
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    zIndex: 0
-                }}
-            />
-
-            {/* =====================================================
-                SOFT CINEMATIC OVERLAY
-            ====================================================== */}
-
-            <motion.div
-                animate={{
-                    opacity: [0.12, 0.22, 0.12]
-                }}
-                transition={{
-                    duration: 7,
-                    repeat: Infinity,
-                    ease: 'easeInOut'
-                }}
-                style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background:
-                        'radial-gradient(circle at 50% 35%, rgba(255,220,130,.25), transparent 55%)',
-                    pointerEvents: 'none',
-                    zIndex: 1
-                }}
-            />
-
-            {/* =====================================================
-                FLOATING FLOWER PETALS
-            ====================================================== */}
-
+            {/* FLOATING FLOWER PETALS */}
             <FloatingPetal left="8%" delay={0} duration={7} />
             <FloatingPetal left="18%" delay={2} duration={9} />
             <FloatingPetal left="32%" delay={4} duration={8} />
@@ -105,10 +507,7 @@ export default function HomeView({ onNavigate }) {
             <FloatingPetal left="82%" delay={3} duration={8} />
             <FloatingPetal left="92%" delay={5} duration={9} />
 
-            {/* =====================================================
-                NAVIGATION
-            ====================================================== */}
-
+            {/* NAVIGATION HEADER */}
             <div
                 style={{
                     position: 'absolute',
@@ -122,7 +521,6 @@ export default function HomeView({ onNavigate }) {
                     whiteSpace: 'nowrap'
                 }}
             >
-
                 <NavButton
                     text="HOME"
                     onClick={() => onNavigate('home')}
@@ -143,401 +541,9 @@ export default function HomeView({ onNavigate }) {
                     text="ABOUT ONAM"
                     onClick={() => onNavigate('about')}
                 />
-
             </div>
 
-            {/* =====================================================
-                WELCOME
-            ====================================================== */}
-
-            <AnimatePresence>
-                {scene === 'welcome' && (
-                    <motion.div
-                        key="welcome"
-                        initial={{
-                            opacity: 0,
-                            y: 30
-                        }}
-                        animate={{
-                            opacity: 1,
-                            y: 0
-                        }}
-                        exit={{
-                            opacity: 0,
-                            y: -25
-                        }}
-                        transition={{
-                            duration: 1
-                        }}
-                        style={{
-                            position: 'absolute',
-                            zIndex: 10,
-                            left: '50%',
-                            top: '27%',
-                            transform: 'translateX(-50%)',
-                            textAlign: 'center',
-                            width: '90%'
-                        }}
-                    >
-
-                        <div
-                            style={{
-                                fontFamily: 'Georgia, serif',
-                                fontSize: 'clamp(42px, 6vw, 90px)',
-                                letterSpacing: '8px',
-                                color: '#8b641d',
-                                fontWeight: 500,
-                                textShadow: '0 3px 15px rgba(255,255,255,.45)'
-                            }}
-                        >
-                            ONAM
-                        </div>
-
-                        <div
-                            style={{
-                                fontFamily: 'Georgia, serif',
-                                fontSize: 'clamp(18px, 2vw, 30px)',
-                                letterSpacing: '6px',
-                                color: '#493a29',
-                                marginTop: '-5px'
-                            }}
-                        >
-                            2026
-                        </div>
-
-                        <motion.p
-                            animate={{
-                                opacity: [0.45, 1, 0.45]
-                            }}
-                            transition={{
-                                duration: 2.5,
-                                repeat: Infinity
-                            }}
-                            style={{
-                                marginTop: '24px',
-                                fontSize: 'clamp(14px, 1.3vw, 20px)',
-                                color: '#594936',
-                                letterSpacing: '2px'
-                            }}
-                        >
-                            Welcome to the celebration
-                        </motion.p>
-
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            {/* =====================================================
-                POOKALAM
-            ====================================================== */}
-
-            <SceneImage
-                show={scene === 'pookalam'}
-                src="assets/pookalam.png"
-                alt="Traditional Onam Pookalam"
-                style={{
-                    width: 'clamp(240px, 32vw, 520px)',
-                    left: '50%',
-                    top: '52%'
-                }}
-                initial={{
-                    scale: 0.1,
-                    opacity: 0,
-                    rotate: -25
-                }}
-                animate={{
-                    scale: 1,
-                    opacity: 1,
-                    rotate: 0
-                }}
-            />
-
-            <SceneCaption
-                show={scene === 'pookalam'}
-                title="THE BEAUTY OF ONAM"
-                text="Where every flower becomes a celebration."
-            />
-
-            {/* =====================================================
-                MAVELI
-            ====================================================== */}
-
-            <SceneImage
-                show={scene === 'maveli'}
-                src="assets/maveli.png"
-                alt="King Mahabali"
-                style={{
-                    width: 'clamp(220px, 28vw, 430px)',
-                    left: '50%',
-                    top: '54%'
-                }}
-                initial={{
-                    x: '-80vw',
-                    opacity: 0,
-                    rotate: -4
-                }}
-                animate={{
-                    x: '-50%',
-                    opacity: 1,
-                    rotate: 0
-                }}
-            />
-
-            <SceneCaption
-                show={scene === 'maveli'}
-                title="WELCOME, MAVELI"
-                text="The beloved king returns to his people."
-            />
-
-            {/* =====================================================
-                SADYA
-            ====================================================== */}
-
-            <SceneImage
-                show={scene === 'sadya'}
-                src="assets/sadya.png"
-                alt="Traditional Onam Sadya"
-                style={{
-                    width: 'clamp(330px, 48vw, 760px)',
-                    left: '50%',
-                    top: '60%'
-                }}
-                initial={{
-                    opacity: 0,
-                    scale: 0.7,
-                    y: 100
-                }}
-                animate={{
-                    opacity: 1,
-                    scale: 1,
-                    y: 0
-                }}
-            />
-
-            <SceneCaption
-                show={scene === 'sadya'}
-                title="ONAM SADYA"
-                text="A feast served with love, tradition and togetherness."
-            />
-
-            {/* =====================================================
-                THIRUVATHIRA
-            ====================================================== */}
-
-            <SceneImage
-                show={scene === 'thiruvathira'}
-                src="assets/thiruvathira.png"
-                alt="Thiruvathira dancers"
-                style={{
-                    width: 'clamp(350px, 55vw, 850px)',
-                    left: '50%',
-                    top: '58%'
-                }}
-                initial={{
-                    opacity: 0,
-                    scale: 0.85,
-                    y: 70
-                }}
-                animate={{
-                    opacity: 1,
-                    scale: 1,
-                    y: 0
-                }}
-            />
-
-            {/* Lamp glow */}
-
-            <motion.div
-                animate={{
-                    scale: [1, 1.08, 1],
-                    opacity: [0.5, 0.9, 0.5]
-                }}
-                transition={{
-                    duration: 2,
-                    repeat: Infinity
-                }}
-                style={{
-                    position: 'absolute',
-                    left: '50%',
-                    top: '64%',
-                    width: '90px',
-                    height: '90px',
-                    transform: 'translate(-50%, -50%)',
-                    borderRadius: '50%',
-                    background:
-                        'radial-gradient(circle, rgba(255,198,50,.45), transparent 65%)',
-                    zIndex: 11,
-                    pointerEvents: 'none'
-                }}
-            />
-
-            <SceneCaption
-                show={scene === 'thiruvathira'}
-                title="THIRUVATHIRA"
-                text="Grace, rhythm and tradition around the glowing lamp."
-            />
-
-            {/* =====================================================
-                KATHAKALI
-            ====================================================== */}
-
-            <SceneImage
-                show={scene === 'kathakali'}
-                src="assets/kathakali.png"
-                alt="Kathakali performer"
-                style={{
-                    width: 'clamp(200px, 28vw, 430px)',
-                    left: '50%',
-                    top: '55%'
-                }}
-                initial={{
-                    opacity: 0,
-                    scale: 0.6,
-                    rotate: -8,
-                    y: 80
-                }}
-                animate={{
-                    opacity: 1,
-                    scale: 1,
-                    rotate: [0, -2, 2, 0],
-                    y: 0
-                }}
-                transition={{
-                    duration: 1.2,
-                    rotate: {
-                        duration: 3,
-                        repeat: Infinity,
-                        ease: 'easeInOut'
-                    }
-                }}
-            />
-
-            <SceneCaption
-                show={scene === 'kathakali'}
-                title="THE SPIRIT OF KERALA"
-                text="Colour, expression and stories come alive."
-            />
-
-            {/* =====================================================
-                VALLAM KALI
-            ====================================================== */}
-
-            <AnimatePresence>
-                {(scene === 'boat' || scene === 'final') && (
-                    <motion.img
-                        key="boat"
-                        src="assets/boat.png"
-                        alt="Kerala snake boat race"
-                        initial={{
-                            x: '-70vw',
-                            opacity: 0
-                        }}
-                        animate={{
-                            x: '0vw',
-                            opacity: 1
-                        }}
-                        transition={{
-                            duration: 2.5,
-                            ease: 'easeOut'
-                        }}
-                        style={{
-                            position: 'absolute',
-                            width: 'clamp(350px, 62vw, 1000px)',
-                            left: '50%',
-                            top: '63%',
-                            transform: 'translateX(-50%)',
-                            zIndex: 12
-                        }}
-                    />
-                )}
-            </AnimatePresence>
-
-            {scene === 'boat' && (
-                <SceneCaption
-                    show
-                    title="VALLAM KALI"
-                    text="The final celebration races across Kerala's backwaters."
-                />
-            )}
-
-            {/* =====================================================
-                FINAL MESSAGE
-            ====================================================== */}
-
-            <AnimatePresence>
-                {scene === 'final' && (
-                    <motion.div
-                        key="final"
-                        initial={{
-                            opacity: 0,
-                            scale: 0.85
-                        }}
-                        animate={{
-                            opacity: 1,
-                            scale: 1
-                        }}
-                        transition={{
-                            duration: 1.2
-                        }}
-                        style={{
-                            position: 'absolute',
-                            left: '50%',
-                            top: '22%',
-                            transform: 'translateX(-50%)',
-                            textAlign: 'center',
-                            zIndex: 20,
-                            width: '90%'
-                        }}
-                    >
-
-                        <div
-                            style={{
-                                fontFamily: 'Georgia, serif',
-                                fontSize: 'clamp(38px, 5vw, 76px)',
-                                color: '#8c681f',
-                                letterSpacing: '3px',
-                                textShadow: '0 3px 15px rgba(255,255,255,.5)'
-                            }}
-                        >
-                            Happy Onam
-                        </div>
-
-                        <div
-                            style={{
-                                marginTop: '15px',
-                                fontSize: 'clamp(15px, 1.5vw, 22px)',
-                                color: '#584938',
-                                letterSpacing: '2px'
-                            }}
-                        >
-                            May the spirit of Onam fill your heart with joy.
-                        </div>
-
-                        <motion.div
-                            animate={{
-                                y: [0, 8, 0],
-                                opacity: [0.5, 1, 0.5]
-                            }}
-                            transition={{
-                                duration: 2,
-                                repeat: Infinity
-                            }}
-                            style={{
-                                marginTop: '30px',
-                                fontSize: '25px'
-                            }}
-                        >
-                            🌸 🌼 🌺
-                        </motion.div>
-
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            {/* =====================================================
-                PROGRESS INDICATOR
-            ====================================================== */}
-
+            {/* SCENE PROGRESS DOT INDICATOR */}
             <div
                 style={{
                     position: 'absolute',
@@ -566,59 +572,46 @@ export default function HomeView({ onNavigate }) {
                 ))}
             </div>
 
-            {/* =====================================================
-                MAIN BUTTONS
-            ====================================================== */}
+            {/* MAIN ACTION BUTTONS */}
+            <motion.div
+                initial={{
+                    opacity: 0,
+                    y: 20
+                }}
+                animate={{
+                    opacity: 1,
+                    y: 0
+                }}
+                transition={{
+                    delay: 0.5,
+                    duration: 0.8
+                }}
+                style={{
+                    position: 'absolute',
+                    left: '50%',
+                    bottom: '9%',
+                    transform: 'translateX(-50%)',
+                    zIndex: 25,
+                    display: 'flex',
+                    gap: '14px',
+                    flexWrap: 'wrap',
+                    justifyContent: 'center'
+                }}
+            >
+                <button
+                    onClick={() => onNavigate('design')}
+                    style={mainButtonStyle}
+                >
+                    Create Pookalam
+                </button>
 
-            <AnimatePresence>
-                {scene === 'welcome' && (
-                    <motion.div
-                        initial={{
-                            opacity: 0,
-                            y: 20
-                        }}
-                        animate={{
-                            opacity: 1,
-                            y: 0
-                        }}
-                        exit={{
-                            opacity: 0
-                        }}
-                        transition={{
-                            delay: 1,
-                            duration: 0.8
-                        }}
-                        style={{
-                            position: 'absolute',
-                            left: '50%',
-                            bottom: '9%',
-                            transform: 'translateX(-50%)',
-                            zIndex: 25,
-                            display: 'flex',
-                            gap: '14px',
-                            flexWrap: 'wrap',
-                            justifyContent: 'center'
-                        }}
-                    >
-
-                        <button
-                            onClick={() => onNavigate('design')}
-                            style={mainButtonStyle}
-                        >
-                            Create Pookalam
-                        </button>
-
-                        <button
-                            onClick={() => onNavigate('gallery')}
-                            style={secondaryButtonStyle}
-                        >
-                            Explore Gallery
-                        </button>
-
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
+                <button
+                    onClick={() => onNavigate('gallery')}
+                    style={secondaryButtonStyle}
+                >
+                    Explore Gallery
+                </button>
+            </motion.div>
         </motion.div>
     );
 }
