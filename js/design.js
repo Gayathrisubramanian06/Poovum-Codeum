@@ -8,27 +8,27 @@
 // ============================================
 
 (function () {
-    const templateStep        = document.getElementById('templateStep');
-    const subTemplateStep     = document.getElementById('subTemplateStep');
+    const templateStep = document.getElementById('templateStep');
+    const subTemplateStep = document.getElementById('subTemplateStep');
     const predefinedTemplates = document.getElementById('predefinedTemplates');
     const customTemplateUpload = document.getElementById('customTemplateUpload');
-    const templateFileInput   = document.getElementById('templateFileInput');
-    const canvasStep          = document.getElementById('canvasStep');
-    const pageTitle           = document.getElementById('pageTitle');
-    const btnBack             = document.getElementById('btnBack');
-    const canvasHint          = document.getElementById('canvasHint');
+    const templateFileInput = document.getElementById('templateFileInput');
+    const canvasStep = document.getElementById('canvasStep');
+    const pageTitle = document.getElementById('pageTitle');
+    const btnBack = document.getElementById('btnBack');
+    const canvasHint = document.getElementById('canvasHint');
 
     if (!templateStep || !canvasStep) return; // not on design.html
 
-    const svg               = document.getElementById('pookalamCanvas');
-    const canvasBgRect      = document.getElementById('canvasBgRect');
-    const vectorFillLayer   = document.getElementById('vectorFillLayer');
+    const svg = document.getElementById('pookalamCanvas');
+    const canvasBgRect = document.getElementById('canvasBgRect');
+    const vectorFillLayer = document.getElementById('vectorFillLayer');
     const vectorBorderLayer = document.getElementById('vectorBorderLayer');
-    const guideLayer        = document.getElementById('guideLayer');
-    const petalLayer        = document.getElementById('petalLayer');
-    const btnSymmetry       = document.getElementById('btnSymmetry');
+    const guideLayer = document.getElementById('guideLayer');
+    const petalLayer = document.getElementById('petalLayer');
+    const btnSymmetry = document.getElementById('btnSymmetry');
 
-    const CENTER      = 200;
+    const CENTER = 200;
     const CANVAS_SIZE = 400;          // matches SVG viewBox
     const BORDER_THRESHOLD = 120;     // luminance below this = border pixel
     const MAX_REGION_RATIO = 0.98;
@@ -46,7 +46,7 @@
             icon: '🌿',
             description: 'Sacred white Onam flower',
             varieties: [
-                { name: 'Pure White',      hex: '#ffffff', center: '#16a34a', border: '#cbd5e1' }
+                { name: 'Pure White', hex: '#ffffff', center: '#16a34a', border: '#cbd5e1' }
             ]
         },
         {
@@ -56,9 +56,9 @@
             icon: '🌺',
             description: 'Vibrant 4-petal Ixora flower',
             varieties: [
-                { name: 'Scarlet Red',     hex: '#dc2626', center: '#fca5a5', border: '#991b1b' },
-                { name: 'Golden Yellow',   hex: '#facc15', center: '#854d0e', border: '#ca8a04' },
-                { name: 'Coral Orange',    hex: '#ea580c', center: '#fed7aa', border: '#9a3412' }
+                { name: 'Scarlet Red', hex: '#dc2626', center: '#fca5a5', border: '#991b1b' },
+                { name: 'Golden Yellow', hex: '#facc15', center: '#854d0e', border: '#ca8a04' },
+                { name: 'Coral Orange', hex: '#ea580c', center: '#fed7aa', border: '#9a3412' }
             ]
         },
         {
@@ -69,8 +69,8 @@
             description: 'Radiating pom-pom Chrysanthemum',
             varieties: [
                 { name: 'Sunshine Yellow', hex: '#fbbf24', center: '#d97706', border: '#b45309' },
-                { name: 'Warm Orange',     hex: '#f97316', center: '#c2410c', border: '#7c2d12' },
-                { name: 'Pure White',      hex: '#ffffff', center: '#facc15', border: '#cbd5e1' }
+                { name: 'Warm Orange', hex: '#f97316', center: '#c2410c', border: '#7c2d12' },
+                { name: 'Pure White', hex: '#ffffff', center: '#facc15', border: '#cbd5e1' }
             ]
         },
         {
@@ -80,8 +80,8 @@
             icon: '🌹',
             description: 'Layered fragrant Rose petals',
             varieties: [
-                { name: 'Rose Red',        hex: '#e11d48', center: '#881337', border: '#9f1239' },
-                { name: 'Paneer Pink',     hex: '#f472b6', center: '#be185d', border: '#db2777' }
+                { name: 'Rose Red', hex: '#e11d48', center: '#881337', border: '#9f1239' },
+                { name: 'Paneer Pink', hex: '#f472b6', center: '#be185d', border: '#db2777' }
             ]
         },
         {
@@ -91,8 +91,8 @@
             icon: '🏵️',
             description: 'Ruffled festive Tagetes pom-pom',
             varieties: [
-                { name: 'Bright Orange',   hex: '#f97316', center: '#9a3412', border: '#c2410c' },
-                { name: 'Golden Yellow',   hex: '#eab308', center: '#854d0e', border: '#ca8a04' }
+                { name: 'Bright Orange', hex: '#f97316', center: '#9a3412', border: '#c2410c' },
+                { name: 'Golden Yellow', hex: '#eab308', center: '#854d0e', border: '#ca8a04' }
             ]
         },
         {
@@ -102,8 +102,8 @@
             icon: '🪷',
             description: 'Sacred pointed Lotus petals',
             varieties: [
-                { name: 'Lotus Pink',      hex: '#fb7185', center: '#facc15', border: '#e11d48' },
-                { name: 'Sacred White',    hex: '#ffffff', center: '#facc15', border: '#cbd5e1' }
+                { name: 'Lotus Pink', hex: '#fb7185', center: '#facc15', border: '#e11d48' },
+                { name: 'Sacred White', hex: '#ffffff', center: '#facc15', border: '#cbd5e1' }
             ]
         },
         {
@@ -113,8 +113,8 @@
             icon: '🌺',
             description: 'Classic 5-petal flared Hibiscus',
             varieties: [
-                { name: 'Crimson Red',     hex: '#dc2626', center: '#7f1d1d', border: '#991b1b', stamen: '#fbbf24' },
-                { name: 'Bright Pink',     hex: '#ec4899', center: '#831843', border: '#be185d', stamen: '#fde047' }
+                { name: 'Crimson Red', hex: '#dc2626', center: '#7f1d1d', border: '#991b1b', stamen: '#fbbf24' },
+                { name: 'Bright Pink', hex: '#ec4899', center: '#831843', border: '#be185d', stamen: '#fde047' }
             ]
         },
         {
@@ -124,8 +124,8 @@
             icon: '💮',
             description: 'Fragrant 5-petal pinwheel Crape Jasmine',
             varieties: [
-                { name: 'Pure White',      hex: '#ffffff', center: '#facc15', border: '#cbd5e1' },
-                { name: 'Soft Cream',      hex: '#fef3c7', center: '#eab308', border: '#e2e8f0' }
+                { name: 'Pure White', hex: '#ffffff', center: '#facc15', border: '#cbd5e1' },
+                { name: 'Soft Cream', hex: '#fef3c7', center: '#eab308', border: '#e2e8f0' }
             ]
         },
         {
@@ -135,21 +135,21 @@
             icon: '🍃',
             description: 'Plantain leaf green and earthy background tones',
             varieties: [
-                { name: 'Tulsi Green',     hex: '#14532d', center: '#22c55e', border: '#052e16' },
-                { name: 'Forest Green',    hex: '#1b4332', center: '#40916c', border: '#081c15' },
-                { name: 'Earth Brown',     hex: '#4e3620', center: '#8c6239', border: '#2b1d0c' },
-                { name: 'Dark Clay',       hex: '#382314', center: '#6f4e37', border: '#1f130b' },
-                { name: 'Temple Ochre',    hex: '#b45309', center: '#f59e0b', border: '#78350f' }
+                { name: 'Tulsi Green', hex: '#14532d', center: '#22c55e', border: '#052e16' },
+                { name: 'Forest Green', hex: '#1b4332', center: '#40916c', border: '#081c15' },
+                { name: 'Earth Brown', hex: '#4e3620', center: '#8c6239', border: '#2b1d0c' },
+                { name: 'Dark Clay', hex: '#382314', center: '#6f4e37', border: '#1f130b' },
+                { name: 'Temple Ochre', hex: '#b45309', center: '#f59e0b', border: '#78350f' }
             ]
         }
     ];
 
     let currentFlower = ONAM_FLOWERS[4]; // Default: Marigold
-    let currentColor  = ONAM_FLOWERS[4].varieties[0]; // Default: Bright Orange
-    let currentMode   = 'shredded'; // 'shredded' (pure solid color fill) or 'whole' (stamp flower)
+    let currentColor = ONAM_FLOWERS[4].varieties[0]; // Default: Bright Orange
+    let currentMode = 'shredded'; // 'shredded' (pure solid color fill) or 'whole' (stamp flower)
     let isSymmetryActive = true; // Universal symmetry toggle
-    let currentSizeKey   = 'medium';
-    let placed           = []; // Undo stack
+    let currentSizeKey = 'medium';
+    let placed = []; // Undo stack
 
     const NS = 'http://www.w3.org/2000/svg';
 
@@ -186,31 +186,31 @@
     // ====================================================
     // REGION DETECTION & SOLID IMAGE COLOR FILLING
     // ====================================================
-    let isImageTemplate    = false;
-    let templateReady      = false;
-    let templateCtx        = null;
-    let imageFillCanvas    = null;
-    let imageFillCtx       = null;
-    let imageFillImgEl     = null;
-    let regionCache        = new Map();
+    let isImageTemplate = false;
+    let templateReady = false;
+    let templateCtx = null;
+    let imageFillCanvas = null;
+    let imageFillCtx = null;
+    let imageFillImgEl = null;
+    let regionCache = new Map();
     let currentTemplateSrc = null;
     let currentSubTemplate = null;
-    let currentVectorTpl   = null;
+    let currentVectorTpl = null;
 
     let adaptiveBorderThreshold = 128;
 
     function initRegionDetection(imgSrc) {
         isImageTemplate = true;
-        templateReady   = false;
+        templateReady = false;
         regionCache.clear();
 
         const offscreen = document.createElement('canvas');
-        offscreen.width  = CANVAS_SIZE;
+        offscreen.width = CANVAS_SIZE;
         offscreen.height = CANVAS_SIZE;
         templateCtx = offscreen.getContext('2d', { willReadFrequently: true });
 
         imageFillCanvas = document.createElement('canvas');
-        imageFillCanvas.width  = CANVAS_SIZE;
+        imageFillCanvas.width = CANVAS_SIZE;
         imageFillCanvas.height = CANVAS_SIZE;
         imageFillCtx = imageFillCanvas.getContext('2d', { willReadFrequently: true });
         imageFillCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
@@ -219,7 +219,7 @@
         imageFillImgEl = document.createElementNS(NS, 'image');
         imageFillImgEl.setAttribute('x', '0');
         imageFillImgEl.setAttribute('y', '0');
-        imageFillImgEl.setAttribute('width',  String(CANVAS_SIZE));
+        imageFillImgEl.setAttribute('width', String(CANVAS_SIZE));
         imageFillImgEl.setAttribute('height', String(CANVAS_SIZE));
         vectorFillLayer.appendChild(imageFillImgEl);
 
@@ -227,7 +227,7 @@
         img.crossOrigin = 'anonymous';
         img.onload = () => {
             templateCtx.drawImage(img, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
-            
+
             // Computer Vision: Adaptive luminance histogram analysis for edge threshold
             const imgData = templateCtx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE);
             const px = imgData.data;
@@ -257,9 +257,9 @@
         if (regionCache.has(key)) return regionCache.get(key);
 
         const imgData = templateCtx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-        const px      = imgData.data;
-        const total   = CANVAS_SIZE * CANVAS_SIZE;
-        const thresh  = adaptiveBorderThreshold;
+        const px = imgData.data;
+        const total = CANVAS_SIZE * CANVAS_SIZE;
+        const thresh = adaptiveBorderThreshold;
 
         function lum(p) {
             const i = p * 4;
@@ -290,13 +290,13 @@
             startPos = foundPos;
         }
 
-        const mask    = new Uint8Array(total);
+        const mask = new Uint8Array(total);
         const visited = new Uint8Array(total);
-        const stack   = new Int32Array(total);
-        let   stackTop = 0;
+        const stack = new Int32Array(total);
+        let stackTop = 0;
         stack[stackTop++] = startPos;
 
-        let pixelCount  = 0;
+        let pixelCount = 0;
 
         while (stackTop > 0) {
             const pos = stack[--stackTop];
@@ -310,9 +310,9 @@
             const x = pos % CANVAS_SIZE;
             const y = Math.floor(pos / CANVAS_SIZE);
 
-            if (x > 0)               stack[stackTop++] = pos - 1;
+            if (x > 0) stack[stackTop++] = pos - 1;
             if (x < CANVAS_SIZE - 1) stack[stackTop++] = pos + 1;
-            if (y > 0)               stack[stackTop++] = pos - CANVAS_SIZE;
+            if (y > 0) stack[stackTop++] = pos - CANVAS_SIZE;
             if (y < CANVAS_SIZE - 1) stack[stackTop++] = pos + CANVAS_SIZE;
         }
 
@@ -333,7 +333,7 @@
             for (let i = 0; i < mask.length; i++) {
                 if (mask[i]) {
                     const idx = i * 4;
-                    d[idx]     = rgb.r;
+                    d[idx] = rgb.r;
                     d[idx + 1] = rgb.g;
                     d[idx + 2] = rgb.b;
                     d[idx + 3] = 255;
@@ -348,12 +348,12 @@
     }
 
     function clearRegionState() {
-        isImageTemplate    = false;
-        templateReady      = false;
-        templateCtx        = null;
-        imageFillCanvas    = null;
-        imageFillCtx       = null;
-        imageFillImgEl     = null;
+        isImageTemplate = false;
+        templateReady = false;
+        templateCtx = null;
+        imageFillCanvas = null;
+        imageFillCtx = null;
+        imageFillImgEl = null;
         regionCache.clear();
         currentTemplateSrc = null;
     }
@@ -439,27 +439,27 @@
 
     const PREDEFINED_TEMPLATES = {
         circle: [
-            { id: 'c1',  name: 'Floral Star',      img: 'assets/images/circle-1.jpg' },
-            { id: 'c2',  name: 'Geometric Star',    img: 'assets/images/circle-2.jpg' },
-            { id: 'c3',  name: 'Scalloped Mandala', img: 'assets/images/circle-3.jpg' },
-            { id: 'c4',  name: 'Diamond Burst',     img: 'assets/images/circle-4.jpg' },
-            { id: 'c5',  name: 'Classic Ring',      img: 'assets/images/circle-5.jpg' },
-            { id: 'c6',  name: 'Sunburst',          img: 'assets/images/circle-6.jpg' },
-            { id: 'c7',  name: 'Petal Wave',        img: 'assets/images/circle-7.jpg' },
-            { id: 'c8',  name: 'Lotus Bloom',       img: 'assets/images/circle-8.jpg' },
-            { id: 'c9',  name: 'Intricate Web',     img: 'assets/images/circle-9.jpg' },
-            { id: 'c10', name: 'Royal Core',        img: 'assets/images/circle-10.jpg' },
-            { id: 'c11', name: 'Spiral Bloom',      img: 'assets/images/circle-11.jpg' },
-            { id: 'c12', name: 'Radiant Petals',    img: 'assets/images/circle-12.jpg' },
-            { id: 'c13', name: 'Layered Lotus',     img: 'assets/images/circle-13.jpg' },
-            { id: 'c14', name: 'Peacock Wheel',     img: 'assets/images/circle-14.jpg' },
-            { id: 'c15', name: 'Star Weave',        img: 'assets/images/circle-15.jpg' },
-            { id: 'c16', name: 'Floral Mandala',    img: 'assets/images/circle-16.jpg' },
-            { id: 'c17', name: 'Concentric Bloom',  img: 'assets/images/circle-17.jpg' },
-            { id: 'c18', name: 'Heritage Pattern',  img: 'assets/images/circle-18.jpg' },
-            { id: 'c19', name: 'Petal Crown',       img: 'assets/images/circle-19.jpg' },
-            { id: 'c20', name: 'Grand Sunflower',   img: 'assets/images/circle-20.jpg' },
-            { id: 'c21', name: 'Festival Ring',     img: 'assets/images/circle-21.jpg' }
+            { id: 'c1', name: 'Floral Star', img: 'assets/images/circle-1.jpg' },
+            { id: 'c2', name: 'Geometric Star', img: 'assets/images/circle-2.jpg' },
+            { id: 'c3', name: 'Scalloped Mandala', img: 'assets/images/circle-3.jpg' },
+            { id: 'c4', name: 'Diamond Burst', img: 'assets/images/circle-4.jpg' },
+            { id: 'c5', name: 'Classic Ring', img: 'assets/images/circle-5.jpg' },
+            { id: 'c6', name: 'Sunburst', img: 'assets/images/circle-6.jpg' },
+            { id: 'c7', name: 'Petal Wave', img: 'assets/images/circle-7.jpg' },
+            { id: 'c8', name: 'Lotus Bloom', img: 'assets/images/circle-8.jpg' },
+            { id: 'c9', name: 'Intricate Web', img: 'assets/images/circle-9.jpg' },
+            { id: 'c10', name: 'Royal Core', img: 'assets/images/circle-10.jpg' },
+            { id: 'c11', name: 'Spiral Bloom', img: 'assets/images/circle-11.jpg' },
+            { id: 'c12', name: 'Radiant Petals', img: 'assets/images/circle-12.jpg' },
+            { id: 'c13', name: 'Layered Lotus', img: 'assets/images/circle-13.jpg' },
+            { id: 'c14', name: 'Peacock Wheel', img: 'assets/images/circle-14.jpg' },
+            { id: 'c15', name: 'Star Weave', img: 'assets/images/circle-15.jpg' },
+            { id: 'c16', name: 'Floral Mandala', img: 'assets/images/circle-16.jpg' },
+            { id: 'c17', name: 'Concentric Bloom', img: 'assets/images/circle-17.jpg' },
+            { id: 'c18', name: 'Heritage Pattern', img: 'assets/images/circle-18.jpg' },
+            { id: 'c19', name: 'Petal Crown', img: 'assets/images/circle-19.jpg' },
+            { id: 'c20', name: 'Grand Sunflower', img: 'assets/images/circle-20.jpg' },
+            { id: 'c21', name: 'Festival Ring', img: 'assets/images/circle-21.jpg' }
         ]
     };
 
@@ -568,6 +568,10 @@
         for (let i = 0; i < 16; i++) {
             addAnnularArcSegment(layer, CENTER, CENTER, 114, 138, i * 22.5, (i + 1) * 22.5, 'surya-green-ring');
         }
+        // NEW — fillable gap between green ring and petal tiers
+        for (let i = 0; i < 12; i++) {
+            addAnnularArcSegment(layer, CENTER, CENTER, 100, 114, i * 30, (i + 1) * 30, 'surya-gap-1');
+        }
         // Dual interlocking petal tiers
         for (let i = 0; i < 12; i++) {
             addPetalSegment(layer, CENTER, CENTER, 74, i * 30 + 15, 48, 26, 'surya-orange-tier');
@@ -585,6 +589,10 @@
         }
         // Center bindu
         addCircleSegment(layer, CENTER, CENTER, 18, 'surya-center-bindu');
+        // NEW — outermost floor beyond scallops, up to canvas edge
+        for (let i = 0; i < 16; i++) {
+            addAnnularArcSegment(layer, CENTER, CENTER, 190, 199, i * 22.5, (i + 1) * 22.5, 'surya-outer-floor');
+        }
     }
 
     // 2. Sacred Lotus Mandala
@@ -593,14 +601,26 @@
         for (let i = 0; i < 8; i++) {
             addPetalSegment(layer, CENTER, CENTER, 24, i * 45, 45, 24, 'lotus-inner-8');
         }
+        // NEW — fillable gap between inner and mid petal tiers
+        for (let i = 0; i < 16; i++) {
+            addAnnularArcSegment(layer, CENTER, CENTER, 69, 76, i * 22.5, (i + 1) * 22.5, 'lotus-gap-1');
+        }
         for (let i = 0; i < 8; i++) {
             addPetalSegment(layer, CENTER, CENTER, 65, i * 45 + 22.5, 60, 36, 'lotus-mid-8');
+        }
+        // NEW — fillable gap between mid petals and outer ring
+        for (let i = 0; i < 16; i++) {
+            addAnnularArcSegment(layer, CENTER, CENTER, 120, 125, i * 22.5, (i + 1) * 22.5, 'lotus-gap-2');
         }
         for (let i = 0; i < 16; i++) {
             addAnnularArcSegment(layer, CENTER, CENTER, 120, 155, i * 22.5, (i + 1) * 22.5, 'lotus-ring-16');
         }
         for (let i = 0; i < 16; i++) {
             addPetalSegment(layer, CENTER, CENTER, 155, i * 22.5 + 11.25, 38, 28, 'lotus-scallop-16');
+        }
+        // NEW — outermost floor beyond scallops, up to canvas edge
+        for (let i = 0; i < 16; i++) {
+            addAnnularArcSegment(layer, CENTER, CENTER, 190, 199, i * 22.5, (i + 1) * 22.5, 'lotus-outer-floor');
         }
     }
 
@@ -1184,11 +1204,11 @@
     }
 
     function svgPoint(evt) {
-        const rect    = svg.getBoundingClientRect();
+        const rect = svg.getBoundingClientRect();
         const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
         const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
-        const x       = ((clientX - rect.left) / rect.width)  * CANVAS_SIZE;
-        const y       = ((clientY - rect.top)  / rect.height) * CANVAS_SIZE;
+        const x = ((clientX - rect.left) / rect.width) * CANVAS_SIZE;
+        const y = ((clientY - rect.top) / rect.height) * CANVAS_SIZE;
         return { x, y };
     }
 
@@ -1320,10 +1340,10 @@
 
     svg.addEventListener('click', handleCanvasClick);
 
-    const customBuilderStep        = document.getElementById('customBuilderStep');
-    const btnDesignMyOwn           = document.getElementById('btnDesignMyOwn');
-    const btnUseCustomTemplate     = document.getElementById('btnUseCustomTemplate');
-    const customBuilderPreviewSvg  = document.getElementById('customBuilderPreviewSvg');
+    const customBuilderStep = document.getElementById('customBuilderStep');
+    const btnDesignMyOwn = document.getElementById('btnDesignMyOwn');
+    const btnUseCustomTemplate = document.getElementById('btnUseCustomTemplate');
+    const customBuilderPreviewSvg = document.getElementById('customBuilderPreviewSvg');
 
     let previousStep = 'browse'; // 'browse' or 'custom'
 
@@ -1345,14 +1365,14 @@
 
     function renderCustomMandala(layer, config) {
         const outerScale = config.outerScale || 1.0;
-        const ringScale  = config.ringScale  || 1.0;
-        const midScale   = config.midScale   || 1.0;
-        const coreScale  = config.coreScale  || 1.0;
+        const ringScale = config.ringScale || 1.0;
+        const midScale = config.midScale || 1.0;
+        const coreScale = config.coreScale || 1.0;
 
         // 1. Outer Border Layer
         const outerDist = 140 + 14 * outerScale;
-        const outerLen  = 34 * outerScale;
-        const outerWid  = 28 * outerScale;
+        const outerLen = 34 * outerScale;
+        const outerWid = 28 * outerScale;
 
         if (config.outer === 'scallop-16') {
             for (let i = 0; i < 16; i++) {
@@ -1399,8 +1419,8 @@
 
         // 3. Mid Petal / Star Pattern
         const midDist = 58 + 14 * coreScale;
-        const midLen  = 46 * midScale;
-        const midWid  = 26 * midScale;
+        const midLen = 46 * midScale;
+        const midWid = 26 * midScale;
 
         if (config.mid === 'pointed-12') {
             for (let i = 0; i < 12; i++) {
@@ -1488,12 +1508,234 @@
         layer.appendChild(coreG);
     }
 
+    // ---------- Custom Template Builder State, Drag-to-Resize & Live Studio ----------
+    let isBuilderDragging = false;
+    let activeDragLayer = null;
+    let dragStartDist = 0;
+    let dragStartScale = 1.0;
+    let hoveredLayer = null;
+
+    const builderDragTooltip = document.getElementById('builderDragTooltip');
+    const customBuilderWrapper = document.getElementById('customBuilderWrapper');
+    const btnResetBuilderScales = document.getElementById('btnResetBuilderScales');
+
+    const BUILDER_LAYERS = {
+        core: { key: 'core', scaleKey: 'coreScale', name: 'Center Sacred Motif', min: 0.55, max: 1.55 },
+        mid: { key: 'mid', scaleKey: 'midScale', name: 'Mid Petals & Stars', min: 0.55, max: 1.55 },
+        rings: { key: 'rings', scaleKey: 'ringScale', name: 'Backdrop Rings', min: 0.60, max: 1.45 },
+        outer: { key: 'outer', scaleKey: 'outerScale', name: 'Outer Border Motifs', min: 0.60, max: 1.55 }
+    };
+
+    function getBuilderSvgPoint(svgEl, evt) {
+        const pt = svgEl.createSVGPoint();
+        pt.x = evt.clientX;
+        pt.y = evt.clientY;
+        const ctm = svgEl.getScreenCTM();
+        if (ctm) {
+            return pt.matrixTransform(ctm.inverse());
+        }
+        const rect = svgEl.getBoundingClientRect();
+        return {
+            x: ((evt.clientX - rect.left) / (rect.width || 1)) * 400,
+            y: ((evt.clientY - rect.top) / (rect.height || 1)) * 400
+        };
+    }
+
+    function getLayerFromDistance(dist) {
+        const coreR = 44 * (customConfig.coreScale || 1.0);
+        const midR = 58 + 14 * (customConfig.coreScale || 1.0) + 46 * (customConfig.midScale || 1.0) * 0.5;
+        const ringR = Math.min(175, 138 * (customConfig.ringScale || 1.0));
+        const outerR = Math.min(195, 140 + 14 * (customConfig.outerScale || 1.0) + 34 * (customConfig.outerScale || 1.0) * 0.85);
+
+        if (dist <= coreR + 14) {
+            return BUILDER_LAYERS.core;
+        } else if (dist <= (midR + ringR) * 0.5 - 6) {
+            return BUILDER_LAYERS.mid;
+        } else if (dist <= (ringR + outerR) * 0.5 - 6) {
+            return BUILDER_LAYERS.rings;
+        } else {
+            return BUILDER_LAYERS.outer;
+        }
+    }
+
+    function renderDragGuidesAndHandles(overlayG) {
+        const coreR = 44 * (customConfig.coreScale || 1.0);
+        const midR = 58 + 14 * (customConfig.coreScale || 1.0) + 46 * (customConfig.midScale || 1.0) * 0.5;
+        const ringR = Math.min(175, 138 * (customConfig.ringScale || 1.0));
+        const outerR = Math.min(195, 140 + 14 * (customConfig.outerScale || 1.0) + 34 * (customConfig.outerScale || 1.0) * 0.85);
+
+        const list = [
+            { layer: BUILDER_LAYERS.core, radius: coreR },
+            { layer: BUILDER_LAYERS.mid, radius: midR },
+            { layer: BUILDER_LAYERS.rings, radius: ringR },
+            { layer: BUILDER_LAYERS.outer, radius: outerR }
+        ];
+
+        list.forEach(item => {
+            const l = item.layer;
+            const isAct = (activeDragLayer === l.key);
+            const isHov = (hoveredLayer === l.key);
+
+            // Circular guideline ring
+            const guide = document.createElementNS(NS, 'circle');
+            guide.setAttribute('cx', CENTER);
+            guide.setAttribute('cy', CENTER);
+            guide.setAttribute('r', item.radius);
+            guide.setAttribute('class', 'drag-guide-ring' + (isAct ? ' active' : (isHov ? ' hovered' : '')));
+            overlayG.appendChild(guide);
+
+            // Drag handle at top-right diagonal (angle -45 deg)
+            const rad = (-45 * Math.PI) / 180;
+            const hx = CENTER + item.radius * Math.cos(rad);
+            const hy = CENTER + item.radius * Math.sin(rad);
+
+            const hg = document.createElementNS(NS, 'g');
+            hg.setAttribute('class', 'drag-handle-group' + (isAct ? ' active' : ''));
+            hg.setAttribute('data-layer', l.key);
+            hg.setAttribute('transform', `translate(${hx}, ${hy})`);
+
+            const outerCircle = document.createElementNS(NS, 'circle');
+            outerCircle.setAttribute('r', '8.5');
+            outerCircle.setAttribute('class', 'drag-handle-outer');
+
+            const innerCircle = document.createElementNS(NS, 'circle');
+            innerCircle.setAttribute('r', '3.5');
+            innerCircle.setAttribute('class', 'drag-handle-inner');
+
+            hg.appendChild(outerCircle);
+            hg.appendChild(innerCircle);
+            overlayG.appendChild(hg);
+        });
+    }
+
     function updateCustomBuilderPreview() {
         if (!customBuilderPreviewSvg) return;
         customBuilderPreviewSvg.innerHTML = '';
-        const g = document.createElementNS(NS, 'g');
-        renderCustomMandala(g, customConfig);
-        customBuilderPreviewSvg.appendChild(g);
+
+        // Render floral mandala elements
+        const gMandala = document.createElementNS(NS, 'g');
+        renderCustomMandala(gMandala, customConfig);
+        customBuilderPreviewSvg.appendChild(gMandala);
+
+        // Render interactive drag handles & guide rings
+        const gGuides = document.createElementNS(NS, 'g');
+        gGuides.setAttribute('id', 'builderOverlayGuides');
+        renderDragGuidesAndHandles(gGuides);
+        customBuilderPreviewSvg.appendChild(gGuides);
+    }
+
+    // Direct Drag-to-Resize Pointer Handlers on the SVG Canvas
+    if (customBuilderPreviewSvg) {
+        customBuilderPreviewSvg.addEventListener('pointerdown', (e) => {
+            const pt = getBuilderSvgPoint(customBuilderPreviewSvg, e);
+            const dx = pt.x - CENTER;
+            const dy = pt.y - CENTER;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            // Check if a handle was clicked directly
+            let handleEl = e.target.closest('.drag-handle-group');
+            let targetLayerObj;
+            if (handleEl && handleEl.dataset.layer) {
+                targetLayerObj = BUILDER_LAYERS[handleEl.dataset.layer];
+            } else {
+                targetLayerObj = getLayerFromDistance(dist);
+            }
+
+            if (!targetLayerObj) return;
+
+            isBuilderDragging = true;
+            activeDragLayer = targetLayerObj.key;
+            dragStartDist = Math.max(25, dist);
+            dragStartScale = customConfig[targetLayerObj.scaleKey] || 1.0;
+
+            customBuilderPreviewSvg.setPointerCapture(e.pointerId);
+            if (customBuilderWrapper) customBuilderWrapper.classList.add('is-dragging');
+
+            if (builderDragTooltip) {
+                builderDragTooltip.textContent = `✨ ${targetLayerObj.name}: ${dragStartScale.toFixed(2)}×`;
+                builderDragTooltip.classList.add('show');
+            }
+
+            updateCustomBuilderPreview();
+        });
+
+        customBuilderPreviewSvg.addEventListener('pointermove', (e) => {
+            const pt = getBuilderSvgPoint(customBuilderPreviewSvg, e);
+            const dx = pt.x - CENTER;
+            const dy = pt.y - CENTER;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (isBuilderDragging && activeDragLayer) {
+                const layerObj = BUILDER_LAYERS[activeDragLayer];
+                if (!layerObj) return;
+
+                const deltaDist = dist - dragStartDist;
+                let newScale = dragStartScale + deltaDist * 0.012;
+                newScale = Math.max(layerObj.min, Math.min(layerObj.max, newScale));
+                newScale = Math.round(newScale * 100) / 100;
+
+                customConfig[layerObj.scaleKey] = newScale;
+
+                if (builderDragTooltip) {
+                    builderDragTooltip.textContent = `✨ ${layerObj.name}: ${newScale.toFixed(2)}×`;
+                    builderDragTooltip.classList.add('show');
+                }
+
+                updateCustomBuilderPreview();
+            } else {
+                // Hover highlight
+                const layerObj = getLayerFromDistance(dist);
+                const prevHover = hoveredLayer;
+                hoveredLayer = layerObj ? layerObj.key : null;
+                if (prevHover !== hoveredLayer) {
+                    updateCustomBuilderPreview();
+                }
+            }
+        });
+
+        const stopDragging = (e) => {
+            if (!isBuilderDragging) return;
+            isBuilderDragging = false;
+            activeDragLayer = null;
+            hoveredLayer = null;
+
+            if (customBuilderWrapper) customBuilderWrapper.classList.remove('is-dragging');
+            if (builderDragTooltip) {
+                setTimeout(() => {
+                    if (!isBuilderDragging) builderDragTooltip.classList.remove('show');
+                }, 800);
+            }
+
+            try {
+                if (e && e.pointerId) customBuilderPreviewSvg.releasePointerCapture(e.pointerId);
+            } catch (err) { }
+
+            updateCustomBuilderPreview();
+        };
+
+        customBuilderPreviewSvg.addEventListener('pointerup', stopDragging);
+        customBuilderPreviewSvg.addEventListener('pointercancel', stopDragging);
+        customBuilderPreviewSvg.addEventListener('pointerleave', () => {
+            if (!isBuilderDragging && hoveredLayer) {
+                hoveredLayer = null;
+                updateCustomBuilderPreview();
+            }
+        });
+    }
+
+    if (btnResetBuilderScales) {
+        btnResetBuilderScales.addEventListener('click', () => {
+            customConfig.coreScale = 1.0;
+            customConfig.midScale = 1.0;
+            customConfig.ringScale = 1.0;
+            customConfig.outerScale = 1.0;
+            updateCustomBuilderPreview();
+            if (builderDragTooltip) {
+                builderDragTooltip.textContent = '✨ Reset all sizes to 1.0×';
+                builderDragTooltip.classList.add('show');
+                setTimeout(() => builderDragTooltip.classList.remove('show'), 1200);
+            }
+        });
     }
 
     function setupCustomBuilderOptions(containerId, configKey) {
@@ -1514,24 +1756,6 @@
     setupCustomBuilderOptions('midPatternOptions', 'mid');
     setupCustomBuilderOptions('ringBandsOptions', 'rings');
     setupCustomBuilderOptions('outerBorderOptions', 'outer');
-
-    // Slider Event Listeners for Real-Time Size Adjustment
-    function setupSizeSlider(sliderId, valId, configKey) {
-        const slider = document.getElementById(sliderId);
-        const valEl  = document.getElementById(valId);
-        if (!slider) return;
-        slider.addEventListener('input', (e) => {
-            const val = parseFloat(e.target.value);
-            customConfig[configKey] = val;
-            if (valEl) valEl.textContent = val.toFixed(1) + '×';
-            updateCustomBuilderPreview();
-        });
-    }
-
-    setupSizeSlider('sliderCoreSize',  'valCoreSize',  'coreScale');
-    setupSizeSlider('sliderMidSize',   'valMidSize',   'midScale');
-    setupSizeSlider('sliderRingSize',  'valRingSize',  'ringScale');
-    setupSizeSlider('sliderOuterSize', 'valOuterSize', 'outerScale');
 
     function goToCustomBuilder() {
         templateStep.hidden = true;
@@ -1584,19 +1808,19 @@
     function goToBrowseTemplates() {
         templateStep.hidden = true;
         if (customBuilderStep) customBuilderStep.hidden = true;
-        canvasStep.hidden   = true;
+        canvasStep.hidden = true;
         if (subTemplateStep) subTemplateStep.hidden = false;
         btnBack.hidden = false;
         pageTitle.textContent = 'Pick a Design';
         previousStep = 'browse';
 
-        const subTitle    = document.getElementById('subTemplateTitle');
+        const subTitle = document.getElementById('subTemplateTitle');
         const subSubtitle = document.getElementById('subTemplateSubtitle');
-        if (subTitle)    subTitle.textContent    = 'Pick a design';
+        if (subTitle) subTitle.textContent = 'Pick a design';
         if (subSubtitle) subSubtitle.textContent = 'Select an interactive mandala or classic tracing layout — all support symmetrical color filling & background floor coloring!';
 
-        predefinedTemplates.hidden    = false;
-        customTemplateUpload.hidden   = true;
+        predefinedTemplates.hidden = false;
+        customTemplateUpload.hidden = true;
         predefinedTemplates.innerHTML = '';
 
         // Section 1: Interactive Vector Mandalas (12 Designs)
@@ -1656,7 +1880,7 @@
             btn.addEventListener('click', () => {
                 currentVectorTpl = null;
                 currentTemplateSrc = tpl.img;
-                currentSubTemplate = `<image href="${tpl.img}" x="0" y="0" width="400" height="400" opacity="0.95" preserveAspectRatio="xMidYMid meet" />`;
+                currentSubTemplate = `<image href="${tpl.img}" x="0" y="0" width="400" height="400" opacity="0.28" preserveAspectRatio="xMidYMid meet" />`;
                 goToCanvas();
             });
             grid2.appendChild(btn);
@@ -1667,19 +1891,19 @@
     function goToUploadOwn() {
         templateStep.hidden = true;
         if (customBuilderStep) customBuilderStep.hidden = true;
-        canvasStep.hidden   = true;
+        canvasStep.hidden = true;
         if (subTemplateStep) subTemplateStep.hidden = false;
         btnBack.hidden = false;
         pageTitle.textContent = 'Upload Your Template';
         previousStep = 'upload';
 
         predefinedTemplates.innerHTML = '';
-        predefinedTemplates.hidden    = true;
-        customTemplateUpload.hidden   = false;
+        predefinedTemplates.hidden = true;
+        customTemplateUpload.hidden = false;
 
-        const subTitle    = document.getElementById('subTemplateTitle');
+        const subTitle = document.getElementById('subTemplateTitle');
         const subSubtitle = document.getElementById('subTemplateSubtitle');
-        if (subTitle)    subTitle.textContent    = 'Upload Your Own';
+        if (subTitle) subTitle.textContent = 'Upload Your Own';
         if (subSubtitle) subSubtitle.textContent = 'Use your own picture or sketch as a tracing guide.';
     }
 
@@ -1687,8 +1911,8 @@
         if (subTemplateStep) subTemplateStep.hidden = true;
         if (customBuilderStep) customBuilderStep.hidden = true;
         templateStep.hidden = true;
-        canvasStep.hidden   = false;
-        btnBack.hidden      = false;
+        canvasStep.hidden = false;
+        btnBack.hidden = false;
         pageTitle.textContent = 'Design Your Pookalam';
 
         clearRegionState();
@@ -1727,7 +1951,7 @@
             reader.onload = (event) => {
                 currentVectorTpl = null;
                 currentTemplateSrc = event.target.result;
-                currentSubTemplate = `<image href="${event.target.result}" x="0" y="0" width="400" height="400" opacity="0.95" preserveAspectRatio="xMidYMid meet" />`;
+                currentSubTemplate = `<image href="${event.target.result}" x="0" y="0" width="400" height="400" opacity="0.28" preserveAspectRatio="xMidYMid meet" />`;
                 goToCanvas();
             };
             reader.readAsDataURL(file);
@@ -1773,10 +1997,10 @@
     // ====================================================
     // FLOWER PALETTE & SWATCHES
     // ====================================================
-    const flowerCategoriesEl    = document.getElementById('flowerCategories');
+    const flowerCategoriesEl = document.getElementById('flowerCategories');
     const activeFlowerIndicator = document.getElementById('activeFlowerIndicator');
-    const activeFlowerName      = document.getElementById('activeFlowerName');
-    const activeColorName       = document.getElementById('activeColorName');
+    const activeFlowerName = document.getElementById('activeFlowerName');
+    const activeColorName = document.getElementById('activeColorName');
 
     function updateActiveFlowerDisplay() {
         if (activeFlowerIndicator) activeFlowerIndicator.style.backgroundColor = currentColor.hex;
@@ -1823,7 +2047,7 @@
                 swatchBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     currentFlower = flower;
-                    currentColor  = variety;
+                    currentColor = variety;
 
                     document.querySelectorAll('.flower-category-card').forEach(c => c.classList.remove('selected'));
                     card.classList.add('selected');
@@ -1923,10 +2147,10 @@
     // SHARING & COMMUNITY GALLERY
     // ====================================================
     const sharePanel = document.getElementById('sharePanel');
-    const shareHint  = document.getElementById('shareHint');
+    const shareHint = document.getElementById('shareHint');
 
     const PROJECT_URL = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '') + '/index.html';
-    const SHARE_TEXT  = 'I just designed a festive Onam Pookalam! 🌸🪔 Create yours too:';
+    const SHARE_TEXT = 'I just designed a festive Onam Pookalam! 🌸🪔 Create yours too:';
 
     const btnShare = document.getElementById('btnShare');
     if (btnShare) {
@@ -1964,16 +2188,16 @@
             });
 
             const serializer = new XMLSerializer();
-            const svgString  = serializer.serializeToString(svgClone);
+            const svgString = serializer.serializeToString(svgClone);
             guideLayer.style.display = wasHidden;
 
             const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
-            const url     = URL.createObjectURL(svgBlob);
-            const img     = new Image();
+            const url = URL.createObjectURL(svgBlob);
+            const img = new Image();
 
             img.onload = function () {
                 const canvas = document.createElement('canvas');
-                canvas.width  = 800;
+                canvas.width = 800;
                 canvas.height = 800;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, 800, 800);
@@ -1995,9 +2219,9 @@
 
     function triggerDownload(blob, filename) {
         if (!blob) return;
-        const link    = document.createElement('a');
+        const link = document.createElement('a');
         link.download = filename;
-        link.href     = URL.createObjectURL(blob);
+        link.href = URL.createObjectURL(blob);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -2005,13 +2229,13 @@
     }
 
     // Publish to Community Gallery Modal
-    const shareGalleryBtn     = document.getElementById('shareGallery');
+    const shareGalleryBtn = document.getElementById('shareGallery');
     const galleryPublishModal = document.getElementById('galleryPublishModal');
-    const modalPreviewImg     = document.getElementById('modalPreviewImg');
-    const publishGalleryForm  = document.getElementById('publishGalleryForm');
-    const creatorNameInput    = document.getElementById('creatorNameInput');
-    const creatorMsgInput     = document.getElementById('creatorMsgInput');
-    const btnCancelPublish    = document.getElementById('btnCancelPublish');
+    const modalPreviewImg = document.getElementById('modalPreviewImg');
+    const publishGalleryForm = document.getElementById('publishGalleryForm');
+    const creatorNameInput = document.getElementById('creatorNameInput');
+    const creatorMsgInput = document.getElementById('creatorMsgInput');
+    const btnCancelPublish = document.getElementById('btnCancelPublish');
 
     let currentPublishDataUrl = null;
 
@@ -2047,7 +2271,7 @@
         publishGalleryForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const creatorName = (creatorNameInput ? creatorNameInput.value.trim() : '') || 'Pookalam Artist';
-            const creatorMsg  = (creatorMsgInput ? creatorMsgInput.value.trim() : '') || 'Happy Onam! 🌸';
+            const creatorMsg = (creatorMsgInput ? creatorMsgInput.value.trim() : '') || 'Happy Onam! 🌸';
 
             if (!currentPublishDataUrl) {
                 alert('Pookalam image is still processing. Please try again in a moment.');

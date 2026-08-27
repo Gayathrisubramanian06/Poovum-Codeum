@@ -25,26 +25,23 @@
 
             <div class="template-grid">
                 <button class="template-card" id="btnChooseTemplate">
-                    <span class="template-icon">🌸</span>
                     <div class="template-info">
-                        <span class="template-name">Choose a Template</span>
-                        <span class="template-desc">Pick from our ready-made pookalam mandala designs</span>
+                        <span class="template-name">CHOOSE A TEMPLATE</span>
+                        <span class="template-desc">Pick from curated traditional & geometric floral patterns</span>
                     </div>
                 </button>
 
                 <button class="template-card" id="btnUploadOwn">
-                    <span class="template-icon">📷</span>
                     <div class="template-info">
-                        <span class="template-name">Upload Your Own</span>
-                        <span class="template-desc">Use your own picture or sketch as a tracing guide</span>
+                        <span class="template-name">UPLOAD YOUR OWN</span>
+                        <span class="template-desc">Upload a photo or sketch to use as your tracing guide</span>
                     </div>
                 </button>
 
                 <button class="template-card" id="btnDesignMyOwn">
-                    <span class="template-icon">📐</span>
                     <div class="template-info">
-                        <span class="template-name">Design My Own Template</span>
-                        <span class="template-desc">Build a custom layout by choosing geometric shapes, rings & petal patterns</span>
+                        <span class="template-name">DESIGN YOUR OWN TEMPLATE</span>
+                        <span class="template-desc">Build a custom layout using sacred motifs, rings, and petals</span>
                     </div>
                 </button>
             </div>
@@ -54,15 +51,17 @@
         <section id="subTemplateStep" hidden style="width:100%;">
             <h1 id="subTemplateTitle">Pick a design</h1>
             <p class="subtitle" id="subTemplateSubtitle">Select a layout to use as your guide.</p>
-            
+
             <div id="predefinedTemplates" class="template-grid" hidden>
                 <!-- Populated dynamically by JS -->
             </div>
 
             <div id="customTemplateUpload" class="custom-template-upload" hidden>
-                <p style="margin-bottom: 16px; font-weight: 600;">Upload a picture or sketch to use as your tracing guide.</p>
+                <p style="margin-bottom: 16px; font-weight: 600;">Upload a picture or sketch to use as your tracing
+                    guide.</p>
                 <input type="file" id="templateFileInput" accept="image/*" style="display:none;" />
-                <button class="hero-btn-solid" id="btnBrowseFiles" type="button" style="max-width: 220px; margin: 0 auto; display: inline-block;">Browse Files</button>
+                <button class="hero-btn-solid" id="btnBrowseFiles" type="button"
+                    style="max-width: 220px; margin: 0 auto; display: inline-block;">Browse Files</button>
             </div>
         </section>
 
@@ -70,95 +69,119 @@
         <section id="customBuilderStep" hidden style="width: 100%;">
             <div class="custom-builder-header">
                 <h1>Design My Own Template</h1>
-                <p class="subtitle">Choose visual shapes and adjust their sizes in real-time to build your custom Pookalam.</p>
+                <p class="subtitle">Select your favourite shapes and drag directly on the template to adjust sizes in real time.</p>
             </div>
 
             <div class="custom-builder-container">
-                <!-- Left: Visual Shape Pickers & Size Adjusters -->
+                <!-- Left: Visual Shape Pickers -->
                 <div class="custom-builder-controls">
                     <!-- 1. Center Core Motif -->
                     <div class="builder-group">
                         <div class="builder-group-header">
                             <label class="builder-label">1. Center Sacred Motif</label>
-                            <div class="size-slider-wrap">
-                                <span class="size-label">Size:</span>
-                                <input type="range" id="sliderCoreSize" min="0.6" max="1.5" step="0.05" value="1.0" class="builder-slider" title="Adjust Center Motif Size">
-                                <span class="size-val" id="valCoreSize">1.0×</span>
-                            </div>
                         </div>
                         <div class="builder-options visual-shape-grid" id="coreShapeOptions">
                             <!-- Ganapathi -->
-                            <button type="button" class="builder-shape-card active" data-val="ganapathi" title="Lord Ganapathi (ഗണപതി)" aria-label="Lord Ganapathi">
+                            <button type="button" class="builder-shape-card active" data-val="ganapathi"
+                                title="Lord Ganapathi (ഗണപതി)" aria-label="Lord Ganapathi">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <path d="M 20 12 L 25 6 L 30 12 Z" fill="none" stroke="#7a4a1e" stroke-width="1.8"/>
-                                    <path d="M 18 16 C 10 14 8 26 17 28" fill="none" stroke="#7a4a1e" stroke-width="1.8"/>
-                                    <path d="M 32 16 C 40 14 42 26 33 28" fill="none" stroke="#7a4a1e" stroke-width="1.8"/>
-                                    <path d="M 22 20 C 24 30 18 42 27 44 C 33 46 38 38 34 32 C 32 28 26 28 26 32" fill="none" stroke="#7a4a1e" stroke-width="1.8"/>
-                                    <circle cx="25" cy="15" r="2" fill="#d97706"/>
+                                    <path d="M 20 12 L 25 6 L 30 12 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.8" />
+                                    <path d="M 18 16 C 10 14 8 26 17 28" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.8" />
+                                    <path d="M 32 16 C 40 14 42 26 33 28" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.8" />
+                                    <path d="M 22 20 C 24 30 18 42 27 44 C 33 46 38 38 34 32 C 32 28 26 28 26 32"
+                                        fill="none" stroke="#7a4a1e" stroke-width="1.8" />
+                                    <circle cx="25" cy="15" r="2" fill="#d97706" />
                                 </svg>
                             </button>
 
                             <!-- Lotus -->
-                            <button type="button" class="builder-shape-card" data-val="lotus" title="Sacred Lotus (താമര)" aria-label="Sacred Lotus">
+                            <button type="button" class="builder-shape-card" data-val="lotus"
+                                title="Sacred Lotus (താമര)" aria-label="Sacred Lotus">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <circle cx="25" cy="25" r="5" fill="#facc15" stroke="#7a4a1e" stroke-width="1.2"/>
-                                    <path d="M 25 25 Q 21 16 25 8 Q 29 16 25 25 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <path d="M 25 25 Q 34 21 42 25 Q 34 29 25 25 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <path d="M 25 25 Q 29 34 25 42 Q 21 34 25 25 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <path d="M 25 25 Q 16 29 8 25 Q 16 21 25 25 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <path d="M 25 25 Q 32 18 37 13 Q 32 25 25 25 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <path d="M 25 25 Q 18 18 13 13 Q 25 20 25 25 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
+                                    <circle cx="25" cy="25" r="5" fill="#facc15" stroke="#7a4a1e" stroke-width="1.2" />
+                                    <path d="M 25 25 Q 21 16 25 8 Q 29 16 25 25 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
+                                    <path d="M 25 25 Q 34 21 42 25 Q 34 29 25 25 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
+                                    <path d="M 25 25 Q 29 34 25 42 Q 21 34 25 25 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
+                                    <path d="M 25 25 Q 16 29 8 25 Q 16 21 25 25 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
+                                    <path d="M 25 25 Q 32 18 37 13 Q 32 25 25 25 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
+                                    <path d="M 25 25 Q 18 18 13 13 Q 25 20 25 25 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
                                 </svg>
                             </button>
 
                             <!-- Nilavilakku -->
-                            <button type="button" class="builder-shape-card" data-val="nilavilakku" title="Nilavilakku Deepam (നിലവിളക്ക്)" aria-label="Nilavilakku Deepam">
+                            <button type="button" class="builder-shape-card" data-val="nilavilakku"
+                                title="Nilavilakku Deepam (നിലവിളക്ക്)" aria-label="Nilavilakku Deepam">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <path d="M 25 8 Q 28 15 25 20 Q 22 15 25 8 Z" fill="#f59e0b" stroke="#7a4a1e" stroke-width="1.2"/>
-                                    <path d="M 16 24 C 16 30 34 30 34 24 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <line x1="25" y1="27" x2="25" y2="40" stroke="#7a4a1e" stroke-width="2"/>
-                                    <path d="M 17 44 C 17 40 33 40 33 44 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
+                                    <path d="M 25 8 Q 28 15 25 20 Q 22 15 25 8 Z" fill="#f59e0b" stroke="#7a4a1e"
+                                        stroke-width="1.2" />
+                                    <path d="M 16 24 C 16 30 34 30 34 24 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
+                                    <line x1="25" y1="27" x2="25" y2="40" stroke="#7a4a1e" stroke-width="2" />
+                                    <path d="M 17 44 C 17 40 33 40 33 44 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
                                 </svg>
                             </button>
 
                             <!-- Peacock -->
-                            <button type="button" class="builder-shape-card" data-val="peacock" title="Peacock Core (മയിൽ)" aria-label="Peacock Core">
+                            <button type="button" class="builder-shape-card" data-val="peacock"
+                                title="Peacock Core (മയിൽ)" aria-label="Peacock Core">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <circle cx="25" cy="22" r="6" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <path d="M 25 28 C 22 36 28 44 25 46" fill="none" stroke="#7a4a1e" stroke-width="1.8"/>
-                                    <path d="M 25 16 L 25 10 M 23 10 L 27 10" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <circle cx="15" cy="18" r="4" fill="none" stroke="#7a4a1e" stroke-width="1.2"/>
-                                    <circle cx="35" cy="18" r="4" fill="none" stroke="#7a4a1e" stroke-width="1.2"/>
+                                    <circle cx="25" cy="22" r="6" fill="none" stroke="#7a4a1e" stroke-width="1.5" />
+                                    <path d="M 25 28 C 22 36 28 44 25 46" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.8" />
+                                    <path d="M 25 16 L 25 10 M 23 10 L 27 10" stroke="#7a4a1e" stroke-width="1.5" />
+                                    <circle cx="15" cy="18" r="4" fill="none" stroke="#7a4a1e" stroke-width="1.2" />
+                                    <circle cx="35" cy="18" r="4" fill="none" stroke="#7a4a1e" stroke-width="1.2" />
                                 </svg>
                             </button>
 
                             <!-- Jasmine Star -->
-                            <button type="button" class="builder-shape-card" data-val="jasmine" title="Jasmine 6-Star (നന്ത്യാർവട്ടം)" aria-label="Jasmine Star">
+                            <button type="button" class="builder-shape-card" data-val="jasmine"
+                                title="Jasmine 6-Star (നന്ത്യാർവട്ടം)" aria-label="Jasmine Star">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <circle cx="25" cy="25" r="4" fill="#facc15" stroke="#7a4a1e" stroke-width="1.2"/>
-                                    <path d="M 25 25 Q 21 16 25 10 Q 29 16 25 25 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <path d="M 25 25 Q 33 20 38 18 Q 32 26 25 25 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <path d="M 25 25 Q 33 30 38 32 Q 32 34 25 25 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <path d="M 25 25 Q 21 34 25 40 Q 29 34 25 25 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <path d="M 25 25 Q 17 30 12 32 Q 18 34 25 25 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <path d="M 25 25 Q 17 20 12 18 Q 18 26 25 25 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
+                                    <circle cx="25" cy="25" r="4" fill="#facc15" stroke="#7a4a1e" stroke-width="1.2" />
+                                    <path d="M 25 25 Q 21 16 25 10 Q 29 16 25 25 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
+                                    <path d="M 25 25 Q 33 20 38 18 Q 32 26 25 25 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
+                                    <path d="M 25 25 Q 33 30 38 32 Q 32 34 25 25 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
+                                    <path d="M 25 25 Q 21 34 25 40 Q 29 34 25 25 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
+                                    <path d="M 25 25 Q 17 30 12 32 Q 18 34 25 25 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
+                                    <path d="M 25 25 Q 17 20 12 18 Q 18 26 25 25 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
                                 </svg>
                             </button>
 
                             <!-- Diamond Core -->
-                            <button type="button" class="builder-shape-card" data-val="diamond" title="Diamond Star (വൈരം)" aria-label="Diamond Star">
+                            <button type="button" class="builder-shape-card" data-val="diamond"
+                                title="Diamond Star (വൈരം)" aria-label="Diamond Star">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <path d="M 25 10 L 40 25 L 25 40 L 10 25 Z" fill="none" stroke="#7a4a1e" stroke-width="1.8"/>
-                                    <path d="M 25 17 L 33 25 L 25 33 L 17 25 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
+                                    <path d="M 25 10 L 40 25 L 25 40 L 10 25 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.8" />
+                                    <path d="M 25 17 L 33 25 L 25 33 L 17 25 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
                                 </svg>
                             </button>
 
                             <!-- Sacred Bindu -->
-                            <button type="button" class="builder-shape-card" data-val="circle" title="Sacred Bindu (ബിന്ദു)" aria-label="Sacred Bindu">
+                            <button type="button" class="builder-shape-card" data-val="circle"
+                                title="Sacred Bindu (ബിന്ദു)" aria-label="Sacred Bindu">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <circle cx="25" cy="25" r="14" fill="none" stroke="#7a4a1e" stroke-width="1.8"/>
-                                    <circle cx="25" cy="25" r="7" fill="#facc15" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <circle cx="25" cy="25" r="2" fill="#7a4a1e"/>
+                                    <circle cx="25" cy="25" r="14" fill="none" stroke="#7a4a1e" stroke-width="1.8" />
+                                    <circle cx="25" cy="25" r="7" fill="#facc15" stroke="#7a4a1e" stroke-width="1.5" />
+                                    <circle cx="25" cy="25" r="2" fill="#7a4a1e" />
                                 </svg>
                             </button>
                         </div>
@@ -167,51 +190,65 @@
                     <!-- 2. Mid Ring Layer -->
                     <div class="builder-group">
                         <div class="builder-group-header">
-                            <label class="builder-label">2. Mid Petal / Star Pattern</label>
-                            <div class="size-slider-wrap">
-                                <span class="size-label">Size:</span>
-                                <input type="range" id="sliderMidSize" min="0.6" max="1.5" step="0.05" value="1.0" class="builder-slider" title="Adjust Mid Petal Size">
-                                <span class="size-val" id="valMidSize">1.0×</span>
-                            </div>
+                            <label class="builder-label">2. Mid Petals & Star Patterns</label>
                         </div>
                         <div class="builder-options visual-shape-grid" id="midPatternOptions">
-                            <button type="button" class="builder-shape-card active" data-val="pointed-12" title="Pointed Petals (12)" aria-label="Pointed Petals">
+                            <button type="button" class="builder-shape-card active" data-val="pointed-12"
+                                title="Pointed Petals (12)" aria-label="Pointed Petals">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <circle cx="25" cy="25" r="8" fill="none" stroke="#ebdcc5" stroke-width="1"/>
-                                    <path d="M 25 17 L 21 8 L 25 2 L 29 8 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <path d="M 33 25 L 42 21 L 48 25 L 42 29 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <path d="M 25 33 L 29 42 L 25 48 L 21 42 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <path d="M 17 25 L 8 29 L 2 25 L 8 21 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
+                                    <circle cx="25" cy="25" r="8" fill="none" stroke="#ebdcc5" stroke-width="1" />
+                                    <path d="M 25 17 L 21 8 L 25 2 L 29 8 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
+                                    <path d="M 33 25 L 42 21 L 48 25 L 42 29 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
+                                    <path d="M 25 33 L 29 42 L 25 48 L 21 42 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
+                                    <path d="M 17 25 L 8 29 L 2 25 L 8 21 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
                                 </svg>
                             </button>
 
-                            <button type="button" class="builder-shape-card" data-val="dual-interlock" title="Dual Interlocked (12+12)" aria-label="Dual Interlocked">
+                            <button type="button" class="builder-shape-card" data-val="dual-interlock"
+                                title="Dual Interlocked (12+12)" aria-label="Dual Interlocked">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <path d="M 25 20 Q 21 10 25 4 Q 29 10 25 20 Z" fill="#f97316" stroke="#7a4a1e" stroke-width="1.2"/>
-                                    <path d="M 25 20 Q 35 15 41 8 Q 35 25 25 20 Z" fill="#facc15" stroke="#7a4a1e" stroke-width="1.2"/>
-                                    <path d="M 25 20 Q 15 15 9 8 Q 15 25 25 20 Z" fill="#facc15" stroke="#7a4a1e" stroke-width="1.2"/>
+                                    <path d="M 25 20 Q 21 10 25 4 Q 29 10 25 20 Z" fill="#f97316" stroke="#7a4a1e"
+                                        stroke-width="1.2" />
+                                    <path d="M 25 20 Q 35 15 41 8 Q 35 25 25 20 Z" fill="#facc15" stroke="#7a4a1e"
+                                        stroke-width="1.2" />
+                                    <path d="M 25 20 Q 15 15 9 8 Q 15 25 25 20 Z" fill="#facc15" stroke="#7a4a1e"
+                                        stroke-width="1.2" />
                                 </svg>
                             </button>
 
-                            <button type="button" class="builder-shape-card" data-val="diamond-star" title="Diamond Stars (8)" aria-label="Diamond Stars">
+                            <button type="button" class="builder-shape-card" data-val="diamond-star"
+                                title="Diamond Stars (8)" aria-label="Diamond Stars">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <path d="M 25 18 L 29 10 L 25 4 L 21 10 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <path d="M 32 25 L 40 21 L 46 25 L 40 29 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <path d="M 25 32 L 21 40 L 25 46 L 29 40 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <path d="M 18 25 L 10 29 L 4 25 L 10 21 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
+                                    <path d="M 25 18 L 29 10 L 25 4 L 21 10 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
+                                    <path d="M 32 25 L 40 21 L 46 25 L 40 29 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
+                                    <path d="M 25 32 L 21 40 L 25 46 L 29 40 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
+                                    <path d="M 18 25 L 10 29 L 4 25 L 10 21 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
                                 </svg>
                             </button>
 
-                            <button type="button" class="builder-shape-card" data-val="heart-petals" title="Heart Petals (8)" aria-label="Heart Petals">
+                            <button type="button" class="builder-shape-card" data-val="heart-petals"
+                                title="Heart Petals (8)" aria-label="Heart Petals">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <path d="M 25 22 C 20 12 14 16 18 22 C 22 26 25 32 25 32 C 25 32 28 26 32 22 C 36 16 30 12 25 22 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
+                                    <path
+                                        d="M 25 22 C 20 12 14 16 18 22 C 22 26 25 32 25 32 C 25 32 28 26 32 22 C 36 16 30 12 25 22 Z"
+                                        fill="none" stroke="#7a4a1e" stroke-width="1.5" />
                                 </svg>
                             </button>
 
-                            <button type="button" class="builder-shape-card" data-val="peacock-fan" title="Peacock Fans (8)" aria-label="Peacock Fans">
+                            <button type="button" class="builder-shape-card" data-val="peacock-fan"
+                                title="Peacock Fans (8)" aria-label="Peacock Fans">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <path d="M 25 30 L 15 12 L 25 6 L 35 12 Z" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <circle cx="25" cy="14" r="3" fill="#0284c7"/>
+                                    <path d="M 25 30 L 15 12 L 25 6 L 35 12 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.5" />
+                                    <circle cx="25" cy="14" r="3" fill="#0284c7" />
                                 </svg>
                             </button>
                         </div>
@@ -221,43 +258,43 @@
                     <div class="builder-group">
                         <div class="builder-group-header">
                             <label class="builder-label">3. Concentric Backdrop Rings</label>
-                            <div class="size-slider-wrap">
-                                <span class="size-label">Width:</span>
-                                <input type="range" id="sliderRingSize" min="0.6" max="1.4" step="0.05" value="1.0" class="builder-slider" title="Adjust Ring Band Width">
-                                <span class="size-val" id="valRingSize">1.0×</span>
-                            </div>
                         </div>
                         <div class="builder-options visual-shape-grid" id="ringBandsOptions">
-                            <button type="button" class="builder-shape-card active" data-val="double-ring" title="Double Rings (16)" aria-label="Double Rings">
+                            <button type="button" class="builder-shape-card active" data-val="double-ring"
+                                title="Double Rings (16)" aria-label="Double Rings">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <circle cx="25" cy="25" r="20" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <circle cx="25" cy="25" r="14" fill="none" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <line x1="25" y1="5" x2="25" y2="11" stroke="#7a4a1e" stroke-width="1"/>
-                                    <line x1="45" y1="25" x2="39" y2="25" stroke="#7a4a1e" stroke-width="1"/>
+                                    <circle cx="25" cy="25" r="20" fill="none" stroke="#7a4a1e" stroke-width="1.5" />
+                                    <circle cx="25" cy="25" r="14" fill="none" stroke="#7a4a1e" stroke-width="1.5" />
+                                    <line x1="25" y1="5" x2="25" y2="11" stroke="#7a4a1e" stroke-width="1" />
+                                    <line x1="45" y1="25" x2="39" y2="25" stroke="#7a4a1e" stroke-width="1" />
                                 </svg>
                             </button>
 
-                            <button type="button" class="builder-shape-card" data-val="single-ring" title="Single Band (12)" aria-label="Single Band">
+                            <button type="button" class="builder-shape-card" data-val="single-ring"
+                                title="Single Band (12)" aria-label="Single Band">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <circle cx="25" cy="25" r="18" fill="none" stroke="#7a4a1e" stroke-width="1.8"/>
-                                    <circle cx="25" cy="25" r="12" fill="none" stroke="#7a4a1e" stroke-width="1.8"/>
+                                    <circle cx="25" cy="25" r="18" fill="none" stroke="#7a4a1e" stroke-width="1.8" />
+                                    <circle cx="25" cy="25" r="12" fill="none" stroke="#7a4a1e" stroke-width="1.8" />
                                 </svg>
                             </button>
 
-                            <button type="button" class="builder-shape-card" data-val="fluted-ring" title="Fluted Ring Band (24)" aria-label="Fluted Band">
+                            <button type="button" class="builder-shape-card" data-val="fluted-ring"
+                                title="Fluted Ring Band (24)" aria-label="Fluted Band">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <circle cx="25" cy="25" r="19" fill="none" stroke="#7a4a1e" stroke-width="1.2"/>
-                                    <circle cx="25" cy="25" r="13" fill="none" stroke="#7a4a1e" stroke-width="1.2"/>
-                                    <line x1="25" y1="6" x2="25" y2="12" stroke="#7a4a1e" stroke-width="1"/>
-                                    <line x1="38" y1="12" x2="33" y2="16" stroke="#7a4a1e" stroke-width="1"/>
-                                    <line x1="44" y1="25" x2="38" y2="25" stroke="#7a4a1e" stroke-width="1"/>
+                                    <circle cx="25" cy="25" r="19" fill="none" stroke="#7a4a1e" stroke-width="1.2" />
+                                    <circle cx="25" cy="25" r="13" fill="none" stroke="#7a4a1e" stroke-width="1.2" />
+                                    <line x1="25" y1="6" x2="25" y2="12" stroke="#7a4a1e" stroke-width="1" />
+                                    <line x1="38" y1="12" x2="33" y2="16" stroke="#7a4a1e" stroke-width="1" />
+                                    <line x1="44" y1="25" x2="38" y2="25" stroke="#7a4a1e" stroke-width="1" />
                                 </svg>
                             </button>
 
-                            <button type="button" class="builder-shape-card" data-val="none" title="No Rings" aria-label="No Rings">
+                            <button type="button" class="builder-shape-card" data-val="none" title="No Rings"
+                                aria-label="No Rings">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <circle cx="25" cy="25" r="18" fill="none" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 3"/>
-                                    <line x1="15" y1="15" x2="35" y2="35" stroke="#ef4444" stroke-width="1.8"/>
+                                    <circle cx="25" cy="25" r="18" fill="none" stroke="#cbd5e1" stroke-width="1.5"
+                                        stroke-dasharray="3 3" />
+                                    <line x1="15" y1="15" x2="35" y2="35" stroke="#ef4444" stroke-width="1.8" />
                                 </svg>
                             </button>
                         </div>
@@ -266,61 +303,70 @@
                     <!-- 4. Outer Boundary Border -->
                     <div class="builder-group">
                         <div class="builder-group-header">
-                            <label class="builder-label">4. Outer Border Style</label>
-                            <div class="size-slider-wrap">
-                                <span class="size-label">Size:</span>
-                                <input type="range" id="sliderOuterSize" min="0.6" max="1.5" step="0.05" value="1.0" class="builder-slider" title="Adjust Outer Border Depth">
-                                <span class="size-val" id="valOuterSize">1.0×</span>
-                            </div>
+                            <label class="builder-label">4. Outer Border Motifs</label>
                         </div>
                         <div class="builder-options visual-shape-grid" id="outerBorderOptions">
-                            <button type="button" class="builder-shape-card active" data-val="scallop-16" title="Scallop Shells (16)" aria-label="Scallop Shells">
+                            <button type="button" class="builder-shape-card active" data-val="scallop-16"
+                                title="Scallop Shells (16)" aria-label="Scallop Shells">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <path d="M 12 35 Q 25 15 38 35" fill="none" stroke="#7a4a1e" stroke-width="2"/>
-                                    <path d="M 6 42 Q 19 22 32 42" fill="none" stroke="#7a4a1e" stroke-width="1.2"/>
+                                    <path d="M 12 35 Q 25 15 38 35" fill="none" stroke="#7a4a1e" stroke-width="2" />
+                                    <path d="M 6 42 Q 19 22 32 42" fill="none" stroke="#7a4a1e" stroke-width="1.2" />
                                 </svg>
                             </button>
 
-                            <button type="button" class="builder-shape-card" data-val="sunburst-24" title="Sunburst Rays (24)" aria-label="Sunburst Rays">
+                            <button type="button" class="builder-shape-card" data-val="sunburst-24"
+                                title="Sunburst Rays (24)" aria-label="Sunburst Rays">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <path d="M 25 35 L 25 8" stroke="#7a4a1e" stroke-width="2"/>
-                                    <path d="M 20 36 L 10 14" stroke="#7a4a1e" stroke-width="1.5"/>
-                                    <path d="M 30 36 L 40 14" stroke="#7a4a1e" stroke-width="1.5"/>
+                                    <path d="M 25 35 L 25 8" stroke="#7a4a1e" stroke-width="2" />
+                                    <path d="M 20 36 L 10 14" stroke="#7a4a1e" stroke-width="1.5" />
+                                    <path d="M 30 36 L 40 14" stroke="#7a4a1e" stroke-width="1.5" />
                                 </svg>
                             </button>
 
-                            <button type="button" class="builder-shape-card" data-val="diamond-chevron" title="Diamond Chevrons (16)" aria-label="Diamond Chevrons">
+                            <button type="button" class="builder-shape-card" data-val="diamond-chevron"
+                                title="Diamond Chevrons (16)" aria-label="Diamond Chevrons">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <path d="M 25 10 L 35 25 L 25 40 L 15 25 Z" fill="none" stroke="#7a4a1e" stroke-width="1.8"/>
+                                    <path d="M 25 10 L 35 25 L 25 40 L 15 25 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.8" />
                                 </svg>
                             </button>
 
-                            <button type="button" class="builder-shape-card" data-val="crest-waves" title="Crest Wave Shells (16)" aria-label="Crest Waves">
+                            <button type="button" class="builder-shape-card" data-val="crest-waves"
+                                title="Crest Wave Shells (16)" aria-label="Crest Waves">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <path d="M 10 35 C 18 18 32 18 40 35 Z" fill="none" stroke="#7a4a1e" stroke-width="1.8"/>
+                                    <path d="M 10 35 C 18 18 32 18 40 35 Z" fill="none" stroke="#7a4a1e"
+                                        stroke-width="1.8" />
                                 </svg>
                             </button>
 
-                            <button type="button" class="builder-shape-card" data-val="plain-circle" title="Clean Circular Ring" aria-label="Circle Rim">
+                            <button type="button" class="builder-shape-card" data-val="plain-circle"
+                                title="Clean Circular Ring" aria-label="Circle Rim">
                                 <svg viewBox="0 0 50 50" class="shape-mini-svg">
-                                    <circle cx="25" cy="25" r="20" fill="none" stroke="#7a4a1e" stroke-width="2.5"/>
+                                    <circle cx="25" cy="25" r="20" fill="none" stroke="#7a4a1e" stroke-width="2.5" />
                                 </svg>
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Right: Big Canvas-Sized Live Preview Studio -->
+                <!-- Right: Big Canvas-Sized Live Interactive Studio -->
                 <div class="custom-builder-preview-box">
                     <div class="preview-header-bar">
-                        <span class="preview-label">Live Template Studio</span>
+                        <span class="preview-label">Live Interactive Template Studio</span>
+                        <button type="button" id="btnResetBuilderScales" class="builder-reset-btn" title="Reset all ring sizes back to default">↺ Reset Sizes</button>
                     </div>
-                    <div class="custom-preview-svg-wrapper large-canvas-preview">
-                        <svg id="customBuilderPreviewSvg" viewBox="0 0 400 400" width="440" height="440">
-                            <!-- Dynamically generated live preview -->
+
+                    <div class="drag-instruction-pill">
+                        <span>🖐️</span> <strong>Click & Drag</strong> outward to enlarge, inward to shrink
+                    </div>
+
+                    <div class="custom-preview-svg-wrapper large-canvas-preview" id="customBuilderWrapper">
+                        <div id="builderDragTooltip" class="builder-drag-tooltip">Drag to resize</div>
+                        <svg id="customBuilderPreviewSvg" viewBox="0 0 400 400" width="500" height="500">
+                            <!-- Dynamically generated live preview with interactive drag handles -->
                         </svg>
                     </div>
-                    <p class="preview-hint">✨ All shapes & sizes are 100% symmetrically fillable on the canvas.</p>
+                    <p class="preview-hint">✨ Drag any ring or handle to adjust. Everything stays 100% symmetrically fillable.</p>
                     <button type="button" id="btnUseCustomTemplate" class="hero-btn-solid start-designing-btn">
                         ✨ Start Coloring This Template
                     </button>
@@ -332,7 +378,7 @@
         <!-- ===== STEP 2: THE CANVAS & SIDE FLOWER PALETTE ===== -->
         <section id="canvasStep" hidden>
             <div class="designer-workspace">
-                
+
                 <!-- Side Flower Palette -->
                 <aside class="flower-sidebar">
                     <div class="sidebar-header">
@@ -364,10 +410,12 @@
                         <div class="control-group">
                             <span class="control-label">Flower Form:</span>
                             <div class="form-row" role="group" aria-label="Drawing mode">
-                                <button class="form-btn active" data-form="shredded" id="btnFormShredded" title="Fill shape purely with flower color">
+                                <button class="form-btn active" data-form="shredded" id="btnFormShredded"
+                                    title="Fill shape purely with flower color">
                                     ✂️ Shredded (Color Fill)
                                 </button>
-                                <button class="form-btn" data-form="whole" id="btnFormWhole" title="Stamp complete flower bloom">
+                                <button class="form-btn" data-form="whole" id="btnFormWhole"
+                                    title="Stamp complete flower bloom">
                                     🌸 Whole Flower
                                 </button>
                             </div>
@@ -375,7 +423,8 @@
 
                         <div class="control-group">
                             <span class="control-label">Symmetry:</span>
-                            <button type="button" class="symmetry-toggle-btn active" id="btnSymmetry" title="Toggle radial symmetry for all designs and stamping">
+                            <button type="button" class="symmetry-toggle-btn active" id="btnSymmetry"
+                                title="Toggle radial symmetry for all designs and stamping">
                                 ✨ Symmetry: ON
                             </button>
                         </div>
@@ -391,7 +440,8 @@
                     </div>
 
                     <div class="canvas-shell">
-                        <svg id="pookalamCanvas" viewBox="0 0 400 400" width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+                        <svg id="pookalamCanvas" viewBox="0 0 400 400" width="400" height="400"
+                            xmlns="http://www.w3.org/2000/svg">
                             <defs>
                                 <radialGradient id="floorGradient" cx="50%" cy="45%" r="70%">
                                     <stop offset="0%" stop-color="#fffaf0" />
@@ -408,21 +458,24 @@
                             <!-- 4. Whole Stamped Flower Layer -->
                             <g id="petalLayer"></g>
                         </svg>
-                        <p class="canvas-hint" id="canvasHint">Tap inside any bordered shape to fill it with flower petals.</p>
+                        <p class="canvas-hint" id="canvasHint">Tap inside any bordered shape to fill it with flower
+                            petals.</p>
                     </div>
 
                     <div class="canvas-actions">
                         <button class="ghost-btn" id="btnUndo" title="Undo last petal">Undo ↩</button>
                         <button class="ghost-btn" id="btnClear" title="Clear all petals">Clear 🗑</button>
                         <button class="hero-btn-solid" id="btnDownload" title="Download image">Download 📥</button>
-                        <button class="ghost-btn share-toggle-btn" id="btnShare" title="Share your design">Share 🔗</button>
+                        <button class="ghost-btn share-toggle-btn" id="btnShare" title="Share your design">Share
+                            🔗</button>
                     </div>
 
                     <!-- Share panel -->
                     <div id="sharePanel" class="share-panel" hidden>
                         <p class="share-panel-title">Share your Pookalam 🌸</p>
                         <div class="share-btns" id="shareBtns">
-                            <button id="shareGallery" class="share-btn share-gallery" title="Publish to Community Gallery">
+                            <button id="shareGallery" class="share-btn share-gallery"
+                                title="Publish to Community Gallery">
                                 <span>🖼️</span> Share to Gallery
                             </button>
                             <button id="shareWhatsapp" class="share-btn share-whatsapp" title="Share on WhatsApp">
@@ -460,17 +513,20 @@
                 <form id="publishGalleryForm" class="modal-form" onsubmit="return false;">
                     <div class="form-field">
                         <label for="creatorNameInput">Your Name / Creator Name <span class="required">*</span></label>
-                        <input type="text" id="creatorNameInput" placeholder="e.g. Gayathri S." required maxlength="40" />
+                        <input type="text" id="creatorNameInput" placeholder="e.g. Gayathri S." required
+                            maxlength="40" />
                     </div>
 
                     <div class="form-field">
                         <label for="creatorMsgInput">Festive Message or City (Optional)</label>
-                        <input type="text" id="creatorMsgInput" placeholder="e.g. Happy Onam from Kochi! 🪔" maxlength="60" />
+                        <input type="text" id="creatorMsgInput" placeholder="e.g. Happy Onam from Kochi! 🪔"
+                            maxlength="60" />
                     </div>
 
                     <div class="modal-actions">
                         <button type="button" class="ghost-btn" id="btnCancelPublish">Cancel</button>
-                        <button type="submit" class="hero-btn-solid" id="btnConfirmPublish">Publish to Gallery 🎉</button>
+                        <button type="submit" class="hero-btn-solid" id="btnConfirmPublish">Publish to Gallery
+                            🎉</button>
                     </div>
                 </form>
             </div>
