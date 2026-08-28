@@ -478,22 +478,28 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
 
             if (hasSupabase) {
                 try {
-                    // 1. Upload image blob to Supabase Storage
+                    let imgUrl = dataUrl;
                     const filename = `pookalam-${Date.now()}-${Math.random().toString(36).slice(2)}.png`;
-                    const { error: uploadError } = await supabase.storage
-                        .from('pookalam-gallery')
-                        .upload(filename, blob, { contentType: 'image/png', upsert: false });
 
-                    if (uploadError) throw uploadError;
+                    // 1. Try uploading image blob to Supabase Storage if bucket exists
+                    try {
+                        const { error: uploadError } = await supabase.storage
+                            .from('pookalam-gallery')
+                            .upload(filename, blob, { contentType: 'image/png', upsert: false });
 
-                    // 2. Get public URL of the uploaded image
-                    const { data: urlData } = supabase.storage
-                        .from('pookalam-gallery')
-                        .getPublicUrl(filename);
+                        if (!uploadError) {
+                            const { data: urlData } = supabase.storage
+                                .from('pookalam-gallery')
+                                .getPublicUrl(filename);
+                            if (urlData?.publicUrl) {
+                                imgUrl = urlData.publicUrl;
+                            }
+                        }
+                    } catch (storageErr) {
+                        console.warn('Storage bucket upload skipped, using direct image URL:', storageErr);
+                    }
 
-                    const imgUrl = urlData.publicUrl;
-
-                    // 3. Insert row into gallery_items table
+                    // 2. Insert row into gallery_items table
                     const { error: insertError } = await supabase
                         .from('gallery_items')
                         .insert({
