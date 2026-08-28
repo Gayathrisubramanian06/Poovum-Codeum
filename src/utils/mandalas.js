@@ -21,13 +21,7 @@ export const VECTOR_TEMPLATES = [
 
 export const PREDEFINED_TEMPLATES = {
     circle: [
-        { id: 'c1', name: 'Floral Star', img: 'assets/images/circle-1.jpg' },
-        { id: 'c2', name: 'Geometric Star', img: 'assets/images/circle-2.jpg' },
         { id: 'c3', name: 'Scalloped Mandala', img: 'assets/images/circle-3.jpg' },
-        { id: 'c4', name: 'Diamond Burst', img: 'assets/images/circle-4.jpg' },
-        { id: 'c5', name: 'Classic Ring', img: 'assets/images/circle-5.jpg' },
-        { id: 'c6', name: 'Sunburst', img: 'assets/images/circle-6.jpg' },
-        { id: 'c7', name: 'Petal Wave', img: 'assets/images/circle-7.jpg' },
         { id: 'c8', name: 'Lotus Bloom', img: 'assets/images/circle-8.jpg' },
         { id: 'c9', name: 'Intricate Web', img: 'assets/images/circle-9.jpg' },
         { id: 'c10', name: 'Royal Core', img: 'assets/images/circle-10.jpg' },
@@ -468,19 +462,47 @@ export function generateCustomMandalaPaths(config) {
     const outerLen = 34 * outerScale;
     const outerWid = 28 * outerScale;
 
-    // Background annular ring backdrops for custom mandalas
-    const addCustomRingBackdrops = (arr, r1, r2, count, groupKey) => {
-        const step = 360 / count;
-        for (let i = 0; i < count; i++) {
-            addAnnularArcSegment(arr, r1, r2, i * step, (i + 1) * step, groupKey);
+    // Annular ring backdrops using evenodd fill rule for precise donut-shaped ring filling
+    const addAnnularRingSegment = (arr, r1, r2, groupKey) => {
+        const rInner = Math.min(r1, r2);
+        const rOuter = Math.max(r1, r2);
+        if (rInner <= 2) {
+            addCircleSegment(arr, rOuter, groupKey);
+            return;
         }
+        const d = `M ${CENTER} ${CENTER - rOuter} A ${rOuter} ${rOuter} 0 1 1 ${CENTER} ${CENTER + rOuter} A ${rOuter} ${rOuter} 0 1 1 ${CENTER} ${CENTER - rOuter} Z M ${CENTER} ${CENTER - rInner} A ${rInner} ${rInner} 0 1 0 ${CENTER} ${CENTER + rInner} A ${rInner} ${rInner} 0 1 0 ${CENTER} ${CENTER - rInner} Z`;
+        arr.push({ d, groupKey, fillRule: 'evenodd' });
     };
 
-    addCustomRingBackdrops(outerPaths, 44 * coreScale, rInner, 16, 'cust-bg-inner');
-    addCustomRingBackdrops(outerPaths, rInner, rOuter, 16, 'cust-bg-mid');
-    addCustomRingBackdrops(outerPaths, rOuter, outerDist + outerLen, 16, 'cust-bg-outer');
+    // Compute all exact concentric border radii
+    const ringRadii = [44 * coreScale];
+    if (config.rings === 'double-ring') {
+        ringRadii.push(rInner);
+        ringRadii.push(rInner + (rOuter - rInner) * 0.5);
+        ringRadii.push(rOuter);
+    } else if (config.rings === 'single-ring') {
+        ringRadii.push(rInner + 4);
+        ringRadii.push(rOuter);
+    } else if (config.rings === 'fluted-ring') {
+        ringRadii.push(rInner + 8);
+        ringRadii.push(rOuter + 2);
+    } else {
+        ringRadii.push(rInner);
+        ringRadii.push(rOuter);
+    }
+    ringRadii.push(outerDist + outerLen);
 
-    // 1. Outer Border
+    const sortedRadii = Array.from(new Set(ringRadii.filter(r => r > 0))).sort((a, b) => a - b);
+
+    // 0. Fill Center Core
+    addAnnularRingSegment(outerPaths, 0, sortedRadii[0], 'cust-bg-center');
+
+    // Annular ring fill bands matching every concentric border line exactly
+    for (let i = 0; i < sortedRadii.length - 1; i++) {
+        addAnnularRingSegment(outerPaths, sortedRadii[i], sortedRadii[i + 1], `cust-bg-ring-${i}`);
+    }
+
+    // 1. Outer Border Motifs
     if (config.outer === 'scallop-16') {
         for (let i = 0; i < 16; i++) {
             addPetalSegment(outerPaths, outerDist, i * 22.5, outerLen, outerWid, 'cust-outer-scallop');
@@ -499,27 +521,15 @@ export function generateCustomMandalaPaths(config) {
         }
     } else if (config.outer === 'plain-circle') {
         const rOut = Math.min(195, outerDist + 8);
-        addAnnularArcSegment(outerPaths, rOut - 8, rOut, 0, 180, 'cust-outer-ring');
-        addAnnularArcSegment(outerPaths, rOut - 8, rOut, 180, 360, 'cust-outer-ring');
+        addCircleSegment(outerPaths, rOut, 'cust-outer-ring');
     }
 
-    // 2. Concentric Rings
-    if (config.rings === 'double-ring') {
-        for (let i = 0; i < 16; i++) {
-            addAnnularArcSegment(ringPaths, rInner + (rOuter - rInner) * 0.5, rOuter, i * 22.5, (i + 1) * 22.5, 'cust-ring-outer');
+    // 2. Concentric Rings Guide Strokes
+    sortedRadii.forEach((r, idx) => {
+        if (r > 0 && r < outerDist + outerLen) {
+            addCircleSegment(ringPaths, r, `cust-ring-guide-${idx}`);
         }
-        for (let i = 0; i < 16; i++) {
-            addAnnularArcSegment(ringPaths, rInner, rInner + (rOuter - rInner) * 0.5, i * 22.5, (i + 1) * 22.5, 'cust-ring-inner');
-        }
-    } else if (config.rings === 'single-ring') {
-        for (let i = 0; i < 12; i++) {
-            addAnnularArcSegment(ringPaths, rInner + 4, rOuter, i * 30, (i + 1) * 30, 'cust-ring-single');
-        }
-    } else if (config.rings === 'fluted-ring') {
-        for (let i = 0; i < 24; i++) {
-            addAnnularArcSegment(ringPaths, rInner + 8, rOuter + 2, i * 15, (i + 1) * 15, 'cust-ring-fluted');
-        }
-    }
+    });
 
     // 3. Mid Petal / Star Pattern
     const midDist = 58 + 14 * coreScale;

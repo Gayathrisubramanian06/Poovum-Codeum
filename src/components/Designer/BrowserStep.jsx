@@ -33,27 +33,15 @@ export default function BrowserStep({ onSelectVector, onSelectImage }) {
             <h1>Pick a design</h1>
             <p className="subtitle">Select a layout to use as your guide.</p>
 
-            <div className="templates-subgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '20px', width: '100%' }}>
-                {VECTOR_TEMPLATES.map((tpl, idx) => (
-                    <motion.button
-                        key={tpl.id}
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: Math.min(5, idx) * 0.03, duration: 0.25 }}
-                        className="template-card-preview-container"
-                        onClick={() => onSelectVector(tpl.id)}
-                        type="button"
-                    >
-                        <VectorPreview templateId={tpl.id} />
-                    </motion.button>
-                ))}
-
+            <div className="templates-subgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '20px', width: '100%' }}>
                 {PREDEFINED_TEMPLATES.circle.map((tpl, idx) => (
                     <motion.button
                         key={tpl.id}
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: Math.min(5, idx + VECTOR_TEMPLATES.length) * 0.03, duration: 0.25 }}
+                        transition={{ delay: Math.min(5, idx) * 0.03, duration: 0.25 }}
+                        whileHover={{ scale: 1.05, y: -4 }}
+                        whileTap={{ scale: 0.96 }}
                         className="template-card-preview-container"
                         onClick={() => onSelectImage(tpl)}
                         type="button"

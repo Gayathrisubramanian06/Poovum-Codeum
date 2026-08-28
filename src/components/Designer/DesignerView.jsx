@@ -7,13 +7,13 @@ import CanvasStep from './CanvasStep';
 import UploadStep from './UploadStep';
 
 const DEFAULT_CUSTOM_CONFIG = {
-    core: 'ganapathi',
+    core: 'lotus-8',
     coreScale: 1.0,
-    mid: 'pointed-12',
+    mid: 'star-12',
     midScale: 1.0,
     rings: 'double-ring',
     ringScale: 1.0,
-    outer: 'scallop-16',
+    outer: 'diamond-chevron',
     outerScale: 1.0
 };
 

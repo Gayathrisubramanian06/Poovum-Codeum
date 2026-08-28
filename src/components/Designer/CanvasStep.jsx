@@ -915,7 +915,8 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                                         <path
                                             key={`fill-${idx}`}
                                             d={p.d}
-                                            fill={vectorFills[idx] || 'rgba(0,0,0,0)'}
+                                            fill={vectorFills[idx] || (p.fillRule ? 'rgba(0,0,0,0)' : '#fffaf0')}
+                                            fillRule={p.fillRule || 'nonzero'}
                                             stroke="none"
                                             transform={p.scale ? `translate(${CENTER}, ${CENTER}) scale(${p.scale}) translate(-${CENTER}, -${CENTER})` : undefined}
                                         />
@@ -945,6 +946,7 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                                                 d={p.d}
                                                 className={`pookalam-segment ${isHovered ? 'symm-highlight' : ''}`}
                                                 fill="rgba(255,255,255,0.01)"
+                                                fillRule={p.fillRule || 'nonzero'}
                                                 stroke="#2a1608"
                                                 strokeWidth="1.8"
                                                 strokeLinecap="round"

@@ -3,18 +3,18 @@ import { motion } from 'framer-motion';
 import { generateMandalaPaths, generateCustomMandalaPaths } from '../../utils/mandalas';
 
 const DEFAULT_CUSTOM_CONFIG = {
-    core: 'ganapathi',
+    core: 'lotus-8',
     coreScale: 1.0,
-    mid: 'pointed-12',
+    mid: 'star-12',
     midScale: 1.0,
     rings: 'double-ring',
     ringScale: 1.0,
-    outer: 'scallop-16',
+    outer: 'diamond-chevron',
     outerScale: 1.0
 };
 
 export default function TemplateStep({ onSelectBrowse, onSelectUpload, onSelectCustom }) {
-    const choosePaths = generateMandalaPaths('surya-padma');
+    const choosePaths = generateMandalaPaths('diamond-mandala');
     const { outerPaths, ringPaths, midPaths, corePaths, coreScale } = generateCustomMandalaPaths(DEFAULT_CUSTOM_CONFIG);
     const diyPaths = [...outerPaths, ...ringPaths, ...midPaths, ...corePaths];
 
