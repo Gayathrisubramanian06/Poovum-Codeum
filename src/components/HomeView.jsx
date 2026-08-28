@@ -44,7 +44,7 @@ export default function HomeView({ onNavigate }) {
             ====================================================== */}
 
             <motion.img
-                src="assets/pookalam.png.png"
+                src="assets/pookalam.png"
                 alt="Pookalam"
                 className="pookalam-top-spin"
                 style={{

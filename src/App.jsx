@@ -36,7 +36,7 @@ export default function App() {
                     className={`nav-link${view === 'about' ? ' active' : ''}`}
                     onClick={() => setView('about')}
                 >
-                    LEARN MORE ABOUT ONAM
+                    ABOUT ONAM
                 </button>
             </nav>
 

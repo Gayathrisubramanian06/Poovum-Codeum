@@ -17,11 +17,11 @@ export default function GalleryView({ onNavigate }) {
         async function fetchGallery() {
             setLoading(true);
             setError(null);
-            
-            const hasSupabase = 
-                import.meta.env.VITE_SUPABASE_URL && 
-                import.meta.env.VITE_SUPABASE_ANON_KEY && 
-                import.meta.env.VITE_SUPABASE_URL !== 'YOUR_SUPABASE_PROJECT_URL' && 
+
+            const hasSupabase =
+                import.meta.env.VITE_SUPABASE_URL &&
+                import.meta.env.VITE_SUPABASE_ANON_KEY &&
+                import.meta.env.VITE_SUPABASE_URL !== 'YOUR_SUPABASE_PROJECT_URL' &&
                 import.meta.env.VITE_SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY';
 
             let communityData = [];
@@ -46,7 +46,7 @@ export default function GalleryView({ onNavigate }) {
             try {
                 const rawUploads = localStorage.getItem('pookalam_community_gallery');
                 const localUploads = rawUploads ? JSON.parse(rawUploads) : [];
-                
+
                 localUploads.forEach(localItem => {
                     if (!communityData.some(item => item.id === localItem.id || item.img_url === localItem.img_url)) {
                         communityData.push({ ...localItem, type: 'community' });
@@ -178,7 +178,7 @@ export default function GalleryView({ onNavigate }) {
                             transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
                             style={{ fontSize: '36px', display: 'inline-block' }}
                         >
-                            <svg viewBox="0 0 24 24" width="36" height="36" fill="#d97706"><path d="M12 2C8 6 4 12 12 22C20 12 16 6 12 2Z"/></svg>
+                            <svg viewBox="0 0 24 24" width="36" height="36" fill="#d97706"><path d="M12 2C8 6 4 12 12 22C20 12 16 6 12 2Z" /></svg>
                         </motion.div>
                         <p style={{ margin: 0, fontSize: '14px' }}>Loading community gallery…</p>
                     </div>
@@ -204,7 +204,7 @@ export default function GalleryView({ onNavigate }) {
                             type="button"
                             style={{ marginTop: '20px' }}
                         >
-                            Learn More About Onam Pookalams
+                            Learn More About Onam
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="empty-link-arrow">
                                 <line x1="7" y1="17" x2="17" y2="7"></line>
                                 <polyline points="7 7 17 7 17 17"></polyline>
@@ -253,7 +253,7 @@ export default function GalleryView({ onNavigate }) {
                                                     type="button"
                                                 >
                                                     <span className="like-heart">
-                                                        <svg fill={isLiked ? "#e74c3c" : "none"} stroke="#e74c3c" strokeWidth="2" viewBox="0 0 24 24" width="16" height="16"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                                        <svg fill={isLiked ? "#e74c3c" : "none"} stroke="#e74c3c" strokeWidth="2" viewBox="0 0 24 24" width="16" height="16"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
                                                     </span>
                                                     <span className="like-count">{currentLikes}</span>
                                                 </button>
@@ -263,7 +263,7 @@ export default function GalleryView({ onNavigate }) {
                                                     title="Download Pookalam"
                                                     type="button"
                                                 >
-                                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" /></svg>
                                                 </button>
                                             </div>
                                         </div>

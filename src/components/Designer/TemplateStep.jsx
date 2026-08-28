@@ -41,18 +41,23 @@ export default function TemplateStep({ onSelectBrowse, onSelectUpload, onSelectC
                     className="template-card-preview-container"
                     onClick={onSelectBrowse}
                     type="button"
-                    style={{ padding: '36px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px', flex: '1 1 0px', minWidth: 0, borderRadius: '24px' }}
+                    style={{ padding: '32px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', gap: '14px', flex: '1 1 0px', minWidth: 0, borderRadius: '24px' }}
                 >
-                    <div style={{ width: '160px', height: '160px', background: '#fbf8f0', borderRadius: '50%', padding: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1.5px solid rgba(122, 74, 30, 0.12)', flexShrink: 0, boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.02)' }}>
+                    <div style={{ width: '150px', height: '150px', background: '#fbf8f0', borderRadius: '50%', padding: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1.5px solid rgba(122, 74, 30, 0.12)', flexShrink: 0, boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.02)' }}>
                         <svg viewBox="0 0 400 400" style={{ width: '100%', height: '100%', display: 'block' }}>
                             {choosePaths.map((p, idx) => (
                                 <path key={idx} d={p.d} fill="none" stroke="#7a4a1e" strokeWidth="2.5" />
                             ))}
                         </svg>
                     </div>
-                    <span className="template-name" style={{ fontSize: '16px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.03em', whiteSpace: 'nowrap', color: 'var(--brown-dark)' }}>
-                        Browse Outlines
-                    </span>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                        <span className="template-name" style={{ fontSize: '16px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.03em', color: 'var(--brown-dark)' }}>
+                            Browse Templates
+                        </span>
+                        <p style={{ fontSize: '12.5px', color: '#684f27', margin: 0, lineHeight: '1.4', fontWeight: '500', maxWidth: '240px' }}>
+                            Choose from authentic pre-made Pookalam mandalas &amp; floral outlines.
+                        </p>
+                    </div>
                 </motion.button>
 
                 <motion.button
@@ -64,16 +69,21 @@ export default function TemplateStep({ onSelectBrowse, onSelectUpload, onSelectC
                     className="template-card-preview-container"
                     onClick={onSelectUpload}
                     type="button"
-                    style={{ padding: '36px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px', flex: '1 1 0px', minWidth: 0, borderRadius: '24px' }}
+                    style={{ padding: '32px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', gap: '14px', flex: '1 1 0px', minWidth: 0, borderRadius: '24px' }}
                 >
-                    <div style={{ width: '160px', height: '160px', background: '#fbf8f0', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px dashed rgba(122, 74, 30, 0.45)', flexShrink: 0, boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.02)' }}>
-                        <svg viewBox="0 0 24 24" width="50" height="50" fill="none" stroke="#7a4a1e" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'block' }}>
+                    <div style={{ width: '150px', height: '150px', background: '#fbf8f0', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px dashed rgba(122, 74, 30, 0.45)', flexShrink: 0, boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.02)' }}>
+                        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#7a4a1e" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'block' }}>
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
                         </svg>
                     </div>
-                    <span className="template-name" style={{ fontSize: '16px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.03em', whiteSpace: 'nowrap', color: 'var(--brown-dark)' }}>
-                        Upload Photo
-                    </span>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                        <span className="template-name" style={{ fontSize: '16px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.03em', color: 'var(--brown-dark)' }}>
+                            Upload Photo
+                        </span>
+                        <p style={{ fontSize: '12.5px', color: '#684f27', margin: 0, lineHeight: '1.4', fontWeight: '500', maxWidth: '240px' }}>
+                            Upload any custom outline photo or line drawing to color automatically.
+                        </p>
+                    </div>
                 </motion.button>
 
                 <motion.button
@@ -85,18 +95,23 @@ export default function TemplateStep({ onSelectBrowse, onSelectUpload, onSelectC
                     className="template-card-preview-container"
                     onClick={onSelectCustom}
                     type="button"
-                    style={{ padding: '36px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px', flex: '1 1 0px', minWidth: 0, borderRadius: '24px' }}
+                    style={{ padding: '32px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', gap: '14px', flex: '1 1 0px', minWidth: 0, borderRadius: '24px' }}
                 >
-                    <div style={{ width: '160px', height: '160px', background: '#fbf8f0', borderRadius: '50%', padding: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1.5px solid rgba(122, 74, 30, 0.12)', flexShrink: 0, boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.02)' }}>
+                    <div style={{ width: '150px', height: '150px', background: '#fbf8f0', borderRadius: '50%', padding: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1.5px solid rgba(122, 74, 30, 0.12)', flexShrink: 0, boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.02)' }}>
                         <svg viewBox="0 0 400 400" style={{ width: '100%', height: '100%', display: 'block' }}>
                             {diyPaths.map((p, idx) => (
                                 <path key={idx} d={p.d} fill="none" stroke="#7a4a1e" strokeWidth="2.5" />
                             ))}
                         </svg>
                     </div>
-                    <span className="template-name" style={{ fontSize: '16px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.03em', whiteSpace: 'nowrap', color: 'var(--brown-dark)' }}>
-                        Design Studio
-                    </span>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                        <span className="template-name" style={{ fontSize: '16px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.03em', color: 'var(--brown-dark)' }}>
+                            Design Studio
+                        </span>
+                        <p style={{ fontSize: '12.5px', color: '#684f27', margin: 0, lineHeight: '1.4', fontWeight: '500', maxWidth: '240px' }}>
+                            Mix and match core motifs, ring patterns, and outer petals to build your design.
+                        </p>
+                    </div>
                 </motion.button>
             </div>
         </motion.section>
