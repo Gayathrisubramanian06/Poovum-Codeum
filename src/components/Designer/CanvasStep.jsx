@@ -172,7 +172,6 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
     // Modal state for publishing
     const [showPublish, setShowPublish] = useState(false);
     const [creatorName, setCreatorName] = useState('');
-    const [pookalamTitle, setPookalamTitle] = useState('');
     const [creatorCity, setCreatorCity] = useState('');
     const [shareMessage, setShareMessage] = useState('');
 
@@ -503,7 +502,7 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                     const { error: insertError } = await supabase
                         .from('gallery_items')
                         .insert({
-                            title: pookalamTitle || 'Onam Rangoli',
+                            title: 'Onam Pookalam',
                             creator: creatorName || 'Festive Designer',
                             city: creatorCity ? `${creatorCity} 🪔` : 'Kerala 🌸',
                             img_url: imgUrl,
@@ -530,7 +529,7 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                 const list = raw ? JSON.parse(raw) : [];
                 const newItem = {
                     id: `comm-${Date.now()}-${Math.random()}`,
-                    title: pookalamTitle || 'Onam Rangoli',
+                    title: 'Onam Pookalam',
                     creator: creatorName || 'Festive Designer',
                     city: creatorCity ? `${creatorCity} 🪔` : 'Kerala 🌸',
                     date: 'Aug 2026',
@@ -1037,15 +1036,6 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                                         value={creatorName}
                                         onChange={e => setCreatorName(e.target.value)}
                                         required
-                                    />
-                                </div>
-                                <div className="form-field">
-                                    <label>Pookalam Title</label>
-                                    <input
-                                        type="text"
-                                        placeholder="Title (e.g. Royal Harvest)"
-                                        value={pookalamTitle}
-                                        onChange={e => setPookalamTitle(e.target.value)}
                                     />
                                 </div>
                                 <div className="form-field">
