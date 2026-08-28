@@ -19,23 +19,124 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
     const [symmetryFolds, setSymmetryFolds] = useState(8);
     const [currentSizeKey, setCurrentSizeKey] = useState('medium');
 
+    // Zoom & Pan state for high-precision coloring
+    const [zoomScale, setZoomScale] = useState(1);
+    const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
+    const [showZoomTip, setShowZoomTip] = useState(true);
+
+    // Drag-to-pan refs when zoomed in
+    const isPointerDownRef = useRef(false);
+    const pointerStartRef = useRef({ x: 0, y: 0 });
+    const panStartRef = useRef({ x: 0, y: 0 });
+    const isDragMoveRef = useRef(false);
+
+    const handleZoomIn = () => {
+        setZoomScale(prev => Math.min(3.5, Math.round((prev + 0.5) * 10) / 10));
+        setCanvasHint('🔍 Zoomed in on Pookalam! Drag to pan around.');
+    };
+
+    const handleZoomOut = () => {
+        setZoomScale(prev => {
+            const next = Math.max(1, Math.round((prev - 0.5) * 10) / 10);
+            if (next === 1) setPanOffset({ x: 0, y: 0 });
+            return next;
+        });
+    };
+
+    const handleResetZoom = () => {
+        setZoomScale(1);
+        setPanOffset({ x: 0, y: 0 });
+        setCanvasHint('🔍 Zoom reset to 100%.');
+    };
+
+    // Non-passive wheel event listener to strictly zoom ONLY the pookalam canvas (prevents browser page zoom)
+    useEffect(() => {
+        const svgEl = svgRef.current;
+        if (!svgEl) return;
+
+        const onWheel = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (e.deltaY < 0) {
+                setZoomScale(prev => Math.min(3.5, Math.round((prev + 0.25) * 100) / 100));
+            } else {
+                setZoomScale(prev => {
+                    const next = Math.max(1, Math.round((prev - 0.25) * 100) / 100);
+                    if (next === 1) setPanOffset({ x: 0, y: 0 });
+                    return next;
+                });
+            }
+        };
+
+        svgEl.addEventListener('wheel', onWheel, { passive: false });
+        return () => {
+            svgEl.removeEventListener('wheel', onWheel);
+        };
+    }, []);
+
+    const handleCanvasPointerDownCombined = (e) => {
+        isPointerDownRef.current = true;
+        isDragMoveRef.current = false;
+        pointerStartRef.current = { x: e.clientX, y: e.clientY };
+        panStartRef.current = { ...panOffset };
+    };
+
+    const handleCanvasPointerMove = (e) => {
+        if (!isPointerDownRef.current || zoomScale <= 1) return;
+        const dx = e.clientX - pointerStartRef.current.x;
+        const dy = e.clientY - pointerStartRef.current.y;
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+            isDragMoveRef.current = true;
+            const svg = svgRef.current;
+            if (!svg) return;
+            const rect = svg.getBoundingClientRect();
+            const scaleFactor = 400 / (rect.width || 400) / zoomScale;
+
+            setPanOffset({
+                x: panStartRef.current.x + dx * scaleFactor,
+                y: panStartRef.current.y + dy * scaleFactor
+            });
+        }
+    };
+
+    const handleCanvasPointerUpCombined = (e) => {
+        if (!isDragMoveRef.current) {
+            handleCanvasPointerDown(e);
+        }
+        isPointerDownRef.current = false;
+        isDragMoveRef.current = false;
+    };
+
+    const viewBoxString = React.useMemo(() => {
+        const w = 400 / zoomScale;
+        const h = 400 / zoomScale;
+        const maxPanX = (400 - w) / 2;
+        const maxPanY = (400 - h) / 2;
+        const clampedPanX = Math.max(-maxPanX, Math.min(maxPanX, panOffset.x));
+        const clampedPanY = Math.max(-maxPanY, Math.min(maxPanY, panOffset.y));
+        const x = (400 - w) / 2 - clampedPanX;
+        const y = (400 - h) / 2 - clampedPanY;
+        return `${x} ${y} ${w} ${h}`;
+    }, [zoomScale, panOffset]);
+
     // Real Palette hover state & position mapping for 11 flower items
     const [hoveredPaletteItem, setHoveredPaletteItem] = useState(null);
 
     const paletteItems = React.useMemo(() => {
         const items = [];
         const positions = [
-            { x: 34, y: 38 }, // 0: Thumba
-            { x: 45, y: 30 }, // 1: Thechi
-            { x: 56, y: 26 }, // 2: Jamanthi
-            { x: 67, y: 28 }, // 3: Rose
-            { x: 78, y: 40 }, // 4: Marigold (Orange)
-            { x: 74, y: 56 }, // 5: Marigold (Yellow)
-            { x: 62, y: 72 }, // 6: Lotus
-            { x: 48, y: 76 }, // 7: Chembarathi
-            { x: 35, y: 70 }, // 8: Pinwheel
-            { x: 26, y: 58 }, // 9: Leaf Green
-            { x: 29, y: 46 }  // 10: Earth Brown
+            { x: 28, y: 32 }, // 0: Thumba
+            { x: 40, y: 26 }, // 1: Thechi
+            { x: 52, y: 26 }, // 2: Jamanthi (Yellow)
+            { x: 64, y: 32 }, // 3: Jamanthi (White)
+            { x: 26, y: 50 }, // 4: Rose
+            { x: 38, y: 48 }, // 5: Marigold (Orange)
+            { x: 50, y: 48 }, // 6: Marigold (Yellow)
+            { x: 62, y: 50 }, // 7: Lotus
+            { x: 30, y: 70 }, // 8: Chembarathi
+            { x: 44, y: 72 }, // 9: Pinwheel
+            { x: 58, y: 70 }  // 10: Leaf Green
         ];
 
         let idx = 0;
@@ -102,7 +203,7 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
     // Initialize Image Template Engine if outline image loaded
     useEffect(() => {
         if (isImageTemplate && imageSrc) {
-            const engine = new ImageTemplateEngine(CANVAS_SIZE);
+            const engine = new ImageTemplateEngine(800);
             engineRef.current = engine;
             engine.init(imageSrc)
                 .then((fillDataUrl) => {
@@ -115,14 +216,26 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
         }
     }, [isImageTemplate, imageSrc]);
 
-    // Get SVG coordinate from click/pointer event
+    // Get SVG coordinate from click/pointer event with viewBox zoom offset
     const getSvgCoordinates = (e) => {
         const svg = svgRef.current;
         if (!svg) return { x: 200, y: 200 };
         const rect = svg.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const clickY = e.clientY - rect.top;
+
+        const w = 400 / zoomScale;
+        const h = 400 / zoomScale;
+        const maxPanX = (400 - w) / 2;
+        const maxPanY = (400 - h) / 2;
+        const clampedPanX = Math.max(-maxPanX, Math.min(maxPanX, panOffset.x));
+        const clampedPanY = Math.max(-maxPanY, Math.min(maxPanY, panOffset.y));
+        const viewBoxX = (400 - w) / 2 - clampedPanX;
+        const viewBoxY = (400 - h) / 2 - clampedPanY;
+
         return {
-            x: ((e.clientX - rect.left) / (rect.width || 1)) * CANVAS_SIZE,
-            y: ((e.clientY - rect.top) / (rect.height || 1)) * CANVAS_SIZE
+            x: viewBoxX + (clickX / (rect.width || 1)) * w,
+            y: viewBoxY + (clickY / (rect.height || 1)) * h
         };
     };
 
@@ -137,22 +250,40 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
             return;
         }
 
-        // In color-fill (shredded) mode, always color only the exact clicked shape.
-        // Symmetry ring-fill only applies to stamp mode.
+        const clickedPath = paths[index];
+        let targetIndices = [index];
+
+        // When Ring Fill (isSymmetryActive) is ON, color all paths sharing the same symmetry groupKey
+        if (isSymmetryActive && clickedPath && clickedPath.groupKey) {
+            targetIndices = paths
+                .map((p, i) => (p.groupKey === clickedPath.groupKey ? i : -1))
+                .filter(i => i !== -1);
+        }
+
         const nextFills = [...vectorFills];
-        const prevColor = nextFills[index];
-        nextFills[index] = currentColor.hex;
+        const prevColors = [];
+
+        targetIndices.forEach(idx => {
+            prevColors.push(nextFills[idx]);
+            nextFills[idx] = currentColor.hex;
+        });
+
         setVectorFills(nextFills);
 
         const nextHistory = [...placedHistory];
         nextHistory.push({
             type: 'vector-fill',
-            indices: [index],
-            prevColors: [prevColor],
+            indices: targetIndices,
+            prevColors: prevColors,
             nextColor: currentColor.hex
         });
         setPlacedHistory(nextHistory);
-        setCanvasHint(`✨ Colored shape with ${currentColor.name}!`);
+
+        if (targetIndices.length > 1) {
+            setCanvasHint(`✨ Symmetrically colored ${targetIndices.length} shapes with ${currentColor.name}!`);
+        } else {
+            setCanvasHint(`✨ Colored shape with ${currentColor.name}!`);
+        }
     };
 
     // stamp petal drawing
@@ -215,19 +346,13 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
             const designCenter = engine.getCenterOfDesign();
 
             if (isSymmetryActive) {
-                const dx = pt.x - designCenter.x;
-                const dy = pt.y - designCenter.y;
-                const r = Math.sqrt(dx * dx + dy * dy);
-                const steps = 120;
-                for (let i = 0; i < steps; i++) {
-                    const angle = (2 * Math.PI / steps) * i;
-                    const px = designCenter.x + r * Math.cos(angle);
-                    const py = designCenter.y + r * Math.sin(angle);
-                    const mask = engine.floodFill(px, py);
+                const symPoints = getSymmetricPoints(designCenter.x, designCenter.y, pt.x, pt.y, symmetryFolds);
+                symPoints.forEach(sPt => {
+                    const mask = engine.floodFill(sPt.x, sPt.y);
                     if (mask && !masks.includes(mask)) {
                         masks.push(mask);
                     }
-                }
+                });
             } else {
                 const mask = engine.floodFill(pt.x, pt.y);
                 if (mask) masks.push(mask);
@@ -544,14 +669,6 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
             <div className="designer-workspace">
                 {/* Left: Flower Palette Sidebar */}
                 <aside className="flower-sidebar">
-                    <div className="sidebar-header">
-                        <span className="sidebar-icon">🎨</span>
-                        <div>
-                            <h2 className="sidebar-title">Flower Palette</h2>
-                            <span className="sidebar-subtitle">പൂക്കൾ തിരഞ്ഞെടുക്കുക</span>
-                        </div>
-                    </div>
-
                     <div className="active-flower-banner">
                         <div className="active-flower-indicator-svg">
                             <svg viewBox="-35 -35 70 70" width="34" height="34">
@@ -567,11 +684,11 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                     <div className="real-palette-wrapper">
                         <div className="real-palette-container">
                             <img
-                                src="/assets/palette.png"
-                                alt="Onam Flower Palette"
+                                src="/assets/images/taro.png"
+                                alt="Taro Leaf Flower Palette"
                                 className="palette-bg-image"
                                 onError={(e) => {
-                                    e.target.src = '/assets/images/palette.png';
+                                    e.target.src = '/assets/taro.png';
                                 }}
                             />
 
@@ -670,10 +787,10 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                             </label>
                         </div>
 
-                        {/* Symmetry Folds selector - only shown in Stamp mode */}
-                        {isSymmetryActive && currentMode === 'whole' && (
+                        {/* Symmetry Folds selector */}
+                        {isSymmetryActive && (
                             <div className="control-group" style={{ minWidth: '150px' }}>
-                                <span className="control-label">Flowers in Ring:</span>
+                                <span className="control-label">{currentMode === 'whole' ? 'Flowers in Ring:' : 'Ring Folds:'}</span>
                                 <div className="size-row" style={{ display: 'flex', gap: '3px' }}>
                                     {[4, 6, 8, 12, 16, 24].map(folds => (
                                         <button
@@ -708,15 +825,79 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                         </div>
                     </div>
 
+                    {/* High-Precision Zooming Pro-Tip Banner */}
+                    <AnimatePresence>
+                        {showZoomTip && (
+                            <motion.div
+                                initial={{ opacity: 0, y: -6, scale: 0.98 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: -6, scale: 0.98 }}
+                                className="zoom-tip-banner"
+                            >
+                                <div className="zoom-tip-content">
+                                    <span className="zoom-tip-badge">💡 Pro Tip</span>
+                                    <span>
+                                        Zoom into the Pookalam (use <strong>+</strong> / <strong>-</strong> buttons or scroll wheel) to color tiny shapes with high precision!
+                                    </span>
+                                </div>
+                                <button
+                                    className="zoom-tip-dismiss"
+                                    onClick={() => setShowZoomTip(false)}
+                                    title="Dismiss hint"
+                                    type="button"
+                                >
+                                    ✕
+                                </button>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
                     {/* SVG Canvas Board */}
                     <div className="canvas-shell">
+                        {/* Floating Zoom Control Bar */}
+                        <div className="canvas-zoom-toolbar">
+                            <button
+                                type="button"
+                                className="zoom-tool-btn"
+                                onClick={handleZoomOut}
+                                disabled={zoomScale <= 1}
+                                title="Zoom Out (-)"
+                            >
+                                ➖
+                            </button>
+                            <span className="zoom-tool-badge">
+                                🔍 {Math.round(zoomScale * 100)}%
+                            </span>
+                            <button
+                                type="button"
+                                className="zoom-tool-btn"
+                                onClick={handleZoomIn}
+                                disabled={zoomScale >= 3.5}
+                                title="Zoom In (+)"
+                            >
+                                ➕
+                            </button>
+                            {zoomScale > 1 && (
+                                <button
+                                    type="button"
+                                    className="zoom-tool-reset"
+                                    onClick={handleResetZoom}
+                                    title="Reset Zoom to 100%"
+                                >
+                                    ↺ Reset
+                                </button>
+                            )}
+                        </div>
+
                         <svg
                             ref={svgRef}
                             id="pookalamCanvas"
-                            viewBox="0 0 400 400"
+                            viewBox={viewBoxString}
                             width="400"
                             height="400"
-                            onPointerDown={handleCanvasPointerDown}
+                            onPointerDown={handleCanvasPointerDownCombined}
+                            onPointerMove={handleCanvasPointerMove}
+                            onPointerUp={handleCanvasPointerUpCombined}
                             style={{ touchAction: 'none' }}
                         >
                             <defs>
@@ -752,22 +933,29 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                             {/* 3. Guide/Outline Layer (Image Outline overlay or Vector Outline paths) */}
                             <g id="guideLayer">
                                 {!isImageTemplate ? (
-                                    paths.map((p, idx) => (
-                                        <path
-                                            key={`border-${idx}`}
-                                            d={p.d}
-                                            className={`pookalam-segment ${hoveredGroup === p.groupKey ? 'symm-highlight' : ''}`}
-                                            fill="rgba(255,255,255,0.01)"
-                                            stroke="#2a1608"
-                                            strokeWidth="1.8"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            transform={p.scale ? `translate(${CENTER}, ${CENTER}) scale(${p.scale}) translate(-${CENTER}, -${CENTER})` : undefined}
-                                            onMouseEnter={() => setHoveredGroup(p.groupKey)}
-                                            onMouseLeave={() => setHoveredGroup(null)}
-                                            onClick={(e) => handleVectorPathClick(e, idx)}
-                                        />
-                                    ))
+                                    paths.map((p, idx) => {
+                                        const isHovered = hoveredGroup && (
+                                            isSymmetryActive 
+                                                ? hoveredGroup === p.groupKey 
+                                                : hoveredGroup === `single-${idx}`
+                                        );
+                                        return (
+                                            <path
+                                                key={`border-${idx}`}
+                                                d={p.d}
+                                                className={`pookalam-segment ${isHovered ? 'symm-highlight' : ''}`}
+                                                fill="rgba(255,255,255,0.01)"
+                                                stroke="#2a1608"
+                                                strokeWidth="1.8"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                transform={p.scale ? `translate(${CENTER}, ${CENTER}) scale(${p.scale}) translate(-${CENTER}, -${CENTER})` : undefined}
+                                                onMouseEnter={() => setHoveredGroup(isSymmetryActive ? p.groupKey : `single-${idx}`)}
+                                                onMouseLeave={() => setHoveredGroup(null)}
+                                                onClick={(e) => handleVectorPathClick(e, idx)}
+                                            />
+                                        );
+                                    })
                                 ) : (
                                     /* Multiply outline blending so shapes stand out above fills */
                                     <image href={imageSrc} x="0" y="0" width="400" height="400" opacity="0.32" style={{ mixBlendMode: 'multiply' }} />

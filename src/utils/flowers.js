@@ -30,7 +30,8 @@ export const ONAM_FLOWERS = [
         icon: '🌼',
         description: 'Radiating pom-pom Chrysanthemum',
         varieties: [
-            { name: 'Sunshine Yellow', hex: '#fbbf24', center: '#d97706', border: '#b45309' }
+            { name: 'Sunshine Yellow', hex: '#fbbf24', center: '#d97706', border: '#b45309' },
+            { name: 'Pure White', hex: '#f8fafc', center: '#facc15', border: '#cbd5e1' }
         ]
     },
     {
@@ -86,13 +87,12 @@ export const ONAM_FLOWERS = [
     },
     {
         id: 'backdrops',
-        nameEn: 'Leaves & Earth',
-        nameMl: 'ഇലകളും പശ്ചാത്തലവും',
+        nameEn: 'Leaf Green',
+        nameMl: 'ഇലപ്പച്ച',
         icon: '🍃',
-        description: 'Plantain leaf green and earthy background tones',
+        description: 'Plantain leaf green backdrop',
         varieties: [
-            { name: 'Leaf Green', hex: '#16a34a', center: '#22c55e', border: '#052e16' },
-            { name: 'Earth Brown', hex: '#6b4226', center: '#8c6239', border: '#3b1f0e' }
+            { name: 'Leaf Green', hex: '#16a34a', center: '#22c55e', border: '#052e16' }
         ]
     }
 ];

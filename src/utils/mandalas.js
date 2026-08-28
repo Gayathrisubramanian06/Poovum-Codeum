@@ -107,9 +107,20 @@ export function generateMandalaPaths(templateId) {
         paths.push({ d, groupKey });
     };
 
+    const addRingBackdrops = (r1, r2, count, groupKey) => {
+        const step = 360 / count;
+        for (let i = 0; i < count; i++) {
+            addAnnularArcSegment(r1, r2, i * step, (i + 1) * step, groupKey);
+        }
+    };
+
     switch (templateId) {
         case 'surya-padma':
-            // 1. Surya Padma Mandala
+            // 1. Surya Padma Mandala - Ring Backdrops for all white region gaps
+            addRingBackdrops(18, 52, 16, 'surya-bg-inner');
+            addRingBackdrops(52, 74, 16, 'surya-bg-mid');
+            addRingBackdrops(74, 114, 16, 'surya-bg-outer');
+
             for (let i = 0; i < 16; i++) {
                 addPetalSegment(152, i * 22.5, 38, 30, 'surya-outer-scallops');
             }
@@ -141,7 +152,11 @@ export function generateMandalaPaths(templateId) {
             break;
 
         case 'lotus-mandala':
-            // 2. Sacred Lotus Mandala
+            // 2. Sacred Lotus Mandala - Backdrops
+            addRingBackdrops(24, 69, 16, 'lotus-bg-inner');
+            addRingBackdrops(69, 120, 16, 'lotus-bg-mid');
+            addRingBackdrops(120, 155, 16, 'lotus-bg-outer');
+
             addCircleSegment(24, 'lotus-center');
             for (let i = 0; i < 8; i++) {
                 addPetalSegment(24, i * 45, 45, 24, 'lotus-inner-8');
@@ -167,7 +182,11 @@ export function generateMandalaPaths(templateId) {
             break;
 
         case 'sunburst-12':
-            // 3. Sunburst 12-Ray Mandala
+            // 3. Sunburst 12-Ray Mandala - Backdrops
+            addRingBackdrops(28, 76, 12, 'sun-bg-inner');
+            addRingBackdrops(76, 128, 12, 'sun-bg-mid');
+            addRingBackdrops(128, 162, 24, 'sun-bg-outer');
+
             addCircleSegment(28, 'sun-center');
             for (let i = 0; i < 12; i++) {
                 addPetalSegment(28, i * 30, 48, 18, 'sun-rays-12');
@@ -184,7 +203,11 @@ export function generateMandalaPaths(templateId) {
             break;
 
         case 'peacock-wheel':
-            // 4. Peacock Wheel Mandala
+            // 4. Peacock Wheel Mandala - Backdrops
+            addRingBackdrops(26, 78, 16, 'peacock-bg-inner');
+            addRingBackdrops(78, 130, 16, 'peacock-bg-mid');
+            addRingBackdrops(130, 162, 16, 'peacock-bg-outer');
+
             addCircleSegment(26, 'peacock-center');
             for (let i = 0; i < 8; i++) {
                 addPetalSegment(26, i * 45, 52, 28, 'peacock-eyes-8');
@@ -201,7 +224,11 @@ export function generateMandalaPaths(templateId) {
             break;
 
         case 'diamond-mandala':
-            // 5. Diamond Star Mandala
+            // 5. Diamond Star Mandala - Backdrops
+            addRingBackdrops(0, 52, 16, 'diamond-bg-core');
+            addRingBackdrops(52, 98, 16, 'diamond-bg-mid');
+            addRingBackdrops(98, 142, 16, 'diamond-bg-outer');
+
             addDiamondSegment(0, 0, 48, 48, 'diamond-core');
             for (let i = 0; i < 8; i++) {
                 addDiamondSegment(52, i * 45, 48, 28, 'diamond-tier1');
@@ -218,7 +245,11 @@ export function generateMandalaPaths(templateId) {
             break;
 
         case 'concentric-rings':
-            // 6. Concentric Bloom Mandala
+            // 6. Concentric Bloom Mandala - Backdrops
+            addRingBackdrops(22, 62, 16, 'bloom-bg-inner');
+            addRingBackdrops(62, 110, 16, 'bloom-bg-mid');
+            addRingBackdrops(110, 158, 16, 'bloom-bg-outer');
+
             addCircleSegment(22, 'bloom-center');
             for (let i = 0; i < 8; i++) {
                 addPetalSegment(22, i * 45, 42, 22, 'bloom-tier-8');
@@ -235,7 +266,11 @@ export function generateMandalaPaths(templateId) {
             break;
 
         case 'heritage-8':
-            // 7. Heritage 8-Petal Mandala
+            // 7. Heritage 8-Petal Mandala - Backdrops
+            addRingBackdrops(26, 82, 16, 'heritage-bg-inner');
+            addRingBackdrops(82, 128, 16, 'heritage-bg-mid');
+            addRingBackdrops(128, 160, 16, 'heritage-bg-outer');
+
             addCircleSegment(26, 'heritage-center');
             for (let i = 0; i < 8; i++) {
                 addPetalSegment(26, i * 45, 56, 32, 'heritage-hearts-8');
@@ -427,11 +462,25 @@ export function generateCustomMandalaPaths(config) {
     const midScale = config.midScale || 1.0;
     const coreScale = config.coreScale || 1.0;
 
-    // 1. Outer Border
+    const rOuter = Math.min(170, 138 * ringScale);
+    const rInner = Math.max(90, 116 * ringScale);
     const outerDist = 140 + 14 * outerScale;
     const outerLen = 34 * outerScale;
     const outerWid = 28 * outerScale;
 
+    // Background annular ring backdrops for custom mandalas
+    const addCustomRingBackdrops = (arr, r1, r2, count, groupKey) => {
+        const step = 360 / count;
+        for (let i = 0; i < count; i++) {
+            addAnnularArcSegment(arr, r1, r2, i * step, (i + 1) * step, groupKey);
+        }
+    };
+
+    addCustomRingBackdrops(outerPaths, 44 * coreScale, rInner, 16, 'cust-bg-inner');
+    addCustomRingBackdrops(outerPaths, rInner, rOuter, 16, 'cust-bg-mid');
+    addCustomRingBackdrops(outerPaths, rOuter, outerDist + outerLen, 16, 'cust-bg-outer');
+
+    // 1. Outer Border
     if (config.outer === 'scallop-16') {
         for (let i = 0; i < 16; i++) {
             addPetalSegment(outerPaths, outerDist, i * 22.5, outerLen, outerWid, 'cust-outer-scallop');
@@ -455,9 +504,6 @@ export function generateCustomMandalaPaths(config) {
     }
 
     // 2. Concentric Rings
-    const rOuter = Math.min(170, 138 * ringScale);
-    const rInner = Math.max(90, 116 * ringScale);
-
     if (config.rings === 'double-ring') {
         for (let i = 0; i < 16; i++) {
             addAnnularArcSegment(ringPaths, rInner + (rOuter - rInner) * 0.5, rOuter, i * 22.5, (i + 1) * 22.5, 'cust-ring-outer');

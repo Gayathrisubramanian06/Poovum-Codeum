@@ -59,21 +59,38 @@ export default function DesignerView({ onNavigate }) {
             />
             <div style={{ position: 'fixed', inset: 0, background: 'rgba(246,237,218,0.18)', zIndex: 1, pointerEvents: 'none' }} />
 
-            {/* Common Header */}
-            <header className="app-header" style={{ position: 'sticky', background: 'var(--cream)', zIndex: 10 }}>
-                <button
-                    className="icon-btn"
-                    onClick={handleBack}
-                    aria-label="Back"
-                    type="button"
-                >
-                    ←
-                </button>
-                <span className="title" id="pageTitle">{getPageTitle()}</span>
-                <button className="icon-btn" aria-label="Profile" type="button">👤</button>
-            </header>
+            <main className="page flex-1 w-full" style={{ padding: '80px 20px 40px', margin: '0 auto', position: 'relative', zIndex: 2, maxWidth: step === 'template' ? '1100px' : undefined }}>
+                {/* Back Option - Only shown AFTER template step is selected */}
+                {step !== 'template' && (
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginBottom: '20px' }}>
+                        <motion.button
+                            whileHover={{ scale: 1.04, x: -2 }}
+                            whileTap={{ scale: 0.96 }}
+                            onClick={handleBack}
+                            className="designer-back-btn"
+                            type="button"
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                padding: '8px 18px',
+                                borderRadius: '20px',
+                                background: 'rgba(255, 255, 255, 0.88)',
+                                backdropFilter: 'blur(8px)',
+                                border: '1px solid rgba(122, 74, 30, 0.2)',
+                                color: 'var(--brown-dark, #5c3210)',
+                                fontWeight: '700',
+                                fontSize: '14px',
+                                cursor: 'pointer',
+                                boxShadow: '0 2px 8px rgba(122, 74, 30, 0.06)',
+                                transition: 'all 0.2s ease'
+                            }}
+                        >
+                            ← Back
+                        </motion.button>
+                    </div>
+                )}
 
-            <main className="page flex-1 w-full" style={{ padding: '24px 20px 40px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
                 <AnimatePresence mode="wait">
                     {step === 'template' && (
                         <TemplateStep
@@ -102,7 +119,6 @@ export default function DesignerView({ onNavigate }) {
                                 setPreviousStep('upload');
                                 setStep('canvas');
                             }}
-                            onBack={() => setStep('template')}
                         />
                     )}
 

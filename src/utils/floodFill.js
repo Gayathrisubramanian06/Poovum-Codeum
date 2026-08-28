@@ -63,74 +63,20 @@ export class ImageTemplateEngine {
         const imgData = this.templateCtx.getImageData(0, 0, this.canvasSize, this.canvasSize);
         const px = imgData.data;
         const total = this.canvasSize * this.canvasSize;
-        const size = this.canvasSize;
 
-        // 1. Grayscale
+        // 1. Convert to grayscale luminance
         const lums = new Uint8Array(total);
         for (let i = 0; i < total; i++) {
             const idx = i * 4;
             lums[i] = Math.round(0.299 * px[idx] + 0.587 * px[idx + 1] + 0.114 * px[idx + 2]);
         }
 
-        // 2. Adaptive Local Thresholding using Integral Image
-        const R = 3;
-        const C = 6;
-        const thresholded = new Uint8Array(total);
-
-        const integral = new Float64Array((size + 1) * (size + 1));
-        for (let y = 0; y < size; y++) {
-            let rowSum = 0;
-            for (let x = 0; x < size; x++) {
-                rowSum += lums[y * size + x];
-                integral[(y + 1) * (size + 1) + (x + 1)] = integral[y * (size + 1) + (x + 1)] + rowSum;
-            }
-        }
-
-        for (let y = 0; y < size; y++) {
-            for (let x = 0; x < size; x++) {
-                const p = y * size + x;
-                
-                const ymin = Math.max(0, y - R);
-                const ymax = Math.min(size - 1, y + R);
-                const xmin = Math.max(0, x - R);
-                const xmax = Math.min(size - 1, x + R);
-                
-                const count = (ymax - ymin + 1) * (xmax - xmin + 1);
-                const sum = integral[(ymax + 1) * (size + 1) + (xmax + 1)]
-                          - integral[ymin * (size + 1) + (xmax + 1)]
-                          - integral[(ymax + 1) * (size + 1) + xmin]
-                          + integral[ymin * (size + 1) + xmin];
-                
-                const avg = sum / count;
-                thresholded[p] = lums[p] < (avg - C) ? 0 : 255;
-            }
-        }
-
-        // 3. Write back thresholded pixels
+        // 2. High-precision thresholding: Dark outline strokes (< 175) become border (0), white fillable regions (>= 175) become 255
         for (let i = 0; i < total; i++) {
             const idx = i * 4;
-            const v = thresholded[i];
+            const v = lums[i] < 175 ? 0 : 255;
             px[idx] = px[idx + 1] = px[idx + 2] = v;
             px[idx + 3] = 255;
-        }
-
-        // 4. 8-Direction Dilation to close micro-gaps
-        const snapshot = new Uint8Array(total);
-        for (let i = 0; i < total; i++) snapshot[i] = px[i * 4] > 0 ? 1 : 0;
-
-        for (let y = 1; y < size - 1; y++) {
-            for (let x = 1; x < size - 1; x++) {
-                const p = y * size + x;
-                if (snapshot[p] === 1 && (
-                    snapshot[p - 1] === 0 || snapshot[p + 1] === 0 ||
-                    snapshot[p - size] === 0 || snapshot[p + size] === 0 ||
-                    snapshot[p - size - 1] === 0 || snapshot[p - size + 1] === 0 ||
-                    snapshot[p + size - 1] === 0 || snapshot[p + size + 1] === 0
-                )) {
-                    const idx = p * 4;
-                    px[idx] = px[idx + 1] = px[idx + 2] = 0;
-                }
-            }
         }
 
         this.templateCtx.putImageData(imgData, 0, 0);
@@ -138,8 +84,9 @@ export class ImageTemplateEngine {
     }
 
     floodFill(svgX, svgY) {
-        const startX = Math.round(svgX);
-        const startY = Math.round(svgY);
+        const scale = this.canvasSize / 400;
+        const startX = Math.round(svgX * scale);
+        const startY = Math.round(svgY * scale);
         if (startX < 0 || startX >= this.canvasSize || startY < 0 || startY >= this.canvasSize) return null;
 
         const key = `${startX},${startY}`;
@@ -158,7 +105,7 @@ export class ImageTemplateEngine {
         let startPos = startY * this.canvasSize + startX;
         if (lum(startPos) < thresh) {
             let foundPos = -1;
-            for (let r = 1; r <= 18; r++) {
+            for (let r = 1; r <= 35; r++) {
                 for (let dy = -r; dy <= r; dy++) {
                     for (let dx = -r; dx <= r; dx++) {
                         const nx = startX + dx;
@@ -214,8 +161,9 @@ export class ImageTemplateEngine {
     applyFills(masks, hexColor) {
         const imgData = this.fillCtx.getImageData(0, 0, this.canvasSize, this.canvasSize);
         const d = imgData.data;
+        const size = this.canvasSize;
 
-        // Hex to RGB inside class
+        // Hex to RGB
         let c = hexColor.replace('#', '');
         if (c.length === 3) c = c.split('').map(x => x + x).join('');
         const num = parseInt(c, 16);
@@ -227,13 +175,41 @@ export class ImageTemplateEngine {
 
         masks.forEach(mask => {
             if (!mask) return;
-            for (let i = 0; i < mask.length; i++) {
+            const total = mask.length;
+
+            // 1. Primary mask fill
+            for (let i = 0; i < total; i++) {
                 if (mask[i]) {
                     const idx = i * 4;
                     d[idx] = rgb.r;
                     d[idx + 1] = rgb.g;
                     d[idx + 2] = rgb.b;
                     d[idx + 3] = 255;
+                }
+            }
+
+            // 2. 1.5-pixel edge dilation under outline borders for ultra-smooth anti-aliased edges
+            const dilated = new Uint8Array(total);
+            for (let y = 1; y < size - 1; y++) {
+                for (let x = 1; x < size - 1; x++) {
+                    const p = y * size + x;
+                    if (!mask[p]) {
+                        if (mask[p - 1] || mask[p + 1] || mask[p - size] || mask[p + size] ||
+                            mask[p - size - 1] || mask[p - size + 1] || mask[p + size - 1] || mask[p + size + 1]) {
+                            dilated[p] = 1;
+                        }
+                    }
+                }
+            }
+
+            for (let i = 0; i < total; i++) {
+                if (dilated[i]) {
+                    const idx = i * 4;
+                    // Blend smoothly with alpha under outline
+                    d[idx] = rgb.r;
+                    d[idx + 1] = rgb.g;
+                    d[idx + 2] = rgb.b;
+                    d[idx + 3] = Math.max(d[idx + 3], 220);
                 }
             }
         });
@@ -286,13 +262,14 @@ export class ImageTemplateEngine {
         }
         
         if (count > 80) {
+            const scale = size / 400;
             return {
-                x: sumX / count,
-                y: sumY / count
+                x: (sumX / count) / scale,
+                y: (sumY / count) / scale
             };
         }
         
-        // Fallback to absolute center
-        return { x: size / 2, y: size / 2 };
+        // Fallback to absolute center (200, 200 in SVG coordinates)
+        return { x: 200, y: 200 };
     }
 }

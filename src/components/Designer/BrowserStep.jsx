@@ -33,53 +33,41 @@ export default function BrowserStep({ onSelectVector, onSelectImage }) {
             <h1>Pick a design</h1>
             <p className="subtitle">Select a layout to use as your guide.</p>
 
-            <div className="template-grid" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-                {/* Section A: Vector Mandalas */}
-                <div>
-                    <h2 className="template-section-divider">Section A: Interactive Vector Mandalas</h2>
-                    <div className="templates-subgrid">
-                        {VECTOR_TEMPLATES.map((tpl, idx) => (
-                            <motion.button
-                                key={tpl.id}
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: Math.min(5, idx) * 0.04, duration: 0.25 }}
-                                className="template-card-preview-container"
-                                onClick={() => onSelectVector(tpl.id)}
-                                type="button"
-                            >
-                                <VectorPreview templateId={tpl.id} />
-                            </motion.button>
-                        ))}
-                    </div>
-                </div>
+            <div className="templates-subgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '20px', width: '100%' }}>
+                {VECTOR_TEMPLATES.map((tpl, idx) => (
+                    <motion.button
+                        key={tpl.id}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: Math.min(5, idx) * 0.03, duration: 0.25 }}
+                        className="template-card-preview-container"
+                        onClick={() => onSelectVector(tpl.id)}
+                        type="button"
+                    >
+                        <VectorPreview templateId={tpl.id} />
+                    </motion.button>
+                ))}
 
-                {/* Section B: Tracing Outlines */}
-                <div>
-                    <h2 className="template-section-divider">Section B: Classic Pookalam Tracing Outlines</h2>
-                    <div className="templates-subgrid">
-                        {PREDEFINED_TEMPLATES.circle.map((tpl, idx) => (
-                            <motion.button
-                                key={tpl.id}
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: Math.min(5, idx) * 0.04, duration: 0.25 }}
-                                className="template-card-preview-container"
-                                onClick={() => onSelectImage(tpl)}
-                                type="button"
-                            >
-                                <div className="template-card-preview">
-                                    <img
-                                        src={tpl.img}
-                                        alt={tpl.name}
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px' }}
-                                        loading="lazy"
-                                    />
-                                </div>
-                            </motion.button>
-                        ))}
-                    </div>
-                </div>
+                {PREDEFINED_TEMPLATES.circle.map((tpl, idx) => (
+                    <motion.button
+                        key={tpl.id}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: Math.min(5, idx + VECTOR_TEMPLATES.length) * 0.03, duration: 0.25 }}
+                        className="template-card-preview-container"
+                        onClick={() => onSelectImage(tpl)}
+                        type="button"
+                    >
+                        <div className="template-card-preview">
+                            <img
+                                src={tpl.img}
+                                alt={tpl.name}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px' }}
+                                loading="lazy"
+                            />
+                        </div>
+                    </motion.button>
+                ))}
             </div>
         </motion.section>
     );

@@ -26,30 +26,31 @@ export default function TemplateStep({ onSelectBrowse, onSelectUpload, onSelectC
             transition={{ duration: 0.28 }}
             id="templateStep"
             className="w-full text-center"
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', margin: '0 auto', textAlign: 'center' }}
         >
-            <h1>Design Your Pookalam</h1>
-            <p className="subtitle">Select how you want to build your layout.</p>
+            <h1 style={{ textAlign: 'center', fontSize: '2.2rem', marginBottom: '8px' }}>Design Your Pookalam</h1>
+            <p className="subtitle" style={{ textAlign: 'center', margin: '0 auto 36px', fontSize: '1.05rem', color: '#684f27' }}>Select how you want to build your layout.</p>
 
-            <div className="template-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', maxWidth: '820px', margin: '0 auto' }}>
+            <div className="template-grid">
                 <motion.button
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.05, duration: 0.3 }}
-                    whileHover={{ y: -6 }}
+                    whileHover={{ y: -8, scale: 1.03 }}
                     whileTap={{ scale: 0.98 }}
                     className="template-card-preview-container"
                     onClick={onSelectBrowse}
                     type="button"
-                    style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}
+                    style={{ padding: '36px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px', flex: '1 1 0px', minWidth: 0, borderRadius: '24px' }}
                 >
-                    <div style={{ width: '130px', height: '130px', background: '#fbf8f0', borderRadius: '50%', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(122, 74, 30, 0.06)' }}>
-                        <svg viewBox="0 0 400 400" style={{ width: '100%', height: '100%' }}>
+                    <div style={{ width: '160px', height: '160px', background: '#fbf8f0', borderRadius: '50%', padding: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1.5px solid rgba(122, 74, 30, 0.12)', flexShrink: 0, boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.02)' }}>
+                        <svg viewBox="0 0 400 400" style={{ width: '100%', height: '100%', display: 'block' }}>
                             {choosePaths.map((p, idx) => (
                                 <path key={idx} d={p.d} fill="none" stroke="#7a4a1e" strokeWidth="2.5" />
                             ))}
                         </svg>
                     </div>
-                    <span className="template-name" style={{ fontSize: '15px', fontWeight: '800', textTransform: 'uppercase' }}>
+                    <span className="template-name" style={{ fontSize: '16px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.03em', whiteSpace: 'nowrap', color: 'var(--brown-dark)' }}>
                         Browse Outlines
                     </span>
                 </motion.button>
@@ -58,17 +59,19 @@ export default function TemplateStep({ onSelectBrowse, onSelectUpload, onSelectC
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.12, duration: 0.3 }}
-                    whileHover={{ y: -6 }}
+                    whileHover={{ y: -8, scale: 1.03 }}
                     whileTap={{ scale: 0.98 }}
                     className="template-card-preview-container"
                     onClick={onSelectUpload}
                     type="button"
-                    style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}
+                    style={{ padding: '36px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px', flex: '1 1 0px', minWidth: 0, borderRadius: '24px' }}
                 >
-                    <div style={{ width: '130px', height: '130px', background: '#fbf8f0', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px dashed rgba(122, 74, 30, 0.35)' }}>
-                        <span style={{ fontSize: '38px' }}>📤</span>
+                    <div style={{ width: '160px', height: '160px', background: '#fbf8f0', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px dashed rgba(122, 74, 30, 0.45)', flexShrink: 0, boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.02)' }}>
+                        <svg viewBox="0 0 24 24" width="50" height="50" fill="none" stroke="#7a4a1e" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'block' }}>
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                        </svg>
                     </div>
-                    <span className="template-name" style={{ fontSize: '15px', fontWeight: '800', textTransform: 'uppercase' }}>
+                    <span className="template-name" style={{ fontSize: '16px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.03em', whiteSpace: 'nowrap', color: 'var(--brown-dark)' }}>
                         Upload Photo
                     </span>
                 </motion.button>
@@ -77,21 +80,21 @@ export default function TemplateStep({ onSelectBrowse, onSelectUpload, onSelectC
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.18, duration: 0.3 }}
-                    whileHover={{ y: -6 }}
+                    whileHover={{ y: -8, scale: 1.03 }}
                     whileTap={{ scale: 0.98 }}
                     className="template-card-preview-container"
                     onClick={onSelectCustom}
                     type="button"
-                    style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}
+                    style={{ padding: '36px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px', flex: '1 1 0px', minWidth: 0, borderRadius: '24px' }}
                 >
-                    <div style={{ width: '130px', height: '130px', background: '#fbf8f0', borderRadius: '50%', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(122, 74, 30, 0.06)' }}>
-                        <svg viewBox="0 0 400 400" style={{ width: '100%', height: '100%' }}>
+                    <div style={{ width: '160px', height: '160px', background: '#fbf8f0', borderRadius: '50%', padding: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1.5px solid rgba(122, 74, 30, 0.12)', flexShrink: 0, boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.02)' }}>
+                        <svg viewBox="0 0 400 400" style={{ width: '100%', height: '100%', display: 'block' }}>
                             {diyPaths.map((p, idx) => (
                                 <path key={idx} d={p.d} fill="none" stroke="#7a4a1e" strokeWidth="2.5" />
                             ))}
                         </svg>
                     </div>
-                    <span className="template-name" style={{ fontSize: '15px', fontWeight: '800', textTransform: 'uppercase' }}>
+                    <span className="template-name" style={{ fontSize: '16px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.03em', whiteSpace: 'nowrap', color: 'var(--brown-dark)' }}>
                         Design Studio
                     </span>
                 </motion.button>

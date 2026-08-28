@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 
-export default function UploadStep({ onStartColoring, onBack }) {
+export default function UploadStep({ onStartColoring }) {
     const [previewSrc, setPreviewSrc] = useState(null);
     const fileInputRef = useRef(null);
 
@@ -135,15 +135,6 @@ export default function UploadStep({ onStartColoring, onBack }) {
                     </div>
                 )}
             </div>
-
-            <button
-                onClick={onBack}
-                className="ghost-btn"
-                style={{ marginTop: '24px', maxWidth: '140px', margin: '24px auto 0' }}
-                type="button"
-            >
-                ← Back
-            </button>
         </motion.section>
     );
 }

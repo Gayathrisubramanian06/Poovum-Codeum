@@ -1,82 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../lib/supabase';
+import SpecularButton from './SpecularButton';
 
 const LIKES_STORAGE_KEY = 'pookalam_gallery_likes';
-
-// Curated starter showcase items with classic Onam pookalams
-const CURATED_DESIGNS = [
-    {
-        id: 'curated-1',
-        title: 'Royal Mahabali Lotus',
-        creator: 'Anjali Menon',
-        city: 'Thiruvananthapuram 🪔',
-        date: 'Aug 2026',
-        img_url: 'assets/images/circle-1.jpg',
-        likes: 42,
-        type: 'classic'
-    },
-    {
-        id: 'curated-2',
-        title: 'Geometric Star Mandapam',
-        creator: 'Rahul & Family',
-        city: 'Kochi 🌸',
-        date: 'Aug 2026',
-        img_url: 'assets/images/circle-2.jpg',
-        likes: 38,
-        type: 'classic'
-    },
-    {
-        id: 'curated-3',
-        title: 'Heritage Chendumalli Ring',
-        creator: 'Devika Nair',
-        city: 'Kozhikode 🌼',
-        date: 'Aug 2026',
-        img_url: 'assets/images/circle-8.jpg',
-        likes: 29,
-        type: 'classic'
-    },
-    {
-        id: 'curated-4',
-        title: 'Radiant Peacock Wheel',
-        creator: 'Sreekanth V.',
-        city: 'Thrissur 🦚',
-        date: 'Aug 2026',
-        img_url: 'assets/images/circle-14.jpg',
-        likes: 56,
-        type: 'classic'
-    },
-    {
-        id: 'curated-5',
-        title: 'Grand Sunflower Pookalam',
-        creator: 'Meera Krishnan',
-        city: 'Palakkad 🌻',
-        date: 'Aug 2026',
-        img_url: 'assets/images/circle-20.jpg',
-        likes: 35,
-        type: 'classic'
-    },
-    {
-        id: 'curated-6',
-        title: 'Thumba & Chethi Bloom',
-        creator: 'Arjun K.',
-        city: 'Alappuzha 🌺',
-        date: 'Aug 2026',
-        img_url: 'assets/images/circle-16.jpg',
-        likes: 47,
-        type: 'classic'
-    }
-];
 
 export default function GalleryView({ onNavigate }) {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [likesMap, setLikesMap] = useState({});
-    const [filter, setFilter] = useState('all');
     const [lightboxItem, setLightboxItem] = useState(null);
 
-    // Fetch from Supabase on mount
+    // Fetch user published Pookalams on mount
     useEffect(() => {
         async function fetchGallery() {
             setLoading(true);
@@ -89,8 +25,8 @@ export default function GalleryView({ onNavigate }) {
                 import.meta.env.VITE_SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY';
 
             let communityData = [];
-            let useLocalFallback = false;
 
+            // 1. Try fetching from Supabase
             if (hasSupabase) {
                 try {
                     const { data, error: sbError } = await supabase
@@ -98,27 +34,30 @@ export default function GalleryView({ onNavigate }) {
                         .select('*')
                         .order('created_at', { ascending: false });
 
-                    if (sbError) throw sbError;
-                    communityData = (data || []).map(item => ({ ...item, type: 'community' }));
+                    if (!sbError && data) {
+                        communityData = data.map(item => ({ ...item, type: 'community' }));
+                    }
                 } catch (err) {
-                    console.error('Gallery Supabase fetch error, falling back to LocalStorage:', err);
-                    useLocalFallback = true;
-                }
-            } else {
-                useLocalFallback = true;
-            }
-
-            if (useLocalFallback) {
-                try {
-                    const rawUploads = localStorage.getItem('pookalam_community_gallery');
-                    const uploads = rawUploads ? JSON.parse(rawUploads) : [];
-                    communityData = uploads.map(item => ({ ...item, type: 'community' }));
-                } catch (e) {
-                    console.error('Failed to load local uploads:', e);
+                    console.error('Gallery Supabase fetch error:', err);
                 }
             }
 
-            setItems([...communityData, ...CURATED_DESIGNS]);
+            // 2. Always merge LocalStorage published items
+            try {
+                const rawUploads = localStorage.getItem('pookalam_community_gallery');
+                const localUploads = rawUploads ? JSON.parse(rawUploads) : [];
+                
+                localUploads.forEach(localItem => {
+                    if (!communityData.some(item => item.id === localItem.id || item.img_url === localItem.img_url)) {
+                        communityData.push({ ...localItem, type: 'community' });
+                    }
+                });
+            } catch (e) {
+                console.error('Failed to load local uploads:', e);
+            }
+
+            // Display ONLY user-uploaded/published Pookalam designs
+            setItems(communityData);
             setLoading(false);
         }
 
@@ -132,13 +71,6 @@ export default function GalleryView({ onNavigate }) {
             console.error('Failed to load likes:', e);
         }
     }, []);
-
-    const filteredItems = items.filter(item => {
-        if (filter === 'all') return true;
-        if (filter === 'community') return item.type === 'community';
-        if (filter === 'classic') return item.type === 'classic';
-        return true;
-    });
 
     const handleLike = (id, e) => {
         e.stopPropagation();
@@ -179,72 +111,39 @@ export default function GalleryView({ onNavigate }) {
             />
             <div style={{ position: 'fixed', inset: 0, background: 'rgba(246,237,218,0.18)', zIndex: 1, pointerEvents: 'none' }} />
 
-            {/* Header */}
-            <header className="app-header" style={{ position: 'sticky', background: 'var(--cream)', zIndex: 100 }}>
-                <button
-                    className="icon-btn"
-                    onClick={() => onNavigate('home')}
-                    aria-label="Go to Home"
-                    type="button"
-                >
-                    ←
-                </button>
-                <span className="title">Community Gallery</span>
-                <button
-                    className="icon-btn"
-                    onClick={() => onNavigate('design')}
-                    title="Create Pookalam"
-                    aria-label="Create Pookalam"
-                    type="button"
-                >
-                    ✨
-                </button>
-            </header>
-
-            <main className="page gallery-page" style={{ position: 'relative', zIndex: 2 }}>
+            <main className="page gallery-page" style={{ position: 'relative', zIndex: 2, paddingTop: '90px' }}>
                 {/* Hero Banner */}
                 <div className="gallery-hero-banner fade-in visible">
                     <div>
-                        <h1>🌸 Community Pookalams</h1>
+                        <h1>Community Pookalams</h1>
                         <p className="subtitle">Browse festive floral designs created and shared by the community!</p>
                     </div>
-                    <button
-                        onClick={() => onNavigate('design')}
-                        className="hero-btn-solid gallery-create-btn"
-                        type="button"
-                    >
-                        <span>🌸</span> Create Your Own
-                    </button>
                 </div>
 
-                {/* Filter Tabs */}
-                <div className="gallery-filter-bar fade-in visible" data-delay="1">
-                    <div className="gallery-tabs" role="tablist">
-                        <button
-                            className={`gallery-tab ${filter === 'all' ? 'active' : ''}`}
-                            onClick={() => setFilter('all')}
-                            type="button"
-                        >
-                            All Designs
-                        </button>
-                        <button
-                            className={`gallery-tab ${filter === 'community' ? 'active' : ''}`}
-                            onClick={() => setFilter('community')}
-                            type="button"
-                        >
-                            Community Uploads ✨
-                        </button>
-                        <button
-                            className={`gallery-tab ${filter === 'classic' ? 'active' : ''}`}
-                            onClick={() => setFilter('classic')}
-                            type="button"
-                        >
-                            Classic Designs 🪔
-                        </button>
-                    </div>
-                    <span className="gallery-counter">
-                        {loading ? 'Loading…' : `${filteredItems.length} ${filteredItems.length === 1 ? 'Design' : 'Designs'}`}
-                    </span>
+                {/* Main Action Bar */}
+                <div className="gallery-filter-bar fade-in visible" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '20px 0 28px' }}>
+                    <SpecularButton
+                        size="md"
+                        radius={24}
+                        tint="#d97706"
+                        tintOpacity={0.9}
+                        blur={6}
+                        textColor="#ffffff"
+                        lineColor="#fef08a"
+                        baseColor="#92400e"
+                        intensity={1.4}
+                        shineSize={16}
+                        shineFade={35}
+                        thickness={1.8}
+                        speed={0.4}
+                        followMouse
+                        proximity={300}
+                        autoAnimate={true}
+                        onClick={() => onNavigate('design')}
+                        className="gallery-create-btn"
+                    >
+                        Create Your Own
+                    </SpecularButton>
                 </div>
 
                 {/* Error Banner */}
@@ -259,7 +158,7 @@ export default function GalleryView({ onNavigate }) {
                         fontSize: '13px',
                         fontFamily: 'inherit'
                     }}>
-                        ⚠️ {error}
+                        {error}
                     </div>
                 )}
 
@@ -279,11 +178,11 @@ export default function GalleryView({ onNavigate }) {
                             transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
                             style={{ fontSize: '36px', display: 'inline-block' }}
                         >
-                            🌸
+                            <svg viewBox="0 0 24 24" width="36" height="36" fill="#d97706"><path d="M12 2C8 6 4 12 12 22C20 12 16 6 12 2Z"/></svg>
                         </motion.div>
-                        <p style={{ margin: 0, fontSize: '14px' }}>Loading gallery…</p>
+                        <p style={{ margin: 0, fontSize: '14px' }}>Loading community gallery…</p>
                     </div>
-                ) : filteredItems.length === 0 ? (
+                ) : items.length === 0 ? (
                     /* Empty State */
                     <div className="empty-container fade-in visible">
                         <div className="empty-header">
@@ -299,26 +198,11 @@ export default function GalleryView({ onNavigate }) {
                                 No community designs have been shared yet. Be the first to create and publish your Onam Pookalam!
                             </p>
                         </div>
-                        <div className="empty-content">
-                            <button
-                                onClick={() => onNavigate('design')}
-                                className="hero-btn-solid"
-                                type="button"
-                            >
-                                Create Pookalam 🌸
-                            </button>
-                            <button
-                                onClick={() => onNavigate('design')}
-                                className="ghost-btn empty-outline-btn"
-                                type="button"
-                            >
-                                Import Outline 📥
-                            </button>
-                        </div>
                         <button
                             onClick={() => onNavigate('about')}
                             className="empty-link"
                             type="button"
+                            style={{ marginTop: '20px' }}
                         >
                             Learn More About Onam Pookalams
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="empty-link-arrow">
@@ -328,10 +212,10 @@ export default function GalleryView({ onNavigate }) {
                         </button>
                     </div>
                 ) : (
-                    /* Gallery Grid */
+                    /* Community Gallery Grid */
                     <motion.div layout className="community-gallery-grid">
                         <AnimatePresence mode="popLayout">
-                            {filteredItems.map((item) => {
+                            {items.map((item) => {
                                 const isLiked = !!likesMap[item.id];
                                 const currentLikes = (item.likes || 0) + (isLiked ? 1 : 0);
 
@@ -351,15 +235,15 @@ export default function GalleryView({ onNavigate }) {
                                             onClick={() => setLightboxItem(item)}
                                         >
                                             <img src={item.img_url} alt={item.title || 'Pookalam'} loading="lazy" />
-                                            <span className="gallery-badge-new">Community ✨</span>
+                                            <span className="gallery-badge-new">Community</span>
                                             <div className="gallery-card-overlay">
-                                                <span>🔍 Click to Zoom</span>
+                                                <span>Click to Zoom</span>
                                             </div>
                                         </div>
                                         <div className="gallery-card-body">
                                             <div className="gallery-card-meta">
                                                 <h3 className="gallery-card-creator">{item.creator || 'Anonymous Creator'}</h3>
-                                                <p className="gallery-card-caption">{item.city || 'Happy Onam! 🌸'}</p>
+                                                <p className="gallery-card-caption">{item.city || 'Happy Onam!'}</p>
                                             </div>
                                             <div className="gallery-card-actions">
                                                 <button
@@ -368,7 +252,9 @@ export default function GalleryView({ onNavigate }) {
                                                     title="Like this Pookalam"
                                                     type="button"
                                                 >
-                                                    <span className="like-heart">{isLiked ? '❤️' : '🤍'}</span>
+                                                    <span className="like-heart">
+                                                        <svg fill={isLiked ? "#e74c3c" : "none"} stroke="#e74c3c" strokeWidth="2" viewBox="0 0 24 24" width="16" height="16"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                                    </span>
                                                     <span className="like-count">{currentLikes}</span>
                                                 </button>
                                                 <button
@@ -377,7 +263,7 @@ export default function GalleryView({ onNavigate }) {
                                                     title="Download Pookalam"
                                                     type="button"
                                                 >
-                                                    <span>📥</span>
+                                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
                                                 </button>
                                             </div>
                                         </div>
@@ -412,24 +298,26 @@ export default function GalleryView({ onNavigate }) {
                                 >
                                     ✕
                                 </button>
-                                <div className="lightbox-img-wrap">
-                                    <img src={lightboxItem.img_url} alt="Pookalam Zoom" />
-                                </div>
                                 <div className="lightbox-info">
-                                    <div>
-                                        <h3>{lightboxItem.title || 'Onam Pookalam'}</h3>
-                                        <p className="lightbox-meta">
-                                            Created by {lightboxItem.creator || 'Community Artist'} • {lightboxItem.city || lightboxItem.date || 'Onam Celebration'}
-                                        </p>
+                                    <div className="lightbox-img-wrap">
+                                        <img src={lightboxItem.img_url} alt="Pookalam Zoom" />
                                     </div>
-                                    <button
-                                        onClick={(e) => handleDownload(lightboxItem.img_url, lightboxItem.creator, e)}
-                                        className="hero-btn-solid animate-none"
-                                        style={{ padding: '8px 18px', fontSize: '13px', minWidth: 'auto' }}
-                                        type="button"
-                                    >
-                                        Download 📥
-                                    </button>
+                                    <div style={{ padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <div>
+                                            <h3 style={{ margin: 0, fontSize: '18px', color: 'var(--brown-dark)' }}>{lightboxItem.title || 'Onam Pookalam'}</h3>
+                                            <p className="lightbox-meta" style={{ margin: '4px 0 0', fontSize: '13px', color: '#666' }}>
+                                                Created by {lightboxItem.creator || 'Community Artist'} • {lightboxItem.city || lightboxItem.date || 'Onam Celebration'}
+                                            </p>
+                                        </div>
+                                        <button
+                                            onClick={(e) => handleDownload(lightboxItem.img_url, lightboxItem.creator, e)}
+                                            className="hero-btn-solid animate-none"
+                                            style={{ padding: '8px 18px', fontSize: '13px', minWidth: 'auto' }}
+                                            type="button"
+                                        >
+                                            Download
+                                        </button>
+                                    </div>
                                 </div>
                             </motion.div>
                         </div>

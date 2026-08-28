@@ -315,7 +315,7 @@
 .thiruvathira-img {
     position: absolute;
 
-    left: -10%;
+    left: -5%;
     bottom: -14%;
 
     transform: translateX(0%);
@@ -343,7 +343,7 @@
     position: absolute;
 
     left: 8%;
-    bottom: -38%;
+    bottom: 12%;
 
     width: clamp(380px, 48vw, 760px);
 
@@ -382,50 +382,17 @@
 .create-btn,
 .gallery-btn {
     border-radius: 30px;
-
     padding: 14px 30px;
-
     font-family: Georgia, serif;
-
     font-size: 15.5px;
-
     letter-spacing: 1px;
-
     cursor: pointer;
-
-    transition:
-        transform 0.3s ease,
-        box-shadow 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
-
-.create-btn {
-    border: none;
-
-    background: #8c681f;
-
-    color: #fffaf0;
-
-    box-shadow:
-        0 7px 18px rgba(80, 60, 25, 0.18);
-}
-
-
-.gallery-btn {
-    border: 1px solid rgba(110, 85, 40, 0.45);
-
-    background: rgba(250, 244, 228, 0.82);
-
-    color: #684f27;
-}
-
 
 .create-btn:hover,
 .gallery-btn:hover {
     transform: translateY(-3px);
-
-    box-shadow:
-        0 10px 22px rgba(70, 50, 20, 0.2);
 }
 
 
@@ -443,8 +410,6 @@
     font-size: 17px;
 
     pointer-events: none;
-
-    filter: hue-rotate(85deg) saturate(3) brightness(0.85);
 
     will-change: transform;
 }

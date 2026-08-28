@@ -305,16 +305,21 @@ export function Thumba({ size, color }) {
     );
 }
 
-// 🍃 Leaves & Earth Flake
+// 🍃 Leaves & Backdrop Green
 export function Leaf({ size, color }) {
-    const d = `M 0 ${-size * 0.4} Q ${size * 0.3} 0 0 ${size * 0.4} Q ${-size * 0.3} 0 0 ${-size * 0.4} Z`;
+    const s = size * 1.55; // Significantly bigger green leaf!
+    const d = `M 0 ${-s * 0.44} Q ${s * 0.35} 0 0 ${s * 0.44} Q ${-s * 0.35} 0 0 ${-s * 0.44} Z`;
     return (
-        <path
-            d={d}
-            fill={color.hex}
-            stroke={color.border || 'rgba(0,0,0,0.18)'}
-            strokeWidth="0.6"
-        />
+        <g>
+            <path
+                d={d}
+                fill={color.hex}
+                stroke={color.border || 'rgba(0,0,0,0.25)'}
+                strokeWidth="0.8"
+            />
+            {/* Detailed leaf vein */}
+            <line x1="0" y1={-s * 0.38} x2="0" y2={s * 0.38} stroke={color.center || '#22c55e'} strokeWidth="1.2" strokeLinecap="round" />
+        </g>
     );
 }
 

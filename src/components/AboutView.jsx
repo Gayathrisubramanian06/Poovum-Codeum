@@ -1,7 +1,8 @@
-﻿import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
+import SpecularButton from './SpecularButton';
 
-/* â”€â”€ Gallery data â”€â”€ */
+/* —— About Onam Traditions Data —— */
 const galleryItems = [
     {
         title: "Maveli comes home",
@@ -29,21 +30,11 @@ const galleryItems = [
         category: "Rituals",
         caption: "Layers of colourful flowers arranged before sunrise.",
         color: "saffron",
-        image: "assets/pookalam.png",
+        image: "assets/images/pookalam.png",
     },
 ];
 
-/* â”€â”€ Filter list â”€â”€ */
-const FILTERS = ["All", "Traditions", "Food", "Culture", "Rituals"];
-
 export default function AboutView({ onNavigate }) {
-    const [filter, setFilter] = useState("All");
-
-    const visibleItems =
-        filter === "All"
-            ? galleryItems
-            : galleryItems.filter((item) => item.category === filter);
-
     return (
         <motion.div
             initial={{ opacity: 0, y: 15 }}
@@ -61,37 +52,17 @@ export default function AboutView({ onNavigate }) {
             />
             <div style={{ position: 'fixed', inset: 0, background: 'rgba(246,237,218,0.55)', zIndex: 1, pointerEvents: 'none' }} />
 
-            {/* â”€â”€ Header â”€â”€ */}
-            <header className="app-header" style={{ position: 'sticky', background: 'rgba(251,243,227,0.92)', backdropFilter: 'blur(12px)', zIndex: 10, borderBottom: '1px solid rgba(194,112,62,0.18)' }}>
-                <button
-                    className="icon-btn"
-                    onClick={() => onNavigate('home')}
-                    aria-label="Back"
-                    type="button"
-                >
-                    â†
-                </button>
-                <span className="title" style={{ fontFamily: 'Georgia, serif', letterSpacing: '0.06em' }}>About Onam</span>
-                <button className="icon-btn" aria-label="Profile" type="button">ðŸ‘¤</button>
-            </header>
+            {/* Main */}
+            <main className="page" style={{ flex: 1, padding: '90px 20px 60px', maxWidth: '720px', margin: '0 auto', width: '100%', position: 'relative', zIndex: 2 }}>
 
-            {/* â”€â”€ Main â”€â”€ */}
-            <main className="page" style={{ flex: 1, padding: '32px 20px 60px', maxWidth: '720px', margin: '0 auto', width: '100%', position: 'relative', zIndex: 2 }}>
-
-                {/* â”€â”€ Hero intro â”€â”€ */}
+                {/* Hero intro */}
                 <motion.section
                     initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, ease: 'easeOut' }}
                     className="about-hero-section"
                 >
-                    {/* Decorative floral row */}
-                    <div className="about-floral-row" aria-hidden="true">
-                        ðŸŒ¸&nbsp;ðŸŒ¼&nbsp;ðŸŒº&nbsp;ðŸŒ»&nbsp;ðŸŒ¼&nbsp;ðŸŒ¸&nbsp;ðŸŒ·&nbsp;ðŸŒ¸&nbsp;ðŸŒ¼&nbsp;ðŸŒº
-                    </div>
-
                     <div className="about-hero-card">
-                        <div className="about-hero-tag">âœ¦ Festival of Kerala âœ¦</div>
                         <h1 className="about-hero-title">What is Onam?</h1>
                         <p className="about-hero-subtitle">An ancient harvest celebration of joy, colour, and community.</p>
 
@@ -101,7 +72,7 @@ export default function AboutView({ onNavigate }) {
                             <p>
                                 Onam is an annual harvest festival celebrated in the Indian state of Kerala.
                                 It is the official festival of the state and includes a rich spectrum of
-                                cultural events â€” from grand processions to intricate floral art.
+                                cultural events — from grand processions to intricate floral art.
                             </p>
                             <p>
                                 According to legends, the festival commemorates <strong>King Mahabali</strong>,
@@ -109,50 +80,17 @@ export default function AboutView({ onNavigate }) {
                                 people with prosperity.
                             </p>
                             <p>
-                                One of its most iconic traditions is the <strong>Pookalam</strong> â€” a vibrant
+                                One of its most iconic traditions is the <strong>Pookalam</strong> — a vibrant
                                 floral carpet laid on doorsteps to welcome the King home.
                             </p>
-                        </div>
-
-                        {/* Fact chips */}
-                        <div className="about-fact-chips">
-                            <span className="about-chip">ðŸ—“ 10-Day Festival</span>
-                            <span className="about-chip">ðŸŒ¾ Harvest Season</span>
-                            <span className="about-chip">ðŸ‘‘ King Mahabali</span>
-                            <span className="about-chip">ðŸŒº Pookalam</span>
                         </div>
                     </div>
                 </motion.section>
 
-                {/* â”€â”€ Gallery section â”€â”€ */}
-                <section className="about-gallery-section" id="about-gallery">
-
-                    {/* Header + filters */}
-                    <div className="about-gallery-header">
-                        <div>
-                            <p className="about-eyebrow">Community creations</p>
-                            <h2 className="about-gallery-title">
-                                Designs shared <em>by you.</em>
-                            </h2>
-                        </div>
-
-                        <div className="about-filters" aria-label="Filter gallery">
-                            {FILTERS.map((f) => (
-                                <button
-                                    key={f}
-                                    type="button"
-                                    className={`about-filter-btn${filter === f ? ' active' : ''}`}
-                                    onClick={() => setFilter(f)}
-                                >
-                                    {f}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Cards */}
+                {/* 4 Traditions Cards & CTA */}
+                <section className="about-gallery-section" id="about-gallery" style={{ marginTop: '32px' }}>
                     <div className="about-gallery-grid">
-                        {visibleItems.map((item, i) => (
+                        {galleryItems.map((item, i) => (
                             <motion.article
                                 key={item.title}
                                 className={`about-gallery-card ${item.color}`}
@@ -174,23 +112,36 @@ export default function AboutView({ onNavigate }) {
                         ))}
                     </div>
 
-                    {/* CTA */}
-                    <div className="about-gallery-cta">
+                    {/* Call To Action */}
+                    <div className="about-gallery-cta" style={{ marginTop: '40px' }}>
                         <div>
                             <p className="about-eyebrow" style={{ color: '#f2c14e' }}>Make it yours</p>
                             <h3 className="about-cta-title">
                                 Design your own <em>digital pookalam.</em>
                             </h3>
                         </div>
-                        <button
-                            className="about-cta-btn"
-                            type="button"
+                        <SpecularButton
+                            size="md"
+                            radius={20}
+                            tint="#d97706"
+                            tintOpacity={0.25}
+                            blur={6}
+                            textColor="#ffffff"
+                            lineColor="#fef08a"
+                            baseColor="#92400e"
+                            intensity={1.2}
+                            shineSize={15}
+                            shineFade={35}
+                            thickness={1.5}
+                            speed={0.4}
+                            followMouse
+                            proximity={250}
                             onClick={() => onNavigate('design')}
+                            className="about-cta-btn"
                         >
-                            Start designing <span>â†—</span>
-                        </button>
+                            Start designing <span>↗</span>
+                        </SpecularButton>
                     </div>
-
                 </section>
             </main>
         </motion.div>

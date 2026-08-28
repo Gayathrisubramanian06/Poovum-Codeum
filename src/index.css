@@ -330,8 +330,8 @@ button {
     box-shadow: 0 12px 32px rgba(122, 74, 30, 0.12) !important;
 }
 
-.template-card-preview-container img,
-.template-card-preview-container svg {
+.template-card-preview-container > img,
+.template-card-preview-container > svg.template-card-preview {
     width: 100%;
     aspect-ratio: 1 / 1;
     object-fit: cover;
@@ -343,8 +343,8 @@ button {
     transition: transform 0.25s ease;
 }
 
-.template-card-preview-container:hover img,
-.template-card-preview-container:hover svg {
+.template-card-preview-container:hover > img,
+.template-card-preview-container:hover > svg.template-card-preview {
     transform: scale(1.02);
 }
 
@@ -389,14 +389,14 @@ button {
 
 #canvasStep {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1140px;
     margin: 0 auto;
 }
 
 .designer-workspace {
     display: grid;
-    grid-template-columns: 390px 1fr;
-    gap: 24px;
+    grid-template-columns: 340px 1fr;
+    gap: 20px;
     align-items: start;
 }
 
@@ -406,45 +406,34 @@ button {
     }
 }
 
-/* ---------- Flower Sidebar ---------- */
+/* ---------- Flower Sidebar (Floating on background, no box/tab, no scrollbar) ---------- */
 .flower-sidebar {
-    background: rgba(255, 255, 255, 0.72) !important;
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1.5px solid rgba(242, 193, 78, 0.28) !important;
-    border-radius: 24px;
-    padding: 22px 18px;
-    box-shadow: 0 8px 32px rgba(122, 74, 30, 0.06);
-    max-height: 82vh;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--gold) #fdfaf3;
-}
-
-.flower-sidebar::-webkit-scrollbar {
-    width: 6px;
-}
-
-.flower-sidebar::-webkit-scrollbar-thumb {
-    background: var(--gold);
-    border-radius: 4px;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    border-radius: 0;
+    padding: 0 !important;
+    box-shadow: none !important;
+    max-height: none !important;
+    overflow: visible !important;
 }
 
 .sidebar-header {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding-bottom: 12px;
-    border-bottom: 1.5px solid rgba(122, 74, 30, 0.08);
-    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid rgba(122, 74, 30, 0.12);
+    margin-bottom: 12px;
 }
 
 .sidebar-icon {
-    font-size: 26px;
+    font-size: 24px;
 }
 
 .sidebar-title {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     color: var(--brown-dark);
     line-height: 1.2;
@@ -456,16 +445,19 @@ button {
     font-weight: 500;
 }
 
-/* Active selection indicator */
+/* Active selection indicator floating pill */
 .active-flower-banner {
     display: flex;
     align-items: center;
-    gap: 12px;
-    background: rgba(253, 248, 238, 0.7);
-    border: 1.5px solid rgba(242, 193, 78, 0.6);
-    border-radius: 14px;
-    padding: 10px 14px;
-    margin-bottom: 18px;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1.5px solid rgba(242, 193, 78, 0.5);
+    border-radius: 12px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 12px rgba(122, 74, 30, 0.05);
 }
 
 .active-flower-indicator {
@@ -499,31 +491,37 @@ button {
 .real-palette-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
     width: 100%;
 }
 
 .real-palette-container {
     position: relative;
     width: 100%;
-    aspect-ratio: 3 / 2;
-    border-radius: 0;
+    aspect-ratio: 1.34 / 1;
+    border-radius: 20px;
     overflow: visible;
     box-shadow: none;
     border: none;
     background: transparent;
     user-select: none;
+    margin: 4px 0;
 }
 
 .palette-bg-image {
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    width: 70%;
+    height: 126%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-90deg);
     object-fit: contain;
-    filter: drop-shadow(0 10px 24px rgba(70, 45, 15, 0.28));
+    filter: drop-shadow(0 10px 24px rgba(10, 50, 20, 0.35));
     display: block;
+    pointer-events: none;
 }
 
-/* Individual Flower Spots on the Wooden Palette */
+/* Individual Flower Spots on the Horizontal Taro Leaf */
 .palette-flower-spot {
     position: absolute;
     transform: translate(-50%, -50%);
@@ -538,12 +536,14 @@ button {
 
 .palette-flower-well {
     position: relative;
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     background: transparent;
     border: none;
     box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -552,19 +552,24 @@ button {
 
 @media (max-width: 1200px) {
     .palette-flower-well {
-        width: 42px;
-        height: 42px;
+        width: 38px;
+        height: 38px;
     }
 }
 
 .palette-flower-spot:hover .palette-flower-well {
     transform: scale(1.35);
-    filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.9)) drop-shadow(0 6px 12px rgba(0, 0, 0, 0.45));
+    background: transparent;
+    border: none;
+    filter: drop-shadow(0 0 12px rgba(253, 224, 71, 0.95)) drop-shadow(0 6px 14px rgba(0, 0, 0, 0.5));
 }
 
 .palette-flower-spot.active .palette-flower-well {
     transform: scale(1.3);
-    filter: drop-shadow(0 0 12px rgba(245, 158, 11, 1)) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    filter: drop-shadow(0 0 14px rgba(253, 224, 71, 1)) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
 }
 
 .palette-flower-svg {
@@ -865,7 +870,127 @@ button {
     padding: 16px;
     box-shadow: 0 12px 40px rgba(122, 74, 30, 0.08) !important;
     position: relative;
+    overflow: hidden;
     transition: all 0.3s ease;
+}
+
+/* ---------- Zoom Pro Tip Banner & Canvas Zoom Toolbar ---------- */
+.zoom-tip-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, rgba(254, 243, 199, 0.95), rgba(253, 230, 138, 0.85));
+    border: 1.5px solid rgba(245, 158, 11, 0.4);
+    border-radius: 16px;
+    padding: 10px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.12);
+    backdrop-filter: blur(8px);
+}
+
+.zoom-tip-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12.5px;
+    color: #78350f;
+    font-weight: 500;
+}
+
+.zoom-tip-badge {
+    background: #f59e0b;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+}
+
+.zoom-tip-dismiss {
+    background: transparent;
+    border: none;
+    color: #92400e;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+}
+
+.zoom-tip-dismiss:hover {
+    background: rgba(146, 64, 14, 0.15);
+}
+
+.canvas-zoom-toolbar {
+    position: absolute;
+    top: 26px;
+    right: 26px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(26, 16, 8, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1.5px solid rgba(242, 193, 78, 0.4);
+    border-radius: 30px;
+    padding: 4px 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.zoom-tool-btn {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.zoom-tool-btn:hover:not(:disabled) {
+    background: rgba(245, 158, 11, 0.9);
+    border-color: #f59e0b;
+    transform: scale(1.1);
+}
+
+.zoom-tool-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.zoom-tool-badge {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #fde047;
+    padding: 0 4px;
+    user-select: none;
+    letter-spacing: 0.3px;
+}
+
+.zoom-tool-reset {
+    background: rgba(245, 158, 11, 0.25);
+    border: 1px solid rgba(245, 158, 11, 0.6);
+    color: #fde047;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: 2px;
+}
+
+.zoom-tool-reset:hover {
+    background: #f59e0b;
+    color: #ffffff;
 }
 
 /* ============================================
@@ -895,8 +1020,10 @@ button {
 
 #pookalamCanvas {
     width: 100%;
+    max-width: 360px;
     height: auto;
     display: block;
+    margin: 0 auto;
     border-radius: 18px;
     box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05), 0 4px 16px rgba(122, 74, 30, 0.04);
     cursor: crosshair;
@@ -2376,18 +2503,118 @@ button {
 }
 
 /* Responsive */
-@media (max-width: 520px) {
+.template-grid {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+    gap: 24px;
+    max-width: 1060px;
+    width: 100%;
+    margin: 0 auto;
+    flex-wrap: nowrap;
+}
+
+@media (max-width: 768px) {
+    .onam-navbar {
+        top: 10px !important;
+        gap: 8px !important;
+        padding: 6px 14px !important;
+        max-width: 95vw !important;
+        background: rgba(255, 248, 235, 0.94) !important;
+        backdrop-filter: blur(12px) !important;
+        border-radius: 30px !important;
+        border: 1px solid rgba(122, 74, 30, 0.18) !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+    }
+
+    .nav-link {
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.5px !important;
+        padding: 4px 8px !important;
+    }
+
+    #musicToggleBtn {
+        top: 10px !important;
+        right: 12px !important;
+        width: 36px !important;
+        height: 36px !important;
+    }
+
+    .template-grid {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 16px !important;
+        flex-wrap: wrap !important;
+    }
+
+    .template-card-preview-container {
+        width: 100% !important;
+        max-width: 340px !important;
+        padding: 24px 16px !important;
+    }
+
+    .page {
+        padding: 70px 14px 40px !important;
+    }
+
+    .about-hero-card {
+        padding: 22px 16px !important;
+        border-radius: 20px !important;
+    }
+
+    .about-hero-title {
+        font-size: 1.8rem !important;
+    }
+
     .about-gallery-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
     }
 
-    .about-gallery-header {
-        flex-direction: column;
-        align-items: flex-start;
+    .gallery-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
     }
 
-    .about-gallery-cta {
-        flex-direction: column;
-        align-items: flex-start;
+    .canvas-shell {
+        padding: 10px !important;
+        border-radius: 20px !important;
+        width: 100% !important;
+        max-width: 380px !important;
+        margin: 0 auto !important;
+    }
+
+    .designer-controls {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+
+    .control-group {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-link {
+        font-size: 10px !important;
+        letter-spacing: 0.3px !important;
+        padding: 3px 6px !important;
+    }
+
+    .home-buttons {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 10px !important;
+        bottom: 4% !important;
+    }
+
+    #pookalamCanvas {
+        max-width: 100% !important;
+        height: auto !important;
     }
 }
