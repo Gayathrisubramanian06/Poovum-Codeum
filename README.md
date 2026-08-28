@@ -128,24 +128,6 @@ Poovum-Codeum/
 └── README.md
 ```
 
----
-
-## 🌸 Flower Guide for Onam
-
-| Day | Primary Flower | Malayalam Name | Cultural Significance |
-| :--- | :--- | :--- | :--- |
-| **Day 1: Atham** | Thumba | തുമ്പപ്പൂവ് | Symbol of simplicity and purity; starts with a single small circle. |
-| **Day 2: Chithira** | Mukkutti & Thumba | മുക്കുറ്റി | Second layer added with yellow tones. |
-| **Day 3: Chodhi** | Chemparathy | ചെമ്പരത്തി | Red hues introduced; Pookalam expands. |
-| **Day 4: Vishakam** | Shankhupushpam | ശംഖുപുഷ്പം | Multi-colored intricate motifs. |
-| **Day 5: Anizham** | Chethi / Thechi | ചെത്തി | Vibrant orange and flame patterns. |
-| **Day 6: Thrikketta** | Marigold / Jamanthi | ചെണ്ടുമല്ലി | Large floral borders added. |
-| **Day 7: Moolam** | Multi-flora | വിവിധ പൂക്കൾ | Intricate floral carpets created. |
-| **Day 8: Pooradam** | Pyramid Onathappan | ഓണത്തപ്പൻ | Clay pyramid idols decorated with flowers. |
-| **Day 9: Uthradam** | Grand Pookalam | ഉത്രാടപ്പൂക്കളം | Massive eve celebrations before Thiruvonam. |
-| **Day 10: Thiruvonam** | Full Spectrum | തിരുവോണം | Grand celebration of King Mahabali's arrival. |
-
----
 
 ## 🤝 Contributing
 
