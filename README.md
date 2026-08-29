@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <strong>🌐 Live Project URL: <a href="https://poovum-codeum-new.vercel.app/" target="_blank">https://poovum-codeum-new.vercel.app/</a></strong>
+  <strong>🌐 Live Project URL: <a href="https://poovum-codeum-itye.vercel.app/" target="_blank">https://poovum-codeum-new.vercel.app/</a></strong>
 </p>
 
 <p align="center">
