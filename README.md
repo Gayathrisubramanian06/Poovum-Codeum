@@ -9,7 +9,10 @@
   <strong>Craft intricate floral carpets (Pookalam), explore Onam traditions, and share your floral art with the world.</strong>
 </p>
 
+<p align="center">
 ### Project URL : https://poovum-codeum-new.vercel.app/
+</p>
+
 
 <p align="center">
   <img src="https://img.shields.io/badge/React-19.2-61DAFB?style=for-the-badge&logo=react&logoColor=white" alt="React 19" />
