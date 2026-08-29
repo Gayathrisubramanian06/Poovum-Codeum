@@ -530,14 +530,7 @@ export function generateCustomMandalaPaths(config) {
         addCircleSegment(outerPaths, rOut, 'cust-outer-ring');
     }
 
-    // 2. Concentric Rings Guide Strokes (only draw visible borders for concentric rings >= rInner)
-    sortedRadii.forEach((r, idx) => {
-        if (r >= rInner - 2 && r < outerDist + outerLen) {
-            addCircleSegment(ringPaths, r, `cust-ring-guide-${idx}`);
-        }
-    });
-
-    // 3. Mid Petal / Star Pattern - Start right outside sacred motif to eliminate gap
+    // 2. Mid Petal / Star Pattern - Starts right outside sacred motif cleanly
     const midDist = 38 + 4 * coreScale;
     const midLen = 50 * midScale;
     const midWid = 28 * midScale;
@@ -567,7 +560,7 @@ export function generateCustomMandalaPaths(config) {
         }
     }
 
-    // 4. Sacred Center Core Motifs
+    // 3. Sacred Center Core Motifs
     if (config.core === 'ganapathi') {
         corePaths.push({ d: `M ${CENTER - 10} ${CENTER - 16} L ${CENTER} ${CENTER - 32} L ${CENTER + 10} ${CENTER - 16} Z`, groupKey: 'cust-ganesh-crown' });
         corePaths.push({ d: `M ${CENTER - 8} ${CENTER - 10} C ${CENTER - 26} ${CENTER - 12} ${CENTER - 28} ${CENTER + 12} ${CENTER - 10} ${CENTER + 15} Z`, groupKey: 'cust-ganesh-left-ear' });
@@ -601,14 +594,12 @@ export function generateCustomMandalaPaths(config) {
             addDiamondSegment(corePaths, 48, i * 45, 42, 24, 'cust-core-diamond-tier');
         }
     } else if (config.core === 'circle') {
-        addCircleSegment(corePaths, 44, 'cust-core-outer-circle');
-        addCircleSegment(corePaths, 24, 'cust-core-mid-circle');
-        addCircleSegment(corePaths, 10, 'cust-core-inner-bindu');
+        addCircleSegment(corePaths, 16, 'cust-core-bindu');
     }
 
     return {
         outerPaths,
-        ringPaths,
+        ringPaths: [],
         midPaths,
         corePaths,
         coreScale
