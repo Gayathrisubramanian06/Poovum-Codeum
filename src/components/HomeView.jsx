@@ -47,10 +47,6 @@ export default function HomeView({ onNavigate }) {
                 src="assets/pookalam.png"
                 alt="Pookalam"
                 className="pookalam-top-spin"
-                style={{
-                    x: '-50%',
-                    y: '-58%',
-                }}
                 animate={{ rotate: 360 }}
                 transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
             />
@@ -63,8 +59,8 @@ export default function HomeView({ onNavigate }) {
 
             <motion.div
                 className="onam-title"
-                initial={{ opacity: 0, x: '-50%', y: -20 }}
-                animate={{ opacity: 1, x: '-50%', y: 0 }}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1 }}
             >
                 <div className="happy-text">
@@ -193,7 +189,6 @@ export default function HomeView({ onNavigate }) {
                 src="assets/boat.png"
                 alt="Kerala Snake Boat"
                 className="boat-img"
-                style={{ x: '-50%' }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{
                     opacity: 0.95,
@@ -217,7 +212,6 @@ export default function HomeView({ onNavigate }) {
                 src="assets/thiruvathira.png"
                 alt="Thiruvathira dancers"
                 className="thiruvathira-img"
-                style={{ x: '-50%' }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{
                     opacity: 1,
