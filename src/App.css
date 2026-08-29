@@ -527,13 +527,13 @@
         font-size: 15.5px !important;
     }
 
-    /* Left: Boat & Thiruvathira - Made Much Larger */
+    /* Left: Boat & Thiruvathira (+10% larger) */
     .boat-img {
         display: block !important;
         left: -4% !important;
         bottom: 8% !important;
-        width: clamp(300px, 82vw, 520px) !important;
-        max-height: 44vh !important;
+        width: clamp(330px, 90vw, 570px) !important;
+        max-height: 48vh !important;
         z-index: 10 !important;
         opacity: 0.95 !important;
         object-fit: contain !important;
@@ -543,16 +543,16 @@
         display: block !important;
         left: -6% !important;
         bottom: -2% !important;
-        width: clamp(220px, 60vw, 380px) !important;
-        max-height: 38vh !important;
+        width: clamp(242px, 66vw, 420px) !important;
+        max-height: 42vh !important;
         z-index: 17 !important;
         object-fit: contain !important;
     }
 
-    /* Rightmost: Sadya feast, Maveli removed */
+    /* Rightmost: Sadya feast (shifted right by 10%) */
     .sadya-img {
         display: block !important;
-        right: -2% !important;
+        right: -12% !important;
         bottom: 0% !important;
         width: clamp(160px, 48vw, 270px) !important;
         max-height: 38vh !important;
@@ -573,14 +573,15 @@
     }
 
     .sadya-img {
+        right: -12% !important;
         width: clamp(140px, 44vw, 220px) !important;
     }
 
     .boat-img {
-        width: clamp(260px, 78vw, 380px) !important;
+        width: clamp(290px, 86vw, 420px) !important;
     }
 
     .thiruvathira-img {
-        width: clamp(190px, 56vw, 280px) !important;
+        width: clamp(210px, 62vw, 310px) !important;
     }
 }
