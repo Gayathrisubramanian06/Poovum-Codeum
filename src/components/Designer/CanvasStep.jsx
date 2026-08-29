@@ -649,46 +649,105 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
         });
     };
 
-    // Share to WhatsApp
+    // Share to WhatsApp (Direct Image sharing via Web Share API + Clipboard / Download fallback)
     const handleWhatsApp = () => {
-        const shareText = `Check out this Onam Pookalam I designed! 🪔🌸 Happy Onam!\n${window.location.origin}`;
-        const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+        setShareMessage('⏳ Preparing image for WhatsApp...');
+        generatePNGAndAction(async (blob) => {
+            if (!blob) {
+                setShareMessage('⚠️ Failed to generate image.');
+                return;
+            }
 
-        // 1. Immediately open WhatsApp to prevent browser popup blocking
-        const win = window.open(waUrl, '_blank', 'noopener,noreferrer');
-        if (!win || win.closed || typeof win.closed === 'undefined') {
-            window.location.href = waUrl;
-        }
+            const file = new File([blob], 'my-onam-pookalam.png', { type: 'image/png' });
+            const shareText = `Check out this Onam Pookalam I designed! 🪔🌸 Happy Onam!`;
 
-        setShareMessage('🌸 WhatsApp opened!');
-        setTimeout(() => setShareMessage(''), 3000);
-
-        // 2. Also copy image to clipboard so the user can paste (Ctrl+V) directly into the chat
-        generatePNGAndAction((blob) => {
-            if (blob && navigator.clipboard && window.ClipboardItem) {
+            // 1. Native Web Share API with File (Attaches actual PNG file directly to WhatsApp on Mobile & Windows/Mac)
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
                 try {
-                    navigator.clipboard.write([
-                        new ClipboardItem({ 'image/png': blob })
-                    ]).then(() => {
-                        setShareMessage('🌸 WhatsApp opened! Pookalam copied to clipboard — paste (Ctrl+V) it in chat! 🎨');
-                        setTimeout(() => setShareMessage(''), 5000);
-                    }).catch(() => {
-                        // Silent fallback
+                    await navigator.share({
+                        files: [file],
+                        title: 'My Onam Pookalam 🪔',
+                        text: shareText
                     });
-                } catch {
-                    // Silent fallback
+                    setShareMessage('✨ Pookalam image shared successfully!');
+                    setTimeout(() => setShareMessage(''), 3500);
+                    return;
+                } catch (err) {
+                    if (err.name === 'AbortError') {
+                        setShareMessage('');
+                        return;
+                    }
+                    console.log('Native file share skipped, using fallback:', err);
                 }
             }
+
+            // 2. Desktop WhatsApp Web Fallback: Copy image to clipboard + Download + Open WhatsApp
+            let copied = false;
+            if (navigator.clipboard && window.ClipboardItem) {
+                try {
+                    await navigator.clipboard.write([
+                        new ClipboardItem({ 'image/png': blob })
+                    ]);
+                    copied = true;
+                } catch (e) {
+                    console.warn('Clipboard write failed:', e);
+                }
+            }
+
+            // Trigger download
+            const downloadUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = 'my-onam-pookalam.png';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(downloadUrl), 2000);
+
+            // Open WhatsApp Web
+            const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + '\n' + window.location.origin)}`;
+            window.open(waUrl, '_blank', 'noopener,noreferrer');
+
+            if (copied) {
+                setShareMessage('🌸 Image downloaded & copied to clipboard! Paste (Ctrl+V) it in WhatsApp chat! 🎨');
+            } else {
+                setShareMessage('🌸 Image downloaded! Attach the downloaded file in your WhatsApp chat! 🎨');
+            }
+            setTimeout(() => setShareMessage(''), 6000);
         });
     };
 
     // Share to Twitter/X
     const handleTwitter = () => {
-        const shareText = `Check out this Onam Pookalam I designed! 🪔🌸 #Onam #Pookalam #Kerala\n${window.location.origin}`;
-        const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
-        window.open(tweetUrl, '_blank', 'noopener,noreferrer');
-        setShareMessage('✨ Twitter opened!');
-        setTimeout(() => setShareMessage(''), 3000);
+        setShareMessage('⏳ Preparing image for Twitter...');
+        generatePNGAndAction(async (blob) => {
+            const shareText = `Check out this Onam Pookalam I designed! 🪔🌸 #Onam #Pookalam #Kerala\n${window.location.origin}`;
+            if (blob && navigator.canShare) {
+                const file = new File([blob], 'my-onam-pookalam.png', { type: 'image/png' });
+                if (navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({
+                            files: [file],
+                            title: 'My Onam Pookalam 🪔',
+                            text: shareText
+                        });
+                        setShareMessage('✨ Shared to Twitter/X successfully!');
+                        setTimeout(() => setShareMessage(''), 3000);
+                        return;
+                    } catch (err) {
+                        if (err.name === 'AbortError') {
+                            setShareMessage('');
+                            return;
+                        }
+                    }
+                }
+            }
+
+            const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
+            window.open(tweetUrl, '_blank', 'noopener,noreferrer');
+            setShareMessage('✨ Twitter opened!');
+            setTimeout(() => setShareMessage(''), 3000);
+        });
     };
 
     return (
