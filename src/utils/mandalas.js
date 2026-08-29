@@ -110,9 +110,8 @@ export function generateMandalaPaths(templateId) {
 
     switch (templateId) {
         case 'surya-padma':
-            // 1. Surya Padma Mandala - Ring Backdrops for all white region gaps
+            // 1. Surya Padma Mandala - Ring Backdrops for white region gaps
             addRingBackdrops(18, 52, 16, 'surya-bg-inner');
-            addRingBackdrops(52, 74, 16, 'surya-bg-mid');
             addRingBackdrops(74, 114, 16, 'surya-bg-outer');
 
             for (let i = 0; i < 16; i++) {
@@ -149,7 +148,6 @@ export function generateMandalaPaths(templateId) {
             // 2. Sacred Lotus Mandala - Backdrops
             addRingBackdrops(24, 69, 16, 'lotus-bg-inner');
             addRingBackdrops(69, 120, 16, 'lotus-bg-mid');
-            addRingBackdrops(120, 155, 16, 'lotus-bg-outer');
 
             addCircleSegment(24, 'lotus-center');
             for (let i = 0; i < 8; i++) {
@@ -200,7 +198,6 @@ export function generateMandalaPaths(templateId) {
             // 4. Peacock Wheel Mandala - Backdrops
             addRingBackdrops(26, 78, 16, 'peacock-bg-inner');
             addRingBackdrops(78, 130, 16, 'peacock-bg-mid');
-            addRingBackdrops(130, 162, 16, 'peacock-bg-outer');
 
             addCircleSegment(26, 'peacock-center');
             for (let i = 0; i < 8; i++) {
@@ -263,7 +260,6 @@ export function generateMandalaPaths(templateId) {
             // 7. Heritage 8-Petal Mandala - Backdrops
             addRingBackdrops(26, 82, 16, 'heritage-bg-inner');
             addRingBackdrops(82, 128, 16, 'heritage-bg-mid');
-            addRingBackdrops(128, 160, 16, 'heritage-bg-outer');
 
             addCircleSegment(26, 'heritage-center');
             for (let i = 0; i < 8; i++) {

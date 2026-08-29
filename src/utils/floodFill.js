@@ -455,7 +455,7 @@ export class ImageTemplateEngine {
     /**
      * Radial Ring & Symmetry Flood Fill:
      * Discovers all matching shapes strictly along the specified ring fold count (e.g. 4, 6, 8, 12, 16, 24).
-     * Prevents cross-ring leakage into inner/outer nested shapes.
+     * Prevents partial fills (e.g. 4 or 2 out of 8) by performing exhaustive radial, angular, and offset searches.
      */
     floodFillSymmetric(svgX, svgY, preferredFolds = null) {
         const baseMask = this.floodFill(svgX, svgY, false);
@@ -467,86 +467,171 @@ export class ImageTemplateEngine {
         const center = this.getCenterOfDesign();
         const baseR = baseMetrics.radiusFromCenter;
 
-        // Central core motif (radius < 18px in SVG) is singular; color only itself
-        if (baseR < 18) {
+        // Central core motif (radius < 16px in SVG) is singular; color only itself
+        if (baseR < 16) {
             return [baseMask];
         }
 
-        // If the shape is enormous (spans over half the design), it is a large backdrop, not a ring petal
-        if (baseMetrics.bboxWidth > 180 || baseMetrics.bboxHeight > 180) {
+        // If the shape is enormous (spans over half the canvas), it is a global background, not a ring petal
+        if (baseMetrics.bboxWidth > 240 || baseMetrics.bboxHeight > 240 || baseMetrics.area > 70000) {
             return [baseMask];
         }
 
         const baseArea = baseMetrics.area;
         const baseDiag = Math.hypot(baseMetrics.bboxWidth, baseMetrics.bboxHeight);
-        const maxRDiff = Math.min(6, Math.max(3, baseR * 0.035));
         const px = this.templatePixels;
         if (!px) return [baseMask];
 
-        const isValidSymmetricSibling = (candMetrics) => {
+        const isValidSymmetricSibling = (candMetrics, expectedAngle, folds) => {
             if (!candMetrics) return false;
+            if (candMetrics.key === baseMetrics.key) return false;
+
+            // Radius distance tolerance from center (generous to handle hand-drawn/raster eccentricities)
             const rDiff = Math.abs(candMetrics.radiusFromCenter - baseR);
+            const maxRDiff = Math.max(16, baseR * 0.22);
             if (rDiff > maxRDiff) return false;
+
+            // Area and shape diagonal ratios
             const areaRatio = candMetrics.area / (baseArea || 1);
-            if (areaRatio < 0.60 || areaRatio > 1.65) return false;
+            if (areaRatio < 0.20 || areaRatio > 5.0) return false;
+
             const candDiag = Math.hypot(candMetrics.bboxWidth, candMetrics.bboxHeight);
             const diagRatio = candDiag / (baseDiag || 1);
-            if (diagRatio < 0.60 || diagRatio > 1.65) return false;
+            if (diagRatio < 0.25 || diagRatio > 4.0) return false;
+
+            // Angular alignment tolerance
+            if (expectedAngle !== undefined && folds) {
+                let angleDiff = Math.abs(candMetrics.angle - expectedAngle);
+                while (angleDiff > Math.PI) angleDiff = Math.abs(angleDiff - 2 * Math.PI);
+                const maxAngleDiff = Math.max(0.40, (Math.PI / folds) * 0.85);
+                if (angleDiff > maxAngleDiff) return false;
+            }
+
             return true;
         };
 
-        // Click coordinate offset relative to center
+        // Click coordinate and centroid offsets relative to design center
         const clickDx = svgX - center.x;
         const clickDy = svgY - center.y;
         const centDx = baseMetrics.centroid.x - center.x;
         const centDy = baseMetrics.centroid.y - center.y;
+        const clickR = Math.hypot(clickDx, clickDy);
+        const clickAngle = Math.atan2(clickDy, clickDx);
+        const centAngle = baseMetrics.angle;
 
-        // Helper to test a specific fold symmetry count
+        // Helper to test a specific fold symmetry count with deep radial, angular, and grid probing
         const testFolds = (folds) => {
             const step = (2 * Math.PI) / folds;
             const currentMasks = [baseMask];
             const visitedKeys = new Set([baseMetrics.key]);
 
             for (let k = 1; k < folds; k++) {
-                const angle = k * step;
-                const cosA = Math.cos(angle);
-                const sinA = Math.sin(angle);
+                const angleOffset = k * step;
+                const expCentAngle = centAngle + angleOffset;
+                const expClickAngle = clickAngle + angleOffset;
 
-                // Rotated target points: primary click point and centroid
-                const targetPoints = [
-                    {
-                        x: center.x + clickDx * cosA - clickDy * sinA,
-                        y: center.y + clickDx * sinA + clickDy * cosA
-                    },
-                    {
-                        x: center.x + centDx * cosA - centDy * sinA,
-                        y: center.y + centDx * sinA + centDy * cosA
+                const cosA = Math.cos(angleOffset);
+                const sinA = Math.sin(angleOffset);
+
+                // Rotated target points
+                const rotClickX = center.x + clickDx * cosA - clickDy * sinA;
+                const rotClickY = center.y + clickDx * sinA + clickDy * cosA;
+
+                const rotCentX = center.x + centDx * cosA - centDy * sinA;
+                const rotCentY = center.y + centDx * sinA + centDy * cosA;
+
+                // Build candidate probe locations
+                const probePoints = [];
+
+                // 1. Direct rotated targets
+                probePoints.push({ x: rotClickX, y: rotClickY });
+                probePoints.push({ x: rotCentX, y: rotCentY });
+
+                // 2. Radial sweeps along click angle and centroid angle
+                const radialDeltas = [0, 3, -3, 6, -6, 10, -10, 15, -15, 20, -20, 25, -25];
+                for (const dr of radialDeltas) {
+                    const rC = clickR + dr;
+                    if (rC > 5 && rC < this.outerRadiusSvg) {
+                        probePoints.push({
+                            x: center.x + rC * Math.cos(expClickAngle),
+                            y: center.y + rC * Math.sin(expClickAngle)
+                        });
                     }
+                    const rCent = baseR + dr;
+                    if (rCent > 5 && rCent < this.outerRadiusSvg) {
+                        probePoints.push({
+                            x: center.x + rCent * Math.cos(expCentAngle),
+                            y: center.y + rCent * Math.sin(expCentAngle)
+                        });
+                    }
+                }
+
+                // 3. Angular sweeps around target radii
+                const angularDeltas = [0.02, -0.02, 0.04, -0.04, 0.07, -0.07, 0.10, -0.10, 0.14, -0.14];
+                for (const da of angularDeltas) {
+                    probePoints.push({
+                        x: center.x + clickR * Math.cos(expClickAngle + da),
+                        y: center.y + clickR * Math.sin(expClickAngle + da)
+                    });
+                    probePoints.push({
+                        x: center.x + baseR * Math.cos(expCentAngle + da),
+                        y: center.y + baseR * Math.sin(expCentAngle + da)
+                    });
+                }
+
+                // 4. Fine 2D grid jitter around target coordinates
+                const jitterOffsets = [
+                    [1, 1], [-1, 1], [1, -1], [-1, -1],
+                    [2, 0], [-2, 0], [0, 2], [0, -2],
+                    [4, 0], [-4, 0], [0, 4], [0, -4],
+                    [7, 0], [-7, 0], [0, 7], [0, -7],
+                    [10, 0], [-10, 0], [0, 10], [0, -10],
+                    [14, 0], [-14, 0], [0, 14], [0, -14],
+                    [18, 0], [-18, 0], [0, 18], [0, -18]
                 ];
+                for (const [jx, jy] of jitterOffsets) {
+                    probePoints.push({ x: rotClickX + jx, y: rotClickY + jy });
+                    probePoints.push({ x: rotCentX + jx, y: rotCentY + jy });
+                }
 
                 let matchedMask = null;
-                for (const pt of targetPoints) {
-                    const offsets = [
-                        [0, 0],
-                        [1, 0], [-1, 0], [0, 1], [0, -1],
-                        [2, 0], [-2, 0], [0, 2], [0, -2],
-                        [3, 0], [-3, 0], [0, 3], [0, -3]
-                    ];
+                const scale = this.canvasSize / 400;
 
-                    for (const [ox, oy] of offsets) {
-                        const candMask = this.floodFill(pt.x + ox, pt.y + oy, false);
-                        if (candMask) {
-                            const candMetrics = this.getMaskMetrics(candMask);
-                            if (candMetrics && isValidSymmetricSibling(candMetrics)) {
+                for (const pt of probePoints) {
+                    if (pt.x < 0 || pt.x > 400 || pt.y < 0 || pt.y > 400) continue;
+                    const dCenter = Math.hypot(pt.x - center.x, pt.y - center.y);
+                    if (dCenter > this.outerRadiusSvg) continue;
+
+                    // Fast check for already segmented region at this probe pixel
+                    const pxX = Math.round(pt.x * scale);
+                    const pxY = Math.round(pt.y * scale);
+                    if (pxX >= 0 && pxX < this.canvasSize && pxY >= 0 && pxY < this.canvasSize) {
+                        const rId = this.regionMap[pxY * this.canvasSize + pxX];
+                        if (rId > 0 && this.regionsById.has(rId)) {
+                            const cachedMask = this.regionsById.get(rId);
+                            const candMetrics = this.getMaskMetrics(cachedMask);
+                            if (candMetrics && isValidSymmetricSibling(candMetrics, expCentAngle, folds)) {
                                 if (!visitedKeys.has(candMetrics.key)) {
                                     visitedKeys.add(candMetrics.key);
-                                    matchedMask = candMask;
+                                    matchedMask = cachedMask;
+                                    break;
                                 }
+                            }
+                        }
+                    }
+
+                    // Fallback to floodFill probe
+                    const candMask = this.floodFill(pt.x, pt.y, false);
+                    if (candMask) {
+                        const candMetrics = this.getMaskMetrics(candMask);
+                        if (candMetrics && isValidSymmetricSibling(candMetrics, expCentAngle, folds)) {
+                            if (!visitedKeys.has(candMetrics.key)) {
+                                visitedKeys.add(candMetrics.key);
+                                matchedMask = candMask;
                                 break;
                             }
                         }
                     }
-                    if (matchedMask) break;
                 }
 
                 if (matchedMask) {
@@ -557,31 +642,52 @@ export class ImageTemplateEngine {
             return currentMasks;
         };
 
-        // 1. If user specified preferredFolds (from UI Ring Folds selector), strictly evaluate that fold count
+        // 1. If preferredFolds is specified (e.g. 8 from UI selector), test it first
+        let preferredResults = null;
         if (preferredFolds && preferredFolds >= 2) {
-            const userFoldMasks = testFolds(preferredFolds);
-            if (userFoldMasks.length > 1) {
-                return userFoldMasks;
+            preferredResults = testFolds(preferredFolds);
+            // If all folds match completely (e.g. all 8 of 8), return immediately
+            if (preferredResults.length === preferredFolds) {
+                return preferredResults;
             }
         }
 
-        // 2. Auto-detect natural symmetry if preferredFolds is null or yielded no multiple matches
-        const autoFolds = [8, 12, 16, 6, 4, 24, 10];
-        for (const folds of autoFolds) {
+        // 2. Test natural geometric symmetries (8, 16, 12, 6, 4, 24, 10)
+        const candidateFolds = [8, 16, 12, 6, 4, 24, 10];
+        let bestCompleteSet = null;
+        let bestCandidateSet = preferredResults || [];
+
+        for (const folds of candidateFolds) {
             if (folds === preferredFolds) continue;
             const masks = testFolds(folds);
-            if (masks.length === folds || masks.length >= 3) {
-                return masks;
+            if (masks.length === folds && folds >= 4) {
+                bestCompleteSet = masks;
+                break; // Found perfect 100% complete ring matching
+            }
+            if (masks.length > bestCandidateSet.length) {
+                bestCandidateSet = masks;
             }
         }
 
-        // 3. Bilateral / Mirror Reflection fallback
+        if (bestCompleteSet) {
+            return bestCompleteSet;
+        }
+
+        if (preferredResults && preferredResults.length >= Math.ceil(preferredFolds * 0.7)) {
+            return preferredResults;
+        }
+
+        if (bestCandidateSet && bestCandidateSet.length >= 2) {
+            return bestCandidateSet;
+        }
+
+        // 3. Bilateral Mirror fallback
         const mirrorSvgX = 2 * center.x - baseMetrics.centroid.x;
         const mirrorSvgY = baseMetrics.centroid.y;
         const mirrorMask = this.floodFill(mirrorSvgX, mirrorSvgY, false);
         if (mirrorMask) {
             const mirrorMetrics = this.getMaskMetrics(mirrorMask);
-            if (mirrorMetrics && mirrorMetrics.key !== baseMetrics.key && isValidSymmetricSibling(mirrorMetrics)) {
+            if (mirrorMetrics && mirrorMetrics.key !== baseMetrics.key && isValidSymmetricSibling(mirrorMetrics, Math.atan2(mirrorSvgY - center.y, mirrorSvgX - center.x), 2)) {
                 return [baseMask, mirrorMask];
             }
         }
