@@ -454,6 +454,7 @@ export function generateCustomMandalaPaths(config) {
     const outerScale = config.outerScale || 1.0;
     const ringScale = config.ringScale || 1.0;
     const midScale = config.midScale || 1.0;
+    const coreScale = config.coreScale || 1.0;
     const coreR = 40 * coreScale;
     const rInner = Math.max(92, 106 + 20 * (ringScale - 1));
     const rOuter = Math.min(172, 142 + 22 * (ringScale - 1));
