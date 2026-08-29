@@ -23,21 +23,17 @@ export const PREDEFINED_TEMPLATES = {
     circle: [
         { id: 'c3', name: 'Scalloped Mandala', img: 'assets/images/circle-3.jpg' },
         { id: 'c9', name: 'Intricate Web', img: 'assets/images/circle-9.jpg' },
-        { id: 'c11', name: 'Spiral Bloom', img: 'assets/images/circle-11.jpg' },
-        { id: 'c19', name: 'Petal Crown', img: 'assets/images/circle-19.jpg' },
+        { id: 'c25', name: 'Surya Radiant', img: 'assets/images/circle-25.jpg' },
+        { id: 'c26', name: 'Padmam Crown', img: 'assets/images/circle-26.jpg' },
+        { id: 'c22', name: 'Swirling Petals', img: 'assets/images/circle-22.jpg' },
+        { id: 'c23', name: 'Hexa Bloom', img: 'assets/images/circle-23.jpg' },
         { id: 'c12', name: 'Radiant Petals', img: 'assets/images/circle-12.jpg' },
         { id: 'c13', name: 'Layered Lotus', img: 'assets/images/circle-13.jpg' },
         { id: 'c18', name: 'Heritage Pattern', img: 'assets/images/circle-18.jpg' },
-        { id: 'c14', name: 'Peacock Wheel', img: 'assets/images/circle-14.jpg' },
         { id: 'c24', name: 'Tiered Blossom', img: 'assets/images/circle-24.jpg' },
         { id: 'c16', name: 'Floral Mandala', img: 'assets/images/circle-16.jpg' },
-        { id: 'c17', name: 'Concentric Bloom', img: 'assets/images/circle-17.jpg' },
-        { id: 'c20', name: 'Grand Sunflower', img: 'assets/images/circle-20.jpg' },
         { id: 'c21', name: 'Festival Ring', img: 'assets/images/circle-21.jpg' },
-        { id: 'c22', name: 'Swirling Petals', img: 'assets/images/circle-22.jpg' },
-        { id: 'c23', name: 'Hexa Bloom', img: 'assets/images/circle-23.jpg' },
-        { id: 'c25', name: 'Surya Radiant', img: 'assets/images/circle-25.jpg' },
-        { id: 'c26', name: 'Padmam Crown', img: 'assets/images/circle-26.jpg' }
+        { id: 'c14', name: 'Peacock Wheel', img: 'assets/images/circle-14.jpg' }
     ]
 };
 

@@ -80,13 +80,15 @@ export class ImageTemplateEngine {
             lums[i] = Math.round(0.299 * px[idx] + 0.587 * px[idx + 1] + 0.114 * px[idx + 2]);
         }
 
-        // 2. High-precision thresholding (dark strokes < 215 become border 0, white interior becomes 255)
+        // 2. High-sensitivity thresholding for JPEG outlines:
+        // Pure background is 245-255. Any stroke, spoke, or antialiased compression line < 236 is treated as a border stroke (0).
         const binary = new Uint8Array(total);
         for (let i = 0; i < total; i++) {
-            binary[i] = lums[i] < 215 ? 0 : 255;
+            binary[i] = lums[i] < 236 ? 0 : 255;
         }
 
-        // 3. Morphological gap-closing pass (1px gap sealing for watertight boundaries)
+        // 3. Diagonal corner bridge pass:
+        // When diagonal pixels are borders (0), seal the orthogonal connections to prevent 4-way flood fill leaking through diagonal cracks
         const sealed = new Uint8Array(binary);
         for (let y = 1; y < size - 1; y++) {
             for (let x = 1; x < size - 1; x++) {
@@ -101,16 +103,18 @@ export class ImageTemplateEngine {
                     const tr = binary[p - size + 1] === 0;
                     const bl = binary[p + size - 1] === 0;
 
-                    // Close 1px horizontal, vertical, diagonal gaps & diagonal corner connections to prevent leaks
+                    // Close 1px gaps and diagonal leaks
                     if ((l && r) || (t && b) || (tl && br) || (tr && bl) ||
-                        (l && b) || (r && b) || (l && t) || (r && t)) {
+                        (l && b) || (r && b) || (l && t) || (r && t) ||
+                        (tl && b) || (tr && b) || (bl && t) || (br && t) ||
+                        (tl && r) || (bl && r) || (tr && l) || (br && l)) {
                         sealed[p] = 0;
                     }
                 }
             }
         }
 
-        // 4. Secondary gap-closing pass for 2px breaks along curves and antialiased compression edges
+        // 4. Secondary gap-closing pass for 2px breaks along fine radial lines and thin spokes
         for (let y = 2; y < size - 2; y++) {
             for (let x = 2; x < size - 2; x++) {
                 const p = y * size + x;
@@ -128,8 +132,22 @@ export class ImageTemplateEngine {
             }
         }
 
-        // 5. Pre-identify Outside Background Mask starting from the 4 outer image edges
-        // This flood fills all canvas margins outside the mandala perimeter so the background is NEVER colored.
+        // 5. Watertight Border Dilation:
+        // Dilate borders by 1px so thin 1px radial spokes and lines form an impermeable barrier that never leaks
+        const dilated = new Uint8Array(sealed);
+        for (let y = 1; y < size - 1; y++) {
+            for (let x = 1; x < size - 1; x++) {
+                const p = y * size + x;
+                if (sealed[p] === 0) {
+                    dilated[p - 1] = 0;
+                    dilated[p + 1] = 0;
+                    dilated[p - size] = 0;
+                    dilated[p + size] = 0;
+                }
+            }
+        }
+
+        // 6. Pre-identify Outside Background Mask starting from the 4 outer image edges
         const bgMask = new Uint8Array(total);
         const bgVisited = new Uint8Array(total);
         const stack = new Int32Array(total);
@@ -137,7 +155,7 @@ export class ImageTemplateEngine {
 
         const pushIfValid = (x, y) => {
             const p = y * size + x;
-            if (!bgVisited[p] && sealed[p] === 255) {
+            if (!bgVisited[p] && dilated[p] === 255) {
                 bgVisited[p] = 1;
                 stack[stackTop++] = p;
             }
@@ -168,7 +186,7 @@ export class ImageTemplateEngine {
             ];
 
             for (const next of neighbors) {
-                if (next !== -1 && !bgVisited[next] && sealed[next] === 255) {
+                if (next !== -1 && !bgVisited[next] && dilated[next] === 255) {
                     bgVisited[next] = 1;
                     stack[stackTop++] = next;
                 }
@@ -183,7 +201,7 @@ export class ImageTemplateEngine {
         for (let y = 0; y < size; y++) {
             for (let x = 0; x < size; x++) {
                 const p = y * size + x;
-                if (sealed[p] === 0 && !bgMask[p]) {
+                if (dilated[p] === 0 && !bgMask[p]) {
                     if (x < minX) minX = x;
                     if (x > maxX) maxX = x;
                     if (y < minY) minY = y;
@@ -206,10 +224,10 @@ export class ImageTemplateEngine {
             this.outerRadiusSvg = 192;
         }
 
-        // Put binarized and sealed data back to template canvas
+        // Put sealed data back to template canvas for display
         for (let i = 0; i < total; i++) {
             const idx = i * 4;
-            const v = sealed[i];
+            const v = dilated[i];
             px[idx] = v;
             px[idx + 1] = v;
             px[idx + 2] = v;
@@ -257,7 +275,7 @@ export class ImageTemplateEngine {
         if (px[startPos * 4] === 0) {
             let foundPos = -1;
             let minDist = Infinity;
-            const maxRadius = strict ? 4 : 14;
+            const maxRadius = strict ? 4 : 16;
             for (let r = 1; r <= maxRadius; r++) {
                 for (let dy = -r; dy <= r; dy++) {
                     for (let dx = -r; dx <= r; dx++) {
@@ -437,8 +455,7 @@ export class ImageTemplateEngine {
     /**
      * Complete Radial Ring & Symmetry Flood Fill:
      * Discovers all matching shapes lying along the same concentric mandala ring at radius R.
-     * Works seamlessly regardless of whether the ring has 4, 6, 8, 10, 12, 14, 16, 18, 20, or 24 petals!
-     * Safely prevents filling large backdrops or non-radial center motifs.
+     * Works seamlessly across all templates with thin radial spokes and fine dividing lines.
      */
     floodFillSymmetric(svgX, svgY, preferredFolds = null) {
         const baseMask = this.floodFill(svgX, svgY, false);
