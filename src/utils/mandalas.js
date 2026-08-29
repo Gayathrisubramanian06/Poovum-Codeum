@@ -475,7 +475,7 @@ export function generateCustomMandalaPaths(config) {
     };
 
     // Compute all exact concentric border radii
-    const ringRadii = [44 * coreScale];
+    const ringRadii = [];
     if (config.rings === 'double-ring') {
         ringRadii.push(rInner);
         ringRadii.push(rInner + (rOuter - rInner) * 0.5);
@@ -495,11 +495,13 @@ export function generateCustomMandalaPaths(config) {
     const sortedRadii = Array.from(new Set(ringRadii.filter(r => r > 0))).sort((a, b) => a - b);
 
     // 0. Fill Center Core
-    addAnnularRingSegment(outerPaths, 0, sortedRadii[0], 'cust-bg-center');
+    if (sortedRadii.length > 0) {
+        addAnnularRingSegment(outerPaths, 0, sortedRadii[0], 'cust-bg-center');
 
-    // Annular ring fill bands matching every concentric border line exactly
-    for (let i = 0; i < sortedRadii.length - 1; i++) {
-        addAnnularRingSegment(outerPaths, sortedRadii[i], sortedRadii[i + 1], `cust-bg-ring-${i}`);
+        // Annular ring fill bands matching every concentric border line exactly
+        for (let i = 0; i < sortedRadii.length - 1; i++) {
+            addAnnularRingSegment(outerPaths, sortedRadii[i], sortedRadii[i + 1], `cust-bg-ring-${i}`);
+        }
     }
 
     // 1. Outer Border Motifs
@@ -563,7 +565,6 @@ export function generateCustomMandalaPaths(config) {
 
     // 4. Sacred Center Core Motifs
     if (config.core === 'ganapathi') {
-        addCircleSegment(corePaths, 44, 'cust-core-backdrop');
         corePaths.push({ d: `M ${CENTER - 10} ${CENTER - 16} L ${CENTER} ${CENTER - 32} L ${CENTER + 10} ${CENTER - 16} Z`, groupKey: 'cust-ganesh-crown' });
         corePaths.push({ d: `M ${CENTER - 8} ${CENTER - 10} C ${CENTER - 26} ${CENTER - 12} ${CENTER - 28} ${CENTER + 12} ${CENTER - 10} ${CENTER + 15} Z`, groupKey: 'cust-ganesh-left-ear' });
         corePaths.push({ d: `M ${CENTER + 8} ${CENTER - 10} C ${CENTER + 26} ${CENTER - 12} ${CENTER + 28} ${CENTER + 12} ${CENTER + 10} ${CENTER + 15} Z`, groupKey: 'cust-ganesh-right-ear' });
@@ -571,25 +572,21 @@ export function generateCustomMandalaPaths(config) {
         const tY = CENTER - 14;
         corePaths.push({ d: `M ${CENTER} ${tY - 3} A 3 3 0 1 1 ${CENTER} ${tY + 3} A 3 3 0 1 1 ${CENTER} ${tY - 3} Z`, groupKey: 'cust-ganesh-tilak' });
     } else if (config.core === 'lotus') {
-        addCircleSegment(corePaths, 44, 'cust-core-backdrop');
         for (let i = 0; i < 8; i++) {
             addPetalSegment(corePaths, 14, i * 45, 30, 18, 'cust-lotus-core-petals');
         }
         addCircleSegment(corePaths, 14, 'cust-lotus-core-bindu');
     } else if (config.core === 'nilavilakku') {
-        addCircleSegment(corePaths, 44, 'cust-core-backdrop');
         corePaths.push({ d: `M ${CENTER} ${CENTER - 34} Q ${CENTER + 8} ${CENTER - 22} ${CENTER} ${CENTER - 14} Q ${CENTER - 8} ${CENTER - 22} ${CENTER} ${CENTER - 34} Z`, groupKey: 'cust-lamp-flame' });
         corePaths.push({ d: `M ${CENTER - 16} ${CENTER - 8} C ${CENTER - 16} ${CENTER + 4} ${CENTER + 16} ${CENTER + 4} ${CENTER + 16} ${CENTER - 8} Z`, groupKey: 'cust-lamp-bowl' });
         corePaths.push({ d: `M ${CENTER - 3} ${CENTER + 4} L ${CENTER + 3} ${CENTER + 4} L ${CENTER + 3} ${CENTER + 24} L ${CENTER - 3} ${CENTER + 24} Z`, groupKey: 'cust-lamp-stem' });
         corePaths.push({ d: `M ${CENTER - 18} ${CENTER + 32} C ${CENTER - 18} ${CENTER + 24} ${CENTER + 18} ${CENTER + 24} ${CENTER + 18} ${CENTER + 32} Z`, groupKey: 'cust-lamp-base' });
     } else if (config.core === 'peacock') {
-        addCircleSegment(corePaths, 44, 'cust-core-backdrop');
         for (let i = 0; i < 6; i++) {
             addPetalSegment(corePaths, 14, i * 60, 28, 16, 'cust-peacock-plumes');
         }
         addCircleSegment(corePaths, 12, 'cust-peacock-eye');
     } else if (config.core === 'jasmine') {
-        addCircleSegment(corePaths, 44, 'cust-core-backdrop');
         for (let i = 0; i < 6; i++) {
             addPetalSegment(corePaths, 16, i * 60, 28, 18, 'cust-core-jasmine');
         }
