@@ -392,11 +392,18 @@ export class ImageTemplateEngine {
         const size = this.canvasSize;
         const total = size * size;
         let sumX = 0, sumY = 0, area = 0;
+        let minX = size, maxX = 0, minY = size, maxY = 0;
 
         for (let i = 0; i < total; i++) {
             if (mask[i]) {
-                sumX += i % size;
-                sumY += Math.floor(i / size);
+                const pxX = i % size;
+                const pxY = Math.floor(i / size);
+                sumX += pxX;
+                sumY += pxY;
+                if (pxX < minX) minX = pxX;
+                if (pxX > maxX) maxX = pxX;
+                if (pxY < minY) minY = pxY;
+                if (pxY > maxY) maxY = pxY;
                 area++;
             }
         }
@@ -412,19 +419,26 @@ export class ImageTemplateEngine {
         const dx = centroidSvg.x - center.x;
         const dy = centroidSvg.y - center.y;
 
+        // Bounding box size in SVG units
+        const bboxWidthSvg = (maxX - minX) / scale;
+        const bboxHeightSvg = (maxY - minY) / scale;
+
         return {
             area,
             centroid: centroidSvg,
             radiusFromCenter: Math.hypot(dx, dy),
             angle: Math.atan2(dy, dx),
+            bboxWidth: bboxWidthSvg,
+            bboxHeight: bboxHeightSvg,
             key: `${Math.round(centroidSvg.x)},${Math.round(centroidSvg.y)},${area}`
         };
     }
 
     /**
-     * Strict Radial & Bilateral Symmetry Flood Fill:
-     * Only fills genuine symmetric copies at regular rotational angles around the center.
-     * Prevents filling unrelated backgrounds, backdrops, or non-radial center motifs.
+     * Complete Radial Ring & Symmetry Flood Fill:
+     * Discovers all matching shapes lying along the same concentric mandala ring at radius R.
+     * Works seamlessly regardless of whether the ring has 4, 6, 8, 10, 12, 14, 16, 18, 20, or 24 petals!
+     * Safely prevents filling large backdrops or non-radial center motifs.
      */
     floodFillSymmetric(svgX, svgY, preferredFolds = null) {
         const baseMask = this.floodFill(svgX, svgY, false);
@@ -436,84 +450,85 @@ export class ImageTemplateEngine {
         const center = this.getCenterOfDesign();
         const baseR = baseMetrics.radiusFromCenter;
 
-        // Central core motif (radius < 18px in SVG) is singular; don't radial repeat
+        // Central core motif (radius < 18px in SVG) is singular; color only itself
         if (baseR < 18) {
             return [baseMask];
         }
 
-        const baseAngle = baseMetrics.angle;
-        const baseArea = baseMetrics.area;
-
-        // Candidate radial symmetry folds to test
-        const foldsToTest = [];
-        if (preferredFolds && preferredFolds >= 3) {
-            foldsToTest.push(preferredFolds);
+        // If the shape is enormous (spans over half the design), it is a large backdrop, not a ring petal
+        if (baseMetrics.bboxWidth > 180 || baseMetrics.bboxHeight > 180) {
+            return [baseMask];
         }
-        [16, 12, 8, 6, 4, 24, 20, 18, 14, 10].forEach(f => {
-            if (!foldsToTest.includes(f)) foldsToTest.push(f);
-        });
 
-        // Test each candidate fold to see if exact matching symmetric shapes exist
-        for (const folds of foldsToTest) {
-            const stepAngle = (2 * Math.PI) / folds;
-            const symmetricMasks = [baseMask];
-            const visitedKeys = new Set([baseMetrics.key]);
-            let matchCount = 1;
+        const baseArea = baseMetrics.area;
+        const scale = this.canvasSize / 400;
+        const size = this.canvasSize;
+        const cX = center.x * scale;
+        const cY = center.y * scale;
+        const rPx = baseR * scale;
+        const px = this.templatePixels;
+        if (!px) return [baseMask];
 
-            for (let k = 1; k < folds; k++) {
-                const targetAngle = baseAngle + k * stepAngle;
-                const sampleSvgX = center.x + baseR * Math.cos(targetAngle);
-                const sampleSvgY = center.y + baseR * Math.sin(targetAngle);
+        // 1. Angular sweep at radius baseR to discover all candidate shapes on this ring
+        const numAngularSteps = 120;
+        const stepAngle = (2 * Math.PI) / numAngularSteps;
+        const radialDeltas = [0, 4, -4, 8, -8, 12, -12];
 
-                // Sample in a small local window around the exact expected symmetric point
-                let foundMask = null;
-                const searchOffsets = [
-                    { dx: 0, dy: 0 },
-                    { dx: 2, dy: 0 }, { dx: -2, dy: 0 }, { dx: 0, dy: 2 }, { dx: 0, dy: -2 },
-                    { dx: 4, dy: 0 }, { dx: -4, dy: 0 }, { dx: 0, dy: 4 }, { dx: 0, dy: -4 },
-                    { dx: 6, dy: 0 }, { dx: -6, dy: 0 }, { dx: 0, dy: 6 }, { dx: 0, dy: -6 }
-                ];
+        const ringMasks = [baseMask];
+        const visitedKeys = new Set([baseMetrics.key]);
 
-                for (const offset of searchOffsets) {
-                    const candMask = this.floodFill(sampleSvgX + offset.dx, sampleSvgY + offset.dy, true);
+        for (let i = 0; i < numAngularSteps; i++) {
+            const angle = i * stepAngle;
+            const cosA = Math.cos(angle);
+            const sinA = Math.sin(angle);
+
+            for (let d = 0; d < radialDeltas.length; d++) {
+                const sampleR = rPx + radialDeltas[d];
+                if (sampleR <= 6) continue;
+
+                const samplePxX = Math.round(cX + sampleR * cosA);
+                const samplePxY = Math.round(cY + sampleR * sinA);
+
+                if (samplePxX >= 0 && samplePxX < size && samplePxY >= 0 && samplePxY < size) {
+                    const pos = samplePxY * size + samplePxX;
+                    // Skip black outlines in O(1)
+                    if (px[pos * 4] === 0) continue;
+
+                    const sampleSvgX = samplePxX / scale;
+                    const sampleSvgY = samplePxY / scale;
+
+                    const candMask = this.floodFill(sampleSvgX, sampleSvgY, true);
                     if (candMask) {
                         const candMetrics = this.getMaskMetrics(candMask);
                         if (candMetrics && !visitedKeys.has(candMetrics.key)) {
                             const rDiff = Math.abs(candMetrics.radiusFromCenter - baseR);
                             const areaRatio = candMetrics.area / (baseArea || 1);
 
-                            // Strict geometric symmetry verification:
-                            // 1. Same radius from center (within 8px)
-                            // 2. Similar shape area (within 0.60x - 1.65x)
-                            // 3. Angular alignment matches expected rotational angle
-                            let angleDiff = Math.abs(candMetrics.angle - targetAngle) % (2 * Math.PI);
-                            if (angleDiff > Math.PI) angleDiff = 2 * Math.PI - angleDiff;
+                            // Ring Member Criteria:
+                            // 1. Lies on the exact same concentric radius band
+                            // 2. Similar shape area (0.45x - 2.2x)
+                            // 3. Similar bounding box dimension (not a giant backdrop)
+                            const isSameBand = rDiff <= Math.max(10, baseR * 0.14);
+                            const isSameSize = areaRatio >= 0.45 && areaRatio <= 2.2;
+                            const isLocalized = candMetrics.bboxWidth < 180 && candMetrics.bboxHeight < 180;
 
-                            if (rDiff <= Math.max(8, baseR * 0.08) &&
-                                areaRatio >= 0.60 && areaRatio <= 1.65 &&
-                                angleDiff <= 0.18) {
+                            if (isSameBand && isSameSize && isLocalized) {
                                 visitedKeys.add(candMetrics.key);
-                                foundMask = candMask;
+                                ringMasks.push(candMask);
                                 break;
                             }
                         }
                     }
                 }
-
-                if (foundMask) {
-                    symmetricMasks.push(foundMask);
-                    matchCount++;
-                }
-            }
-
-            // A valid symmetric ring must match all or almost all symmetric copies
-            const requiredMatches = folds >= 8 ? folds - 1 : folds;
-            if (matchCount >= requiredMatches && symmetricMasks.length > 1) {
-                return symmetricMasks;
             }
         }
 
-        // If no radial ring matches, check for mirror/bilateral symmetry across vertical axis
+        // If 3 or more symmetric shapes form a circular layer, return the complete ring
+        if (ringMasks.length >= 3) {
+            return ringMasks;
+        }
+
+        // 2. If fewer than 3 shapes found in radial sweep, check for bilateral/mirror reflection
         const mirrorSvgX = 2 * center.x - baseMetrics.centroid.x;
         const mirrorSvgY = baseMetrics.centroid.y;
         const mirrorMask = this.floodFill(mirrorSvgX, mirrorSvgY, true);
@@ -522,13 +537,13 @@ export class ImageTemplateEngine {
             if (mirrorMetrics && mirrorMetrics.key !== baseMetrics.key) {
                 const rDiff = Math.abs(mirrorMetrics.radiusFromCenter - baseR);
                 const areaRatio = mirrorMetrics.area / (baseArea || 1);
-                if (rDiff <= 6 && areaRatio >= 0.70 && areaRatio <= 1.45) {
+                if (rDiff <= 8 && areaRatio >= 0.65 && areaRatio <= 1.55) {
                     return [baseMask, mirrorMask];
                 }
             }
         }
 
-        // If shape is non-symmetric / unique, color ONLY the clicked shape
+        // If non-symmetric / isolated motif, color ONLY the clicked shape
         return [baseMask];
     }
 
