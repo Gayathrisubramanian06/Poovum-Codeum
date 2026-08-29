@@ -431,189 +431,137 @@
 
 
 /* ================================================================
-   TABLET & MOBILE SCREENS
+   TABLET & MOBILE SCREENS (<= 900px)
 ================================================================ */
 
-@media (max-width: 850px) {
+@media (max-width: 900px) {
     .onam-navbar {
-        top: 14px;
-        gap: clamp(8px, 1.8vw, 20px);
-        padding: 7px 16px;
-        max-width: 94vw;
+        top: 10px !important;
+        width: calc(100vw - 16px) !important;
+        max-width: 440px !important;
+        padding: 5px 8px !important;
+        gap: 2px !important;
+        justify-content: space-between !important;
+        background: rgba(255, 248, 235, 0.95) !important;
+        border-radius: 999px !important;
+        box-shadow: 0 4px 16px rgba(70, 45, 15, 0.12) !important;
     }
 
     .nav-link {
-        font-size: 11.5px;
-        letter-spacing: 1px;
-        padding: 4px 6px;
-    }
-
-    .onam-title {
-        top: 12%;
-        width: 90vw;
+        font-size: 10px !important;
+        letter-spacing: 0.2px !important;
+        padding: 4px 5px !important;
+        white-space: nowrap !important;
     }
 
     .pookalam-top-spin {
-        width: clamp(190px, 42vw, 320px);
-        height: clamp(190px, 42vw, 320px);
-    }
-
-    .maveli-img {
-        right: 3%;
-        bottom: 6%;
-        width: 14vw;
-    }
-
-    .kathakali-img {
-        left: 2%;
-        bottom: 4%;
-        width: 16vw;
-    }
-
-    .sadya-img {
-        width: 22vw;
-    }
-
-    .thiruvathira-img {
-        width: 60vw;
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: 0;
-    }
-
-    .boat-img {
-        width: 75vw;
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: 2%;
-    }
-}
-
-
-/* ================================================================
-   MOBILE PHONE SCREENS (<= 600px)
-================================================================ */
-
-@media (max-width: 600px) {
-    .onam-navbar {
-        top: 8px;
-        width: calc(100vw - 16px);
-        max-width: 440px;
-        padding: 5px 8px;
-        gap: 2px;
-        justify-content: space-between;
-        background: rgba(255, 248, 235, 0.95);
-        border-radius: 999px;
-        box-shadow: 0 4px 16px rgba(70, 45, 15, 0.12);
-    }
-
-    .nav-link {
-        font-size: 10px;
-        letter-spacing: 0.2px;
-        padding: 4px 5px;
-        white-space: nowrap;
+        left: 50% !important;
+        top: 0 !important;
+        transform: translate(-50%, -54%) !important;
+        width: clamp(170px, 46vw, 240px) !important;
+        height: clamp(170px, 46vw, 240px) !important;
     }
 
     .onam-title {
-        top: 10%;
-        width: 95vw;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        top: clamp(90px, 14vh, 140px) !important;
+        width: 94vw !important;
+        max-width: 440px !important;
+        text-align: center !important;
+        margin: 0 auto !important;
     }
 
     .happy-text {
-        font-size: clamp(20px, 5.5vw, 30px);
-        margin-bottom: -4px;
+        font-size: clamp(20px, 5.5vw, 30px) !important;
+        margin-bottom: -4px !important;
     }
 
     .onam-text {
-        font-size: clamp(34px, 10vw, 54px);
-        letter-spacing: 1.5px;
+        font-size: clamp(34px, 10vw, 54px) !important;
+        letter-spacing: 1.5px !important;
     }
 
     .title-line {
-        width: 50px;
-        margin: 8px auto;
+        width: 50px !important;
+        margin: 8px auto !important;
     }
 
     .onam-title p {
-        font-size: clamp(11.5px, 3.4vw, 14px);
-        letter-spacing: 0.5px;
-        max-width: 95%;
+        font-size: clamp(11.5px, 3.4vw, 14px) !important;
+        letter-spacing: 0.5px !important;
+        max-width: 95% !important;
     }
 
     .home-buttons {
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        margin-top: 16px;
-        width: 100%;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 10px !important;
+        margin-top: 14px !important;
+        width: 100% !important;
     }
 
     .home-buttons button {
-        width: 100%;
-        max-width: 250px;
+        width: 100% !important;
+        max-width: 250px !important;
     }
 
-    .pookalam-top-spin {
-        left: 50%;
-        top: 0;
-        transform: translate(-50%, -54%);
-        width: clamp(160px, 46vw, 230px);
-        height: clamp(160px, 46vw, 230px);
-    }
-
-    /* Bottom Festive Artwork - Large, Clear & Prominent */
+    /* Bottom Festive Artwork - Large, High-impact & Clear */
     .boat-img {
-        left: -2%;
-        bottom: 5%;
-        width: clamp(220px, 62vw, 380px);
-        max-height: 30vh;
-        z-index: 10;
-        opacity: 0.95;
-        object-fit: contain;
+        display: block !important;
+        left: -2% !important;
+        bottom: 8% !important;
+        width: clamp(260px, 72vw, 440px) !important;
+        max-height: 36vh !important;
+        z-index: 10 !important;
+        opacity: 0.95 !important;
+        object-fit: contain !important;
     }
 
     .thiruvathira-img {
-        left: -6%;
-        bottom: -4%;
-        width: clamp(160px, 46vw, 280px);
-        max-height: 24vh;
-        z-index: 14;
-        object-fit: contain;
+        display: block !important;
+        left: -5% !important;
+        bottom: -2% !important;
+        width: clamp(180px, 50vw, 320px) !important;
+        max-height: 30vh !important;
+        z-index: 17 !important;
+        object-fit: contain !important;
     }
 
     .sadya-img {
         display: block !important;
-        right: 18%;
-        bottom: -10%;
-        width: clamp(110px, 28vw, 180px);
-        max-height: 24vh;
-        z-index: 13;
-        object-fit: contain;
+        right: 22% !important;
+        bottom: -2% !important;
+        width: clamp(130px, 34vw, 210px) !important;
+        max-height: 30vh !important;
+        z-index: 14 !important;
+        object-fit: contain !important;
     }
 
     .kathakali-img {
         display: block !important;
-        right: -4%;
-        bottom: -4%;
-        width: clamp(140px, 38vw, 230px);
-        max-height: 36vh;
-        z-index: 15;
-        object-fit: contain;
+        right: -2% !important;
+        bottom: 0% !important;
+        width: clamp(160px, 44vw, 260px) !important;
+        max-height: 42vh !important;
+        z-index: 16 !important;
+        object-fit: contain !important;
     }
 }
 
 @media (max-width: 380px) {
     .nav-link {
-        font-size: 8.5px;
-        padding: 3px 3px;
-        letter-spacing: 0px;
+        font-size: 8.5px !important;
+        padding: 3px 3px !important;
+        letter-spacing: 0px !important;
     }
 
     .kathakali-img {
-        width: clamp(120px, 36vw, 180px);
+        width: clamp(140px, 42vw, 200px) !important;
     }
 
     .boat-img {
-        width: clamp(190px, 58vw, 300px);
+        width: clamp(220px, 66vw, 340px) !important;
     }
 }
