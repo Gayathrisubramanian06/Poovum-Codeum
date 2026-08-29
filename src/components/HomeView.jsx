@@ -43,13 +43,13 @@ export default function HomeView({ onNavigate }) {
                 POOKALAM — TOP CENTER (half visible, spinning)
             ====================================================== */}
 
-            <motion.img
-                src="assets/pookalam.png"
-                alt="Pookalam"
-                className="pookalam-top-spin"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
-            />
+            <div className="pookalam-spin-wrapper">
+                <img
+                    src="assets/pookalam.png"
+                    alt="Pookalam"
+                    className="pookalam-top-spin-img"
+                />
+            </div>
 
 
 
