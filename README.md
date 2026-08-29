@@ -46,8 +46,6 @@
 - In-browser image edge detection engine automatically converts photographs into interactive fillable outlines.
 
 ### 📜 4. Learn More About Onam (*ഓണം വിശേഷങ്ങൾ*)
-- **10 Days of Onam**: Detailed cultural journey from *Atham* to *Thiruvonam*.
-- **Mythology & History**: Story of King Mahabali, Vamana Avatara, and Kerala's golden harvest era.
 - **Onasadya & Folk Arts**: Insights into traditional feasts, *Pulikali*, *Vallamkali* (snake boat races), and *Kathakali*.
 
 ### 🌐 5. Community Gallery & Export
