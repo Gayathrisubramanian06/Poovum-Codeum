@@ -10,9 +10,8 @@
 </p>
 
 <p align="center">
-### Project URL : https://poovum-codeum-new.vercel.app/
+  <strong>🌐 Live Project URL: <a href="https://poovum-codeum-new.vercel.app/" target="_blank">https://poovum-codeum-new.vercel.app/</a></strong>
 </p>
-
 
 <p align="center">
   <img src="https://img.shields.io/badge/React-19.2-61DAFB?style=for-the-badge&logo=react&logoColor=white" alt="React 19" />
@@ -133,8 +132,6 @@ Poovum-Codeum/
 └── README.md
 ```
 
-<<<<<<< HEAD
-=======
 ---
 
 ## 🌸 Flower Guide for Onam
