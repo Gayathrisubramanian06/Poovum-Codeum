@@ -31,8 +31,8 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
     const isDragMoveRef = useRef(false);
 
     const handleZoomIn = () => {
-        setZoomScale(prev => Math.min(3.5, Math.round((prev + 0.5) * 10) / 10));
-        setCanvasHint('🔍 Zoomed in on Pookalam! Drag to pan around.');
+        setZoomScale(prev => Math.min(4.5, Math.round((prev + 0.5) * 10) / 10));
+        setCanvasHint('🔍 Zoomed in on Pookalam! Zoom in to colour in small shapes with high precision.');
     };
 
     const handleZoomOut = () => {
@@ -49,7 +49,19 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
         setCanvasHint('🔍 Zoom reset to 100%.');
     };
 
-    // Non-passive wheel event listener to strictly zoom ONLY the pookalam canvas (prevents browser page zoom)
+    const handlePanTo = (dir) => {
+        const w = 400 / zoomScale;
+        const h = 400 / zoomScale;
+        const maxRangeX = (400 - w) / 2 + 55;
+        const maxRangeY = (400 - h) / 2 + 55;
+        if (dir === 'center') setPanOffset({ x: 0, y: 0 });
+        else if (dir === 'top') setPanOffset(prev => ({ ...prev, y: maxRangeY }));
+        else if (dir === 'bottom') setPanOffset(prev => ({ ...prev, y: -maxRangeY }));
+        else if (dir === 'left') setPanOffset(prev => ({ ...prev, x: maxRangeX }));
+        else if (dir === 'right') setPanOffset(prev => ({ ...prev, x: -maxRangeX }));
+    };
+
+    // Non-passive wheel event listener to zoom directly towards the mouse cursor
     useEffect(() => {
         const svgEl = svgRef.current;
         if (!svgEl) return;
@@ -58,15 +70,52 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
             e.preventDefault();
             e.stopPropagation();
 
-            if (e.deltaY < 0) {
-                setZoomScale(prev => Math.min(3.5, Math.round((prev + 0.25) * 100) / 100));
-            } else {
-                setZoomScale(prev => {
-                    const next = Math.max(1, Math.round((prev - 0.25) * 100) / 100);
-                    if (next === 1) setPanOffset({ x: 0, y: 0 });
-                    return next;
+            const rect = svgEl.getBoundingClientRect();
+            const cursorRelX = Math.max(0, Math.min(1, (e.clientX - rect.left) / (rect.width || 400)));
+            const cursorRelY = Math.max(0, Math.min(1, (e.clientY - rect.top) / (rect.height || 400)));
+
+            const zoomDelta = e.deltaY < 0 ? 0.35 : -0.35;
+
+            setZoomScale(prevZoom => {
+                const newZoom = Math.max(1, Math.min(4.5, Math.round((prevZoom + zoomDelta) * 100) / 100));
+                if (newZoom === 1) {
+                    setPanOffset({ x: 0, y: 0 });
+                    return 1;
+                }
+
+                setPanOffset(prevPan => {
+                    const curW = 400 / prevZoom;
+                    const curH = 400 / prevZoom;
+                    const curMaxPanX = (400 - curW) / 2 + 55;
+                    const curMaxPanY = (400 - curH) / 2 + 55;
+                    const curPanX = Math.max(-curMaxPanX, Math.min(curMaxPanX, prevPan.x));
+                    const curPanY = Math.max(-curMaxPanY, Math.min(curMaxPanY, prevPan.y));
+                    const curVbX = (400 - curW) / 2 - curPanX;
+                    const curVbY = (400 - curH) / 2 - curPanY;
+
+                    const mouseSvgX = curVbX + cursorRelX * curW;
+                    const mouseSvgY = curVbY + cursorRelY * curH;
+
+                    const newW = 400 / newZoom;
+                    const newH = 400 / newZoom;
+
+                    const targetVbX = mouseSvgX - cursorRelX * newW;
+                    const targetVbY = mouseSvgY - cursorRelY * newH;
+
+                    const newPanX = (400 - newW) / 2 - targetVbX;
+                    const newPanY = (400 - newH) / 2 - targetVbY;
+
+                    const maxPanX = (400 - newW) / 2 + 55;
+                    const maxPanY = (400 - newH) / 2 + 55;
+
+                    return {
+                        x: Math.max(-maxPanX, Math.min(maxPanX, newPanX)),
+                        y: Math.max(-maxPanY, Math.min(maxPanY, newPanY))
+                    };
                 });
-            }
+
+                return newZoom;
+            });
         };
 
         svgEl.addEventListener('wheel', onWheel, { passive: false });
@@ -86,33 +135,45 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
         if (!isPointerDownRef.current || zoomScale <= 1) return;
         const dx = e.clientX - pointerStartRef.current.x;
         const dy = e.clientY - pointerStartRef.current.y;
-        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+        const dragDist = Math.hypot(dx, dy);
+        if (dragDist > 8) {
             isDragMoveRef.current = true;
             const svg = svgRef.current;
             if (!svg) return;
             const rect = svg.getBoundingClientRect();
             const scaleFactor = 400 / (rect.width || 400) / zoomScale;
 
+            const w = 400 / zoomScale;
+            const h = 400 / zoomScale;
+            const maxPanX = (400 - w) / 2 + 55;
+            const maxPanY = (400 - h) / 2 + 55;
+
             setPanOffset({
-                x: panStartRef.current.x + dx * scaleFactor,
-                y: panStartRef.current.y + dy * scaleFactor
+                x: Math.max(-maxPanX, Math.min(maxPanX, panStartRef.current.x + dx * scaleFactor)),
+                y: Math.max(-maxPanY, Math.min(maxPanY, panStartRef.current.y + dy * scaleFactor))
             });
         }
     };
 
     const handleCanvasPointerUpCombined = (e) => {
-        if (!isDragMoveRef.current) {
+        const dx = e.clientX - pointerStartRef.current.x;
+        const dy = e.clientY - pointerStartRef.current.y;
+        const isClick = Math.hypot(dx, dy) < 8;
+
+        if (isClick && !isDragMoveRef.current) {
             handleCanvasPointerDown(e);
         }
         isPointerDownRef.current = false;
-        isDragMoveRef.current = false;
+        setTimeout(() => {
+            isDragMoveRef.current = false;
+        }, 50);
     };
 
     const viewBoxString = React.useMemo(() => {
         const w = 400 / zoomScale;
         const h = 400 / zoomScale;
-        const maxPanX = (400 - w) / 2;
-        const maxPanY = (400 - h) / 2;
+        const maxPanX = (400 - w) / 2 + 55;
+        const maxPanY = (400 - h) / 2 + 55;
         const clampedPanX = Math.max(-maxPanX, Math.min(maxPanX, panOffset.x));
         const clampedPanY = Math.max(-maxPanY, Math.min(maxPanY, panOffset.y));
         const x = (400 - w) / 2 - clampedPanX;
@@ -167,7 +228,7 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
     const svgRef = useRef(null);
     const [imageReady, setImageReady] = useState(false);
     const [hoveredGroup, setHoveredGroup] = useState(null);
-    const [canvasHint, setCanvasHint] = useState('Tap inside any bordered shape to color it!');
+    const [canvasHint, setCanvasHint] = useState('Tap inside any bordered shape to color it! Zoom in to colour in small shapes with high precision.');
 
     // Modal state for publishing
     const [showPublish, setShowPublish] = useState(false);
@@ -219,14 +280,30 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
     const getSvgCoordinates = (e) => {
         const svg = svgRef.current;
         if (!svg) return { x: 200, y: 200 };
+
+        // 1. Primary: Native SVG Screen CTM inversion gives exact sub-pixel coordinates across any zoom/pan
+        if (svg.getScreenCTM) {
+            const ctm = svg.getScreenCTM();
+            if (ctm) {
+                const pt = svg.createSVGPoint();
+                pt.x = e.clientX;
+                pt.y = e.clientY;
+                const transformed = pt.matrixTransform(ctm.inverse());
+                if (!isNaN(transformed.x) && !isNaN(transformed.y)) {
+                    return { x: transformed.x, y: transformed.y };
+                }
+            }
+        }
+
+        // 2. Fallback
         const rect = svg.getBoundingClientRect();
         const clickX = e.clientX - rect.left;
         const clickY = e.clientY - rect.top;
 
         const w = 400 / zoomScale;
         const h = 400 / zoomScale;
-        const maxPanX = (400 - w) / 2;
-        const maxPanY = (400 - h) / 2;
+        const maxPanX = (400 - w) / 2 + 55;
+        const maxPanY = (400 - h) / 2 + 55;
         const clampedPanX = Math.max(-maxPanX, Math.min(maxPanX, panOffset.x));
         const clampedPanY = Math.max(-maxPanY, Math.min(maxPanY, panOffset.y));
         const viewBoxX = (400 - w) / 2 - clampedPanX;
@@ -240,6 +317,7 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
 
     // Vector Path click filling
     const handleVectorPathClick = (e, index) => {
+        if (isDragMoveRef.current) return;
         e.stopPropagation();
 
         if (currentMode === 'whole') {
@@ -341,19 +419,12 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
         if (isImageTemplate && engineRef.current && imageReady) {
             const engine = engineRef.current;
             const prevSnapshot = engine.getFillState();
-            const masks = [];
-            const designCenter = engine.getCenterOfDesign();
+            let masks = [];
 
             if (isSymmetryActive) {
-                const symPoints = getSymmetricPoints(designCenter.x, designCenter.y, pt.x, pt.y, symmetryFolds);
-                symPoints.forEach(sPt => {
-                    const mask = engine.floodFill(sPt.x, sPt.y);
-                    if (mask && !masks.includes(mask)) {
-                        masks.push(mask);
-                    }
-                });
+                masks = engine.floodFillSymmetric(pt.x, pt.y, symmetryFolds);
             } else {
-                const mask = engine.floodFill(pt.x, pt.y);
+                const mask = engine.floodFill(pt.x, pt.y, false);
                 if (mask) masks.push(mask);
             }
 
@@ -361,10 +432,14 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                 const nextUrl = engine.applyFills(masks, currentColor.hex);
                 setImageFillSrc(nextUrl);
                 setPlacedHistory(prev => [...prev, { type: 'image-fill', snapshot: prevSnapshot }]);
-                setCanvasHint(`✨ Filled outline region with ${currentColor.name}!`);
+                if (masks.length > 1) {
+                    setCanvasHint(`✨ Symmetrically filled ${masks.length} ring shapes with ${currentColor.name}!`);
+                } else {
+                    setCanvasHint(`✨ Filled outline region with ${currentColor.name}!`);
+                }
             } else {
                 // Shake canvas or hint out of bounds
-                setCanvasHint(`⚠️ Click closer to the white outline area!`);
+                setCanvasHint(`⚠️ Click closer to the shape area! Zoom in to colour in small shapes with high precision.`);
             }
         }
     };
@@ -574,57 +649,42 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
         });
     };
 
-    // Share to WhatsApp (Native Share on mobile or WhatsApp Web + Clipboard on Desktop)
+    // Share to WhatsApp
     const handleWhatsApp = () => {
-        setShareMessage('⏳ Preparing WhatsApp share...');
-        const shareText = "Check out this Onam Pookalam I designed! 🪔🌸 Happy Onam!";
+        const shareText = `Check out this Onam Pookalam I designed! 🪔🌸 Happy Onam!\n${window.location.origin}`;
+        const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
 
-        generatePNGAndAction(async (blob) => {
-            // 1. Mobile Native Share Sheet (shares image file directly to WhatsApp/any app)
-            if (navigator.share && navigator.canShare) {
-                try {
-                    const file = new File([blob], 'my-pookalam.png', { type: 'image/png' });
-                    if (navigator.canShare({ files: [file] })) {
-                        await navigator.share({
-                            files: [file],
-                            title: 'My Onam Pookalam',
-                            text: shareText
-                        });
-                        setShareMessage('✨ Shared successfully!');
-                        setTimeout(() => setShareMessage(''), 3000);
-                        return;
-                    }
-                } catch (err) {
-                    console.log('Native share skipped or cancelled:', err);
-                }
-            }
+        // 1. Immediately open WhatsApp to prevent browser popup blocking
+        const win = window.open(waUrl, '_blank', 'noopener,noreferrer');
+        if (!win || win.closed || typeof win.closed === 'undefined') {
+            window.location.href = waUrl;
+        }
 
-            // 2. Universal WhatsApp Web / App Click-to-Chat URL
-            const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
-            window.open(waUrl, '_blank', 'noopener,noreferrer');
+        setShareMessage('🌸 WhatsApp opened!');
+        setTimeout(() => setShareMessage(''), 3000);
 
-            // 3. Copy image to clipboard so user can paste (Ctrl+V) directly in the chat
+        // 2. Also copy image to clipboard so the user can paste (Ctrl+V) directly into the chat
+        generatePNGAndAction((blob) => {
             if (blob && navigator.clipboard && window.ClipboardItem) {
                 try {
-                    await navigator.clipboard.write([
+                    navigator.clipboard.write([
                         new ClipboardItem({ 'image/png': blob })
-                    ]);
-                    setShareMessage('🌸 WhatsApp opened! We copied your Pookalam to clipboard — you can paste (Ctrl+V) it in the chat!');
-                    setTimeout(() => setShareMessage(''), 5000);
-                } catch (e) {
-                    setShareMessage('🌸 WhatsApp opened!');
-                    setTimeout(() => setShareMessage(''), 3000);
+                    ]).then(() => {
+                        setShareMessage('🌸 WhatsApp opened! Pookalam copied to clipboard — paste (Ctrl+V) it in chat! 🎨');
+                        setTimeout(() => setShareMessage(''), 5000);
+                    }).catch(() => {
+                        // Silent fallback
+                    });
+                } catch {
+                    // Silent fallback
                 }
-            } else {
-                setShareMessage('🌸 WhatsApp opened!');
-                setTimeout(() => setShareMessage(''), 3000);
             }
         });
     };
 
     // Share to Twitter/X
     const handleTwitter = () => {
-        const shareText = "Check out this Onam Pookalam I designed! 🪔🌸 #Onam #Pookalam #Kerala";
+        const shareText = `Check out this Onam Pookalam I designed! 🪔🌸 #Onam #Pookalam #Kerala\n${window.location.origin}`;
         const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
         window.open(tweetUrl, '_blank', 'noopener,noreferrer');
         setShareMessage('✨ Twitter opened!');
@@ -764,7 +824,13 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                         {/* Symmetry Folds selector */}
                         {isSymmetryActive && (
                             <div className="control-group" style={{ minWidth: '150px' }}>
-                                <span className="control-label">{currentMode === 'whole' ? 'Flowers in Ring:' : 'Ring Folds:'}</span>
+                                <span 
+                                    className="control-label" 
+                                    title="Sets radial symmetry (4–24x) to auto-repeat colors or flowers evenly around the circle in a single tap"
+                                    style={{ cursor: 'help' }}
+                                >
+                                    {currentMode === 'whole' ? 'Flowers in Ring ℹ️:' : 'Ring Folds ℹ️:'}
+                                </span>
                                 <div className="size-row" style={{ display: 'flex', gap: '3px' }}>
                                     {[4, 6, 8, 12, 16, 24].map(folds => (
                                         <button
@@ -799,7 +865,7 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                         </div>
                     </div>
 
-                    {/* High-Precision Zooming Pro-Tip Banner */}
+                    {/* High-Precision Zooming & Symmetry Pro-Tip Banner */}
                     <AnimatePresence>
                         {showZoomTip && (
                             <motion.div
@@ -811,7 +877,7 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                                 <div className="zoom-tip-content">
                                     <span className="zoom-tip-badge">💡 Pro Tip</span>
                                     <span>
-                                        Zoom into the Pookalam (use <strong>+</strong> / <strong>-</strong> buttons or scroll wheel) to color tiny shapes with high precision!
+                                        🔍 <strong>Zoom in to colour in small shapes with high precision</strong>! Use <strong>Ring Fill: ON</strong> to color whole symmetric rings in 1 tap, or switch <strong>Ring Fill: OFF</strong> to color individual shapes.
                                     </span>
                                 </div>
                                 <button
@@ -846,20 +912,29 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                                 type="button"
                                 className="zoom-tool-btn"
                                 onClick={handleZoomIn}
-                                disabled={zoomScale >= 3.5}
+                                disabled={zoomScale >= 4.5}
                                 title="Zoom In (+)"
                             >
                                 ➕
                             </button>
                             {zoomScale > 1 && (
-                                <button
-                                    type="button"
-                                    className="zoom-tool-reset"
-                                    onClick={handleResetZoom}
-                                    title="Reset Zoom to 100%"
-                                >
-                                    ↺ Reset
-                                </button>
+                                <>
+                                    <div className="zoom-pan-cluster">
+                                        <button type="button" className="zoom-pan-btn" onClick={() => handlePanTo('top')} title="Pan to Top (⬆️)">⬆️</button>
+                                        <button type="button" className="zoom-pan-btn" onClick={() => handlePanTo('bottom')} title="Pan to Bottom (⬇️)">⬇️</button>
+                                        <button type="button" className="zoom-pan-btn" onClick={() => handlePanTo('left')} title="Pan to Left (⬅️)">⬅️</button>
+                                        <button type="button" className="zoom-pan-btn" onClick={() => handlePanTo('right')} title="Pan to Right (➡️)">➡️</button>
+                                        <button type="button" className="zoom-pan-btn" onClick={() => handlePanTo('center')} title="Reset Pan to Center (🎯)">🎯</button>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        className="zoom-tool-reset"
+                                        onClick={handleResetZoom}
+                                        title="Reset Zoom to 100%"
+                                    >
+                                        ↺ 100%
+                                    </button>
+                                </>
                             )}
                         </div>
 
@@ -872,7 +947,10 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                             onPointerDown={handleCanvasPointerDownCombined}
                             onPointerMove={handleCanvasPointerMove}
                             onPointerUp={handleCanvasPointerUpCombined}
-                            style={{ touchAction: 'none' }}
+                            style={{ 
+                                touchAction: 'none',
+                                cursor: zoomScale > 1 ? (isPointerDownRef.current ? 'grabbing' : 'grab') : 'crosshair'
+                            }}
                         >
                             <defs>
                                 <radialGradient id="floorGradient" cx="50%" cy="45%" r="70%">
@@ -934,7 +1012,7 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                                     })
                                 ) : (
                                     /* Multiply outline blending so shapes stand out above fills */
-                                    <image href={imageSrc} x="0" y="0" width="400" height="400" opacity="0.32" style={{ mixBlendMode: 'multiply' }} />
+                                    <image href={imageSrc} x="0" y="0" width="400" height="400" opacity="0.95" style={{ mixBlendMode: 'multiply' }} />
                                 )}
                             </g>
 
