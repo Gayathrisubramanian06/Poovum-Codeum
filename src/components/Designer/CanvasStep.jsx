@@ -571,14 +571,14 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                         console.warn('Storage bucket upload skipped, using direct image URL:', storageErr);
                     }
 
-                    // 2. Insert row into gallery_items table
+                    // 2. Insert row into gallery_items table matching exact Supabase schema (author, image_data, title, likes)
+                    const authorLabel = creatorName ? (creatorCity ? `${creatorName} (${creatorCity} 🪔)` : `${creatorName} 🌸`) : 'Festive Designer 🪔';
                     const { error: insertError } = await supabase
                         .from('gallery_items')
                         .insert({
                             title: 'Onam Pookalam',
-                            creator: creatorName || 'Festive Designer',
-                            city: creatorCity ? `${creatorCity} 🪔` : 'Kerala 🌸',
-                            img_url: imgUrl,
+                            author: authorLabel,
+                            image_data: imgUrl,
                             likes: 0
                         });
 
@@ -589,7 +589,7 @@ export default function CanvasStep({ selectedTemplate, isImageTemplate, imageSrc
                         setShowPublish(false);
                         onNavigate('gallery');
                         setShareMessage('');
-                    }, 1500);
+                    }, 1200);
                     return;
                 } catch (err) {
                     console.error('Supabase publish failed, falling back to local storage:', err);

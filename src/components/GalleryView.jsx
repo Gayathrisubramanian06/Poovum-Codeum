@@ -33,7 +33,16 @@ export default function GalleryView({ onNavigate }) {
                         .order('created_at', { ascending: false });
 
                     if (!sbError && data && data.length > 0) {
-                        communityData = data.map(item => ({ ...item, type: 'community' }));
+                        communityData = data.map(item => ({
+                            id: item.id,
+                            title: item.title || 'Onam Pookalam',
+                            creator: item.author || item.creator || 'Festive Designer',
+                            city: item.city || 'Kerala 🌸',
+                            img_url: item.image_data || item.img_url,
+                            likes: item.likes || 0,
+                            created_at: item.created_at,
+                            type: 'community'
+                        }));
                     }
                 } catch (err) {
                     console.error('Gallery Supabase fetch error:', err);
