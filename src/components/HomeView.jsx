@@ -64,8 +64,8 @@ export default function HomeView({ onNavigate }) {
 
             <motion.div
                 className="onam-title"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: '-50%', y: -20 }}
+                animate={{ opacity: 1, x: '-50%', y: 0 }}
                 transition={{ duration: 1 }}
             >
                 <div className="happy-text">
@@ -144,17 +144,15 @@ export default function HomeView({ onNavigate }) {
                 src="assets/maveli.png"
                 alt="King Maveli"
                 className="kathakali-img"
-                initial={{ opacity: 0, x: 60, scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.95 }}
                 animate={{
                     opacity: 1,
-                    x: [60, 0, 0, 0, 0],
                     y: [0, -8, 0, 5, 0],
                     rotate: [0, 1.2, 0, -1.2, 0],
                     scale: [1, 1.02, 1, 0.99, 1]
                 }}
                 transition={{
                     opacity: { duration: 1 },
-                    x: { duration: 1 },
                     y: { duration: 7, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" },
                     rotate: { duration: 8, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" },
                     scale: { duration: 6, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }
@@ -196,16 +194,15 @@ export default function HomeView({ onNavigate }) {
                 src="assets/boat.png"
                 alt="Kerala Snake Boat"
                 className="boat-img"
-                initial={{ opacity: 0, x: -100, y: 20 }}
+                style={{ x: '-50%' }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{
                     opacity: 0.95,
-                    x: [-100, 0, 8, 0, -8, 0],
                     y: [0, -7, 0, 5, 0],
                     rotate: [-1.5, 1, -0.8, 1.2, -1.5]
                 }}
                 transition={{
                     opacity: { duration: 1.2 },
-                    x: { duration: 14, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" },
                     y: { duration: 9, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" },
                     rotate: { duration: 11, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }
                 }}
@@ -221,17 +218,16 @@ export default function HomeView({ onNavigate }) {
                 src="assets/thiruvathira.png"
                 alt="Thiruvathira dancers"
                 className="thiruvathira-img"
+                style={{ x: '-50%' }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{
                     opacity: 1,
                     y: [0, -7, 0, -4, 0],
-                    x: [0, 6, 0, -6, 0],
                     rotate: [0, 1.5, 0, -1.5, 0]
                 }}
                 transition={{
                     opacity: { duration: 1 },
                     y: { duration: 6.5, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" },
-                    x: { duration: 8, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" },
                     rotate: { duration: 7, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }
                 }}
                 whileHover={{ scale: 1.04, rotate: 1, transition: { duration: 0.3 } }}
