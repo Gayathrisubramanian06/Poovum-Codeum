@@ -527,13 +527,13 @@
         font-size: 15.5px !important;
     }
 
-    /* Left: Boat & Thiruvathira */
+    /* Left: Boat & Thiruvathira - Made Much Larger */
     .boat-img {
         display: block !important;
-        left: -2% !important;
+        left: -4% !important;
         bottom: 8% !important;
-        width: clamp(240px, 66vw, 420px) !important;
-        max-height: 36vh !important;
+        width: clamp(300px, 82vw, 520px) !important;
+        max-height: 44vh !important;
         z-index: 10 !important;
         opacity: 0.95 !important;
         object-fit: contain !important;
@@ -541,10 +541,10 @@
 
     .thiruvathira-img {
         display: block !important;
-        left: -5% !important;
+        left: -6% !important;
         bottom: -2% !important;
-        width: clamp(170px, 48vw, 300px) !important;
-        max-height: 30vh !important;
+        width: clamp(220px, 60vw, 380px) !important;
+        max-height: 38vh !important;
         z-index: 17 !important;
         object-fit: contain !important;
     }
@@ -577,6 +577,10 @@
     }
 
     .boat-img {
-        width: clamp(200px, 62vw, 300px) !important;
+        width: clamp(260px, 78vw, 380px) !important;
+    }
+
+    .thiruvathira-img {
+        width: clamp(190px, 56vw, 280px) !important;
     }
 }
