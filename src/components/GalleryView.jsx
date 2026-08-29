@@ -70,16 +70,30 @@ export default function GalleryView({ onNavigate }) {
         }
     }, []);
 
-    const handleLike = (id, e) => {
+    const handleLike = async (id, e) => {
         e.stopPropagation();
         const newLikes = { ...likesMap };
-        if (newLikes[id]) {
+        const isCurrentlyLiked = !!newLikes[id];
+        if (isCurrentlyLiked) {
             delete newLikes[id];
         } else {
             newLikes[id] = true;
         }
         setLikesMap(newLikes);
         localStorage.setItem(LIKES_STORAGE_KEY, JSON.stringify(newLikes));
+
+        try {
+            const currentItem = items.find(it => it.id === id);
+            if (currentItem && typeof id === 'number') {
+                const updatedCount = Math.max(0, (currentItem.likes || 0) + (isCurrentlyLiked ? -1 : 1));
+                await supabase
+                    .from('gallery_items')
+                    .update({ likes: updatedCount })
+                    .eq('id', id);
+            }
+        } catch (_) {
+            // Non-blocking
+        }
     };
 
     const handleDownload = (imgUrl, creator, e) => {
