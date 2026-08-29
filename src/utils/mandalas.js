@@ -21,13 +21,12 @@ export const VECTOR_TEMPLATES = [
 
 export const PREDEFINED_TEMPLATES = {
     circle: [
-        { id: 'c3', name: 'Scalloped Mandala', img: 'assets/images/circle-3.jpg' },
-        { id: 'c9', name: 'Intricate Web', img: 'assets/images/circle-9.jpg' },
         { id: 'c25', name: 'Surya Radiant', img: 'assets/images/circle-25.jpg' },
         { id: 'c26', name: 'Padmam Crown', img: 'assets/images/circle-26.jpg' },
         { id: 'c22', name: 'Swirling Petals', img: 'assets/images/circle-22.jpg' },
+        { id: 'c3', name: 'Scalloped Mandala', img: 'assets/images/circle-3.jpg' },
+        { id: 'c9', name: 'Intricate Web', img: 'assets/images/circle-9.jpg' },
         { id: 'c23', name: 'Hexa Bloom', img: 'assets/images/circle-23.jpg' },
-        { id: 'c12', name: 'Radiant Petals', img: 'assets/images/circle-12.jpg' },
         { id: 'c13', name: 'Layered Lotus', img: 'assets/images/circle-13.jpg' },
         { id: 'c24', name: 'Tiered Blossom', img: 'assets/images/circle-24.jpg' },
         { id: 'c16', name: 'Floral Mandala', img: 'assets/images/circle-16.jpg' },
@@ -35,7 +34,8 @@ export const PREDEFINED_TEMPLATES = {
         { id: 'c14', name: 'Peacock Wheel', img: 'assets/images/circle-14.jpg' },
         { id: 'c18', name: 'Heritage Pattern', img: 'assets/images/circle-18.jpg' },
         { id: 'c27', name: 'Daisy Wheel', img: 'assets/images/circle-27.jpg' },
-        { id: 'c28', name: 'Layered Rosette', img: 'assets/images/circle-28.jpg' }
+        { id: 'c28', name: 'Layered Rosette', img: 'assets/images/circle-28.jpg' },
+        { id: 'c29', name: 'Rose Blossom', img: 'assets/images/circle-29.jpg' }
     ]
 };
 
