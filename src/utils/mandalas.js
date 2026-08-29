@@ -454,10 +454,9 @@ export function generateCustomMandalaPaths(config) {
     const outerScale = config.outerScale || 1.0;
     const ringScale = config.ringScale || 1.0;
     const midScale = config.midScale || 1.0;
-    const coreScale = config.coreScale || 1.0;
-
-    const rOuter = Math.min(170, 138 * ringScale);
-    const rInner = Math.max(90, 116 * ringScale);
+    const coreR = 40 * coreScale;
+    const rInner = Math.max(92, 106 + 20 * (ringScale - 1));
+    const rOuter = Math.min(172, 142 + 22 * (ringScale - 1));
     const outerDist = 140 + 14 * outerScale;
     const outerLen = 34 * outerScale;
     const outerWid = 28 * outerScale;
@@ -475,7 +474,7 @@ export function generateCustomMandalaPaths(config) {
     };
 
     // Compute all exact concentric border radii
-    const ringRadii = [];
+    const ringRadii = [coreR];
     if (config.rings === 'double-ring') {
         ringRadii.push(rInner);
         ringRadii.push(rInner + (rOuter - rInner) * 0.5);
@@ -494,14 +493,18 @@ export function generateCustomMandalaPaths(config) {
 
     const sortedRadii = Array.from(new Set(ringRadii.filter(r => r > 0))).sort((a, b) => a - b);
 
-    // 0. Fill Center Core
-    if (sortedRadii.length > 0) {
-        addAnnularRingSegment(outerPaths, 0, sortedRadii[0], 'cust-bg-center');
+    // 0. Fill Center Core Backdrop (behind sacred motif)
+    addAnnularRingSegment(outerPaths, 0, sortedRadii[0], 'cust-bg-core');
 
-        // Annular ring fill bands matching every concentric border line exactly
-        for (let i = 0; i < sortedRadii.length - 1; i++) {
-            addAnnularRingSegment(outerPaths, sortedRadii[i], sortedRadii[i + 1], `cust-bg-ring-${i}`);
+    // Annular ring fill bands matching every concentric region cleanly
+    for (let i = 0; i < sortedRadii.length - 1; i++) {
+        const r1 = sortedRadii[i];
+        const r2 = sortedRadii[i + 1];
+        let bandKey = `cust-bg-ring-${i}`;
+        if (i === 0) {
+            bandKey = 'cust-bg-mid-gap'; // Dedicated mid-pattern backdrop region
         }
+        addAnnularRingSegment(outerPaths, r1, r2, bandKey);
     }
 
     // 1. Outer Border Motifs
@@ -526,17 +529,17 @@ export function generateCustomMandalaPaths(config) {
         addCircleSegment(outerPaths, rOut, 'cust-outer-ring');
     }
 
-    // 2. Concentric Rings Guide Strokes
+    // 2. Concentric Rings Guide Strokes (only draw visible borders for concentric rings >= rInner)
     sortedRadii.forEach((r, idx) => {
-        if (r > 0 && r < outerDist + outerLen) {
+        if (r >= rInner - 2 && r < outerDist + outerLen) {
             addCircleSegment(ringPaths, r, `cust-ring-guide-${idx}`);
         }
     });
 
-    // 3. Mid Petal / Star Pattern
-    const midDist = 58 + 14 * coreScale;
-    const midLen = 46 * midScale;
-    const midWid = 26 * midScale;
+    // 3. Mid Petal / Star Pattern - Start right outside sacred motif to eliminate gap
+    const midDist = 38 + 4 * coreScale;
+    const midLen = 50 * midScale;
+    const midWid = 28 * midScale;
 
     if (config.mid === 'pointed-12') {
         for (let i = 0; i < 12; i++) {
@@ -551,15 +554,15 @@ export function generateCustomMandalaPaths(config) {
         }
     } else if (config.mid === 'diamond-star') {
         for (let i = 0; i < 8; i++) {
-            addDiamondSegment(midPaths, midDist + 22, i * 45 + 22.5, midLen * 1.2, midWid * 1.3, 'cust-mid-diamonds');
+            addDiamondSegment(midPaths, midDist + midLen * 0.45, i * 45 + 22.5, midLen * 1.05, midWid * 1.15, 'cust-mid-diamonds');
         }
     } else if (config.mid === 'heart-petals') {
         for (let i = 0; i < 8; i++) {
-            addPetalSegment(midPaths, midDist - 16, i * 45, midLen * 1.2, midWid * 1.2, 'cust-mid-hearts');
+            addPetalSegment(midPaths, midDist, i * 45, midLen * 1.1, midWid * 1.2, 'cust-mid-hearts');
         }
     } else if (config.mid === 'peacock-fan') {
         for (let i = 0; i < 8; i++) {
-            addDiamondSegment(midPaths, midDist + 20, i * 45 + 22.5, midLen * 1.1, midWid * 1.3, 'cust-mid-fans');
+            addDiamondSegment(midPaths, midDist + midLen * 0.45, i * 45 + 22.5, midLen * 1.05, midWid * 1.2, 'cust-mid-fans');
         }
     }
 
