@@ -78,9 +78,9 @@ export default function CustomStep({ config, onChangeConfig, onStartColoring }) 
     const { outerPaths, ringPaths, midPaths, corePaths, coreScale } = generateCustomMandalaPaths(config);
 
     // Compute preview radii for rendering guidelines and handles
-    const coreR = 44 * config.coreScale;
-    const midR = 58 + 14 * config.coreScale + 46 * config.midScale * 0.5;
-    const ringR = Math.min(175, 138 * config.ringScale);
+    const coreR = 40 * config.coreScale;
+    const midR = 38 + 4 * config.coreScale + 50 * config.midScale * 0.5;
+    const ringR = Math.min(172, 142 + 22 * (config.ringScale - 1));
     const outerR = Math.min(195, 140 + 14 * config.outerScale + 34 * config.outerScale * 0.85);
 
     const getSvgPoint = (e) => {
