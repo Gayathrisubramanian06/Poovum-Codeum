@@ -5,63 +5,6 @@ import SpecularButton from './SpecularButton';
 
 const LIKES_STORAGE_KEY = 'pookalam_gallery_likes';
 
-const DEFAULT_GALLERY_ITEMS = [
-    {
-        id: 'showcase-1',
-        title: 'Grand Athapookalam',
-        creator: 'Aananya Nair',
-        city: 'Kochi 🪔',
-        img_url: '/assets/pookalam.png',
-        likes: 42,
-        type: 'featured'
-    },
-    {
-        id: 'showcase-2',
-        title: 'Kathakali Sacred Mandala',
-        creator: 'Rahul Menon',
-        city: 'Calicut 🪔',
-        img_url: '/assets/kathakali.png',
-        likes: 56,
-        type: 'featured'
-    },
-    {
-        id: 'showcase-3',
-        title: 'Thiruvathira Floral Circle',
-        creator: 'Meera Krishnan',
-        city: 'Thrissur 🌸',
-        img_url: '/assets/thiruvathira.png',
-        likes: 38,
-        type: 'featured'
-    },
-    {
-        id: 'showcase-4',
-        title: 'Vallamkali Royal Pookalam',
-        creator: 'Siddharth V.',
-        city: 'Alappuzha ⛵',
-        img_url: '/assets/boat.png',
-        likes: 29,
-        type: 'featured'
-    },
-    {
-        id: 'showcase-5',
-        title: 'Onasadya Festive Bloom',
-        creator: 'Devika Pillai',
-        city: 'Trivandrum 🪔',
-        img_url: '/assets/sadya.png',
-        likes: 35,
-        type: 'featured'
-    },
-    {
-        id: 'showcase-6',
-        title: 'King Mahabali Heritage',
-        creator: 'Gokul Ram',
-        city: 'Kottayam 🌸',
-        img_url: '/assets/maveli.png',
-        likes: 48,
-        type: 'featured'
-    }
-];
-
 export default function GalleryView({ onNavigate }) {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -113,15 +56,8 @@ export default function GalleryView({ onNavigate }) {
                 console.error('Failed to load local uploads:', e);
             }
 
-            // 3. Merge user-created Pookalams first + curated showcase items
-            const allItems = [...communityData];
-            DEFAULT_GALLERY_ITEMS.forEach(defaultItem => {
-                if (!allItems.some(item => item.id === defaultItem.id)) {
-                    allItems.push(defaultItem);
-                }
-            });
-
-            setItems(allItems);
+            // Display ONLY user-created/published Pookalam designs (no defaults)
+            setItems(communityData);
             setLoading(false);
         }
 
