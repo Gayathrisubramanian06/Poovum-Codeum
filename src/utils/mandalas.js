@@ -29,11 +29,13 @@ export const PREDEFINED_TEMPLATES = {
         { id: 'c23', name: 'Hexa Bloom', img: 'assets/images/circle-23.jpg' },
         { id: 'c12', name: 'Radiant Petals', img: 'assets/images/circle-12.jpg' },
         { id: 'c13', name: 'Layered Lotus', img: 'assets/images/circle-13.jpg' },
-        { id: 'c18', name: 'Heritage Pattern', img: 'assets/images/circle-18.jpg' },
         { id: 'c24', name: 'Tiered Blossom', img: 'assets/images/circle-24.jpg' },
         { id: 'c16', name: 'Floral Mandala', img: 'assets/images/circle-16.jpg' },
         { id: 'c21', name: 'Festival Ring', img: 'assets/images/circle-21.jpg' },
-        { id: 'c14', name: 'Peacock Wheel', img: 'assets/images/circle-14.jpg' }
+        { id: 'c14', name: 'Peacock Wheel', img: 'assets/images/circle-14.jpg' },
+        { id: 'c18', name: 'Heritage Pattern', img: 'assets/images/circle-18.jpg' },
+        { id: 'c27', name: 'Daisy Wheel', img: 'assets/images/circle-27.jpg' },
+        { id: 'c28', name: 'Layered Rosette', img: 'assets/images/circle-28.jpg' }
     ]
 };
 
