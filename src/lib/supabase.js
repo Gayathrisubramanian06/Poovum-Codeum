@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://yvylpcbwcokzccgxuxsb.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2eWxwY2J3Y29remNjZ3h1eHNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc5MDgzMTAsImV4cCI6MjEwMzQ4NDMxMH0.HMBkcM7kujMiyImhfvHo1oQTbZK-W0DTefz1JBDnyJE';
 
 const isValidUrl = (url) => {
     try {
@@ -19,15 +19,7 @@ const isConfigured =
     supabaseAnonKey !== 'YOUR_SUPABASE_ANON_KEY' && 
     isValidUrl(supabaseUrl);
 
-if (!isConfigured) {
-    console.warn(
-        '[Supabase] Missing env vars VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY. ' +
-        'Add them to your .env.local file.'
-    );
-}
-
-// Fallback to a valid placeholder URL if unconfigured to prevent crash on import
-const finalUrl = isConfigured ? supabaseUrl : 'https://placeholder-unconfigured.supabase.co';
-const finalKey = isConfigured ? supabaseAnonKey : 'dummy-anon-key';
-
-export const supabase = createClient(finalUrl, finalKey);
+export const supabase = createClient(
+    isConfigured ? supabaseUrl : 'https://yvylpcbwcokzccgxuxsb.supabase.co',
+    isConfigured ? supabaseAnonKey : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2eWxwY2J3Y29remNjZ3h1eHNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc5MDgzMTAsImV4cCI6MjEwMzQ4NDMxMH0.HMBkcM7kujMiyImhfvHo1oQTbZK-W0DTefz1JBDnyJE'
+);

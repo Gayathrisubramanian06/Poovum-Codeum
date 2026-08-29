@@ -19,10 +19,8 @@ export default function GalleryView({ onNavigate }) {
             setError(null);
 
             const hasSupabase =
-                import.meta.env.VITE_SUPABASE_URL &&
-                import.meta.env.VITE_SUPABASE_ANON_KEY &&
-                import.meta.env.VITE_SUPABASE_URL !== 'YOUR_SUPABASE_PROJECT_URL' &&
-                import.meta.env.VITE_SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY';
+                (import.meta.env.VITE_SUPABASE_URL || 'https://yvylpcbwcokzccgxuxsb.supabase.co') &&
+                (import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2eWxwY2J3Y29remNjZ3h1eHNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc5MDgzMTAsImV4cCI6MjEwMzQ4NDMxMH0.HMBkcM7kujMiyImhfvHo1oQTbZK-W0DTefz1JBDnyJE') !== 'YOUR_SUPABASE_ANON_KEY';
 
             let communityData = [];
 
