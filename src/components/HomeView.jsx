@@ -48,9 +48,8 @@ export default function HomeView({ onNavigate }) {
                 alt="Pookalam"
                 className="pookalam-top-spin"
                 style={{
-                    // translateX(-50%) centers it; translateY(-50%) hides the top half
                     x: '-50%',
-                    y: '-52%',
+                    y: '-58%',
                 }}
                 animate={{ rotate: 360 }}
                 transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
